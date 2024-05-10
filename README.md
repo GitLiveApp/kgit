@@ -1,11 +1,11 @@
-# Java Git
+# Kotlin Git
 
-An implementation of the Git version control system in pure Java.
+An fork of the JGit project translated to Kotlin.
 
 This project is licensed under the __EDL__ (Eclipse Distribution
 License).
 
-JGit can be imported straight into Eclipse and built and tested from
+KGit can be imported straight into IntelliJ and built and tested from
 there. It can be built from the command line using
 [Maven](https://maven.apache.org/) or [Bazel](https://bazel.build/).
 The CI builds use Maven and run on [Jenkins](https://ci.eclipse.org/jgit/).
