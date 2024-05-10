@@ -786,26 +786,26 @@ public class DiffFormatter implements AutoCloseable {
 			final int endIdx = findCombinedEnd(edits, curIdx);
 			final Edit endEdit = edits.get(endIdx);
 
-			int aCur = (int) Math.max(0, (long) curEdit.getBeginA() - context);
-			int bCur = (int) Math.max(0, (long) curEdit.getBeginB() - context);
-			final int aEnd = (int) Math.min(a.size(), (long) endEdit.getEndA() + context);
-			final int bEnd = (int) Math.min(b.size(), (long) endEdit.getEndB() + context);
+			int aCur = (int) Math.max(0, (long) curEdit.beginA - context);
+			int bCur = (int) Math.max(0, (long) curEdit.beginB - context);
+			final int aEnd = (int) Math.min(a.size(), (long) endEdit.endA + context);
+			final int bEnd = (int) Math.min(b.size(), (long) endEdit.endB + context);
 
 			writeHunkHeader(aCur, aEnd, bCur, bEnd);
 
 			while (aCur < aEnd || bCur < bEnd) {
-				if (aCur < curEdit.getBeginA() || endIdx + 1 < curIdx) {
+				if (aCur < curEdit.beginA || endIdx + 1 < curIdx) {
 					writeContextLine(a, aCur);
 					if (isEndOfLineMissing(a, aCur))
 						out.write(noNewLine);
 					aCur++;
 					bCur++;
-				} else if (aCur < curEdit.getEndA()) {
+				} else if (aCur < curEdit.endA) {
 					writeRemovedLine(a, aCur);
 					if (isEndOfLineMissing(a, aCur))
 						out.write(noNewLine);
 					aCur++;
-				} else if (bCur < curEdit.getEndB()) {
+				} else if (bCur < curEdit.endB) {
 					writeAddedLine(b, bCur);
 					if (isEndOfLineMissing(b, bCur))
 						out.write(noNewLine);
@@ -1237,14 +1237,14 @@ public class DiffFormatter implements AutoCloseable {
 	}
 
 	private boolean combineA(List<Edit> e, int i) {
-		return e.get(i).getBeginA() - e.get(i - 1).getEndA() <= 2 * context;
+		return e.get(i).beginA - e.get(i - 1).endA <= 2 * context;
 	}
 
 	private boolean combineB(List<Edit> e, int i) {
-		return e.get(i).getBeginB() - e.get(i - 1).getEndB() <= 2 * context;
+		return e.get(i).beginB - e.get(i - 1).endB <= 2 * context;
 	}
 
 	private static boolean end(Edit edit, int a, int b) {
-		return edit.getEndA() <= a && edit.getEndB() <= b;
+		return edit.endA <= a && edit.endB <= b;
 	}
 }

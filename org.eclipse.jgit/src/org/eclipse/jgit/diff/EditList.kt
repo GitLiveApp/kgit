@@ -7,50 +7,45 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.diff;
-
-import java.util.ArrayList;
+package org.eclipse.jgit.diff
 
 /**
- * Specialized list of {@link org.eclipse.jgit.diff.Edit}s in a document.
+ * Specialized list of [org.eclipse.jgit.diff.Edit]s in a document.
  */
-public class EditList extends ArrayList<Edit> {
-	private static final long serialVersionUID = 1L;
+class EditList : ArrayList<Edit> {
+    /**
+     * Create a new, empty edit list.
+     */
+    constructor() : super(16)
 
-	/**
-	 * Construct an edit list containing a single edit.
-	 *
-	 * @param edit
-	 *            the edit to return in the list.
-	 * @return list containing only {@code edit}.
-	 */
-	public static EditList singleton(Edit edit) {
-		EditList res = new EditList(1);
-		res.add(edit);
-		return res;
-	}
+    /**
+     * Create an empty edit list with the specified capacity.
+     *
+     * @param capacity
+     * the initial capacity of the edit list. If additional edits are
+     * added to the list, it will be grown to support them.
+     */
+    constructor(capacity: Int) : super(capacity)
 
-	/**
-	 * Create a new, empty edit list.
-	 */
-	public EditList() {
-		super(16);
-	}
+    override fun toString(): String {
+        return "EditList" + super.toString() //$NON-NLS-1$
+    }
 
-	/**
-	 * Create an empty edit list with the specified capacity.
-	 *
-	 * @param capacity
-	 *            the initial capacity of the edit list. If additional edits are
-	 *            added to the list, it will be grown to support them.
-	 */
-	public EditList(int capacity) {
-		super(capacity);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
 
-	@Override
-	public String toString() {
-		return "EditList" + super.toString(); //$NON-NLS-1$
-	}
+        /**
+         * Construct an edit list containing a single edit.
+         *
+         * @param edit
+         * the edit to return in the list.
+         * @return list containing only `edit`.
+         */
+		@JvmStatic
+		fun singleton(edit: Edit): EditList {
+            val res = EditList(1)
+            res.add(edit)
+            return res
+        }
+    }
 }

@@ -7,21 +7,20 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.merge;
+package org.eclipse.jgit.merge
 
 /**
  * How to handle content conflicts.
  *
  * @since 5.12
  */
-public enum ContentMergeStrategy {
+enum class ContentMergeStrategy {
+    /** Produce a conflict.  */
+    CONFLICT,
 
-	/** Produce a conflict. */
-	CONFLICT,
+    /** Resolve the conflict hunk using the ours version.  */
+    OURS,
 
-	/** Resolve the conflict hunk using the ours version. */
-	OURS,
-
-	/** Resolve the conflict hunk using the theirs version. */
-	THEIRS
+    /** Resolve the conflict hunk using the theirs version.  */
+    THEIRS
 }

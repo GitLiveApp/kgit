@@ -7,41 +7,37 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.diff;
+package org.eclipse.jgit.diff
 
 /**
  * Wrap another comparator for use with
- * {@link org.eclipse.jgit.diff.HashedSequence}.
- * <p>
+ * [org.eclipse.jgit.diff.HashedSequence].
+ *
+ *
  * This comparator acts as a proxy for the real comparator, evaluating the
  * cached hash code before testing the underlying comparator's equality.
  * Comparators of this type must be used with a
- * {@link org.eclipse.jgit.diff.HashedSequence}.
- * <p>
+ * [org.eclipse.jgit.diff.HashedSequence].
+ *
+ *
  * To construct an instance of this type use
- * {@link org.eclipse.jgit.diff.HashedSequencePair}.
+ * [org.eclipse.jgit.diff.HashedSequencePair].
  *
  * @param <S>
- *            the base sequence type.
- */
-public final class HashedSequenceComparator<S extends Sequence> extends
-		SequenceComparator<HashedSequence<S>> {
-	private final SequenceComparator<? super S> cmp;
+ * the base sequence type.
+</S> */
+class HashedSequenceComparator<S : Sequence> internal constructor(private val cmp: SequenceComparator<in S>) :
+    SequenceComparator<HashedSequence<S>>() {
 
-	HashedSequenceComparator(SequenceComparator<? super S> cmp) {
-		this.cmp = cmp;
-	}
+    override fun equals(
+        a: HashedSequence<S>, ai: Int,  //
+        b: HashedSequence<S>, bi: Int
+    ): Boolean {
+        return (a.hashes[ai] == b.hashes[bi]
+            && cmp.equals(a.base, ai, b.base, bi))
+    }
 
-	@Override
-	public boolean equals(HashedSequence<S> a, int ai, //
-			HashedSequence<S> b, int bi) {
-		return a.hashes[ai] == b.hashes[bi]
-				&& cmp.equals(a.base, ai, b.base, bi);
-	}
-
-	@Override
-	public int hash(HashedSequence<S> seq, int ptr) {
-		return seq.hashes[ptr];
-	}
+    override fun hash(seq: HashedSequence<S>, ptr: Int): Int {
+        return seq.hashes[ptr]
+    }
 }

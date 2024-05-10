@@ -7,26 +7,25 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.lib;
+package org.eclipse.jgit.lib
 
 /**
  * Base object type accessed during bitmap expansion.
  *
  * @since 3.0
  */
-public abstract class BitmapObject {
-	/**
-	 * Get Git object type. See {@link org.eclipse.jgit.lib.Constants}.
-	 *
-	 * @return object type
-	 */
-	public abstract int getType();
+abstract class BitmapObject {
+    /**
+     * Get Git object type. See [org.eclipse.jgit.lib.Constants].
+     *
+     * @return object type
+     */
+    abstract val type: Int
 
-	/**
-	 * Get the name of this object.
-	 *
-	 * @return unique hash of this object.
-	 */
-	public abstract ObjectId getObjectId();
+    /**
+     * Get the name of this object.
+     *
+     * @return unique hash of this object.
+     */
+    abstract val objectId: ObjectId?
 }

@@ -22,19 +22,19 @@ public class EditTest {
 	@Test
 	public void testCreate() {
 		final Edit e = new Edit(1, 2, 3, 4);
-		assertEquals(1, e.getBeginA());
-		assertEquals(2, e.getEndA());
-		assertEquals(3, e.getBeginB());
-		assertEquals(4, e.getEndB());
+		assertEquals(1, e.beginA);
+		assertEquals(2, e.endA);
+		assertEquals(3, e.beginB);
+		assertEquals(4, e.endB);
 	}
 
 	@Test
 	public void testCreateEmpty() {
 		final Edit e = new Edit(1, 3);
-		assertEquals(1, e.getBeginA());
-		assertEquals(1, e.getEndA());
-		assertEquals(3, e.getBeginB());
-		assertEquals(3, e.getEndB());
+		assertEquals(1, e.beginA);
+		assertEquals(1, e.endA);
+		assertEquals(3, e.beginB);
+		assertEquals(3, e.endB);
 		assertTrue("is empty", e.isEmpty());
 		assertSame(Edit.Type.EMPTY, e.getType());
 	}
@@ -43,10 +43,10 @@ public class EditTest {
 	public void testSwap() {
 		final Edit e = new Edit(1, 2, 3, 4);
 		e.swap();
-		assertEquals(3, e.getBeginA());
-		assertEquals(4, e.getEndA());
-		assertEquals(1, e.getBeginB());
-		assertEquals(2, e.getEndB());
+		assertEquals(3, e.beginA);
+		assertEquals(4, e.endA);
+		assertEquals(1, e.beginB);
+		assertEquals(2, e.endB);
 	}
 
 	@Test

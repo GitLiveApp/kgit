@@ -47,7 +47,7 @@ public class RawTextLoadTest extends RepositoryTestCase {
 	public void testSmallOK() throws Exception {
 		byte[] data = generate(1000, -1);
 		RawText result = textFor(data, 1 << 20);
-		Assert.assertArrayEquals(result.content, data);
+		Assert.assertArrayEquals(result.getRawContent(), data);
 	}
 
 	@Test(expected = BinaryBlobException.class)
@@ -60,7 +60,7 @@ public class RawTextLoadTest extends RepositoryTestCase {
 	public void testBigOK() throws Exception {
 		byte[] data = generate(10000, -1);
 		RawText result = textFor(data, 1 << 20);
-		Assert.assertArrayEquals(result.content, data);
+		Assert.assertArrayEquals(result.getRawContent(), data);
 	}
 
 	@Test(expected = BinaryBlobException.class)

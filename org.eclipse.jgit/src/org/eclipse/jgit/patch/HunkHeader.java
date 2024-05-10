@@ -131,9 +131,9 @@ public class HunkHeader {
 			newStartLine = 0;
 			newLineCount = 0;
 		} else {
-			newStartLine = editList.get(0).getBeginB();
+			newStartLine = editList.get(0).beginB;
 			Edit last = editList.get(editList.size() - 1);
-			newLineCount = last.getEndB() - newStartLine;
+			newLineCount = last.endB - newStartLine;
 		}
 	}
 

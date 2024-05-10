@@ -7,18 +7,15 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.merge
 
-package org.eclipse.jgit.merge;
-
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Repository
 
 /**
  * A merge strategy to merge 2 trees, using a common base ancestor tree.
  */
-public abstract class ThreeWayMergeStrategy extends MergeStrategy {
-	@Override
-	public abstract ThreeWayMerger newMerger(Repository db);
+abstract class ThreeWayMergeStrategy : MergeStrategy() {
+    abstract override fun newMerger(db: Repository): ThreeWayMerger
 
-	@Override
-	public abstract ThreeWayMerger newMerger(Repository db, boolean inCore);
+    abstract override fun newMerger(db: Repository, inCore: Boolean): ThreeWayMerger
 }

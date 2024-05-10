@@ -7,21 +7,19 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.lib;
+package org.eclipse.jgit.lib
 
-import java.util.function.Supplier;
+import java.util.function.Supplier
 
 /**
- * A factory for {@link BaseRepositoryBuilder}s.
- * <p>
- * Note that a {@link BaseRepositoryBuilder} should be used only once to build a
+ * A factory for [BaseRepositoryBuilder]s.
+ *
+ *
+ * Note that a [BaseRepositoryBuilder] should be used only once to build a
  * repository. Otherwise subsequently built repositories may be built using
  * settings made for earlier built repositories.
- * </p>
+ *
  *
  * @since 5.6
  */
-public interface RepositoryBuilderFactory extends
-		Supplier<BaseRepositoryBuilder<? extends BaseRepositoryBuilder, ? extends Repository>> {
-	// Empty
-}
+interface RepositoryBuilderFactory : Supplier<BaseRepositoryBuilder<out BaseRepositoryBuilder<*, *>?, out Repository?>?>

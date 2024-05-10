@@ -39,61 +39,52 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.eclipse.jgit.merge;
+package org.eclipse.jgit.merge
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.IOException
+import java.io.OutputStream
 
 /**
  * An output stream which is aware of newlines and can be asked to begin a new
  * line if not already in one.
  */
-class EolAwareOutputStream extends OutputStream {
-	private final OutputStream out;
+internal class EolAwareOutputStream
+/**
+ * Initialize a new EOL aware stream.
+ *
+ * @param out
+ * stream to output all writes to.
+ */(private val out: OutputStream) : OutputStream() {
+    /**
+     * Whether a new line has just begun
+     *
+     * @return true if a new line has just begun.
+     */
+    var isBeginln: Boolean = true
+        private set
 
-	private boolean bol = true;
+    /**
+     * Begin a new line if not already in one.
+     *
+     * @exception IOException
+     * if an I/O error occurs.
+     */
+    @Throws(IOException::class)
+    fun beginln() {
+        if (!isBeginln) write('\n'.code)
+    }
 
-	/**
-	 * Initialize a new EOL aware stream.
-	 *
-	 * @param out
-	 *            stream to output all writes to.
-	 */
-	EolAwareOutputStream(OutputStream out) {
-		this.out = out;
-	}
+    @Throws(IOException::class)
+    override fun write(`val`: Int) {
+        out.write(`val`)
+        isBeginln = (`val` == '\n'.code)
+    }
 
-	/**
-	 * Begin a new line if not already in one.
-	 *
-	 * @exception IOException
-	 *                if an I/O error occurs.
-	 */
-	void beginln() throws IOException {
-		if (!bol)
-			write('\n');
-	}
-
-	/**
-	 * Whether a new line has just begun
-	 *
-	 * @return true if a new line has just begun.
-	 */
-	boolean isBeginln() {
-		return bol;
-	}
-
-	@Override
-	public void write(int val) throws IOException {
-		out.write(val);
-		bol = (val == '\n');
-	}
-
-	@Override
-	public void write(byte[] buf, int pos, int cnt) throws IOException {
-		if (cnt > 0) {
-			out.write(buf, pos, cnt);
-			bol = (buf[pos + (cnt - 1)] == '\n');
-		}
-	}
+    @Throws(IOException::class)
+    override fun write(buf: ByteArray, pos: Int, cnt: Int) {
+        if (cnt > 0) {
+            out.write(buf, pos, cnt)
+            isBeginln = (buf[pos + (cnt - 1)] == '\n'.code.toByte())
+        }
+    }
 }

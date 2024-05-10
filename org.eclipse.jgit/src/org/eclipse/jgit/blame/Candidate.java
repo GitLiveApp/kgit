@@ -167,26 +167,26 @@ class Candidate {
 			Edit e = editList.get(eIdx);
 
 			// Edit ends before the next candidate region. Skip the edit.
-			if (e.getEndB() <= r.sourceStart) {
+			if (e.endB <= r.sourceStart) {
 				eIdx++;
 				continue;
 			}
 
 			// Next candidate region starts before the edit. Assign some
 			// of the blame onto A, but possibly split and also on B.
-			if (r.sourceStart < e.getBeginB()) {
-				int d = e.getBeginB() - r.sourceStart;
+			if (r.sourceStart < e.beginB) {
+				int d = e.beginB - r.sourceStart;
 				if (r.length <= d) {
 					// Pass the blame for this region onto A.
 					Region next = r.next;
-					r.sourceStart = e.getBeginA() - d;
+					r.sourceStart = e.beginA - d;
 					aTail = add(aTail, a, r);
 					r = next;
 					continue;
 				}
 
 				// Split the region and assign some to A, some to B.
-				aTail = add(aTail, a, r.splitFirst(e.getBeginA() - d, d));
+				aTail = add(aTail, a, r.splitFirst(e.beginA - d, d));
 				r.slideAndShrink(d);
 			}
 
@@ -201,18 +201,18 @@ class Candidate {
 
 			// If the region ends before the edit, blame on B.
 			int rEnd = r.sourceStart + r.length;
-			if (rEnd <= e.getEndB()) {
+			if (rEnd <= e.endB) {
 				Region next = r.next;
 				bTail = add(bTail, b, r);
 				r = next;
-				if (rEnd == e.getEndB())
+				if (rEnd == e.endB)
 					eIdx++;
 				continue;
 			}
 
 			// This region extends beyond the edit. Blame the first
 			// half of the region on B, and process the rest after.
-			int len = e.getEndB() - r.sourceStart;
+			int len = e.endB - r.sourceStart;
 			bTail = add(bTail, b, r.splitFirst(r.sourceStart, len));
 			r.slideAndShrink(len);
 			eIdx++;
@@ -224,8 +224,8 @@ class Candidate {
 		// For any remaining region, pass the blame onto A after shifting
 		// the source start to account for the difference between the two.
 		Edit e = editList.get(editList.size() - 1);
-		int endB = e.getEndB();
-		int d = endB - e.getEndA();
+		int endB = e.endB;
+		int d = endB - e.endA;
 		if (aTail == null)
 			a.regionList = r;
 		else

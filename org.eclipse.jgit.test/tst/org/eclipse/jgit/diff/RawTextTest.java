@@ -39,7 +39,7 @@ public class RawTextTest {
 		String input = "foo-a\nf\0o-b\n";
 		byte[] data = Constants.encodeASCII(input);
 		final RawText a = new RawText(data);
-		assertArrayEquals(a.content, data);
+		assertArrayEquals(a.getRawContent(), data);
 		assertEquals(2, a.size());
 		assertEquals("foo-a\n", a.getString(0, 1, false));
 		assertEquals("f\0o-b\n", a.getString(1, 2, false));

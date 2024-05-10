@@ -150,8 +150,8 @@ public class HistogramDiff extends LowLevelDiffAlgorithm {
 
 			} else if (fallback != null) {
 				SubsequenceComparator<HashedSequence<S>> cs = subcmp();
-				Subsequence<HashedSequence<S>> as = Subsequence.a(a, r);
-				Subsequence<HashedSequence<S>> bs = Subsequence.b(b, r);
+				Subsequence<HashedSequence<S>> as = Subsequence.Companion.a(a, r);
+				Subsequence<HashedSequence<S>> bs = Subsequence.Companion.b(b, r);
 
 				EditList res = fallback.diffNonCommon(cs, as, bs);
 				edits.addAll(Subsequence.toBase(res, as, bs));

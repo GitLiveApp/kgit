@@ -8,302 +8,305 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.diff
 
-package org.eclipse.jgit.diff;
-
-import static org.eclipse.jgit.util.RawCharUtil.isWhitespace;
-import static org.eclipse.jgit.util.RawCharUtil.trimLeadingWhitespace;
-import static org.eclipse.jgit.util.RawCharUtil.trimTrailingWhitespace;
-
-import org.eclipse.jgit.util.IntList;
+import org.eclipse.jgit.util.IntList
+import org.eclipse.jgit.util.RawCharUtil
 
 /**
- * Equivalence function for {@link org.eclipse.jgit.diff.RawText}.
+ * Equivalence function for [org.eclipse.jgit.diff.RawText].
  */
-public abstract class RawTextComparator extends SequenceComparator<RawText> {
-	/** No special treatment. */
-	public static final RawTextComparator DEFAULT = new RawTextComparator() {
-		@Override
-		public boolean equals(RawText a, int ai, RawText b, int bi) {
-			ai++;
-			bi++;
+abstract class RawTextComparator : SequenceComparator<RawText>() {
+    override fun hash(seq: RawText, ptr: Int): Int {
+        val begin = seq.lines[ptr + 1]
+        val end = seq.lines[ptr + 2]
+        return hashRegion(seq.rawContent, begin, end)
+    }
 
-			int as = a.lines.get(ai);
-			int bs = b.lines.get(bi);
-			final int ae = a.lines.get(ai + 1);
-			final int be = b.lines.get(bi + 1);
+    override fun reduceCommonStartEnd(a: RawText, b: RawText, e: Edit): Edit? {
+        // This is a faster exact match based form that tries to improve
+        // performance for the common case of the header and trailer of
+        // a text file not changing at all. After this fast path we use
+        // the slower path based on the super class' using equals() to
+        // allow for whitespace ignore modes to still work.
 
-			if (ae - as != be - bs)
-				return false;
+        if (e.beginA == e.endA || e.beginB == e.endB) return e
 
-			while (as < ae) {
-				if (a.content[as++] != b.content[bs++])
-					return false;
-			}
-			return true;
-		}
+        val aRaw = a.rawContent
+        val bRaw = b.rawContent
 
-		@Override
-		protected int hashRegion(byte[] raw, int ptr, int end) {
-			int hash = 5381;
-			for (; ptr < end; ptr++)
-				hash = ((hash << 5) + hash) + (raw[ptr] & 0xff);
-			return hash;
-		}
-	};
+        var aPtr = a.lines[e.beginA + 1]
+        var bPtr = a.lines[e.beginB + 1]
 
-	/** Ignores all whitespace. */
-	public static final RawTextComparator WS_IGNORE_ALL = new RawTextComparator() {
-		@Override
-		public boolean equals(RawText a, int ai, RawText b, int bi) {
-			ai++;
-			bi++;
+        var aEnd = a.lines[e.endA + 1]
+        var bEnd = b.lines[e.endB + 1]
 
-			int as = a.lines.get(ai);
-			int bs = b.lines.get(bi);
-			int ae = a.lines.get(ai + 1);
-			int be = b.lines.get(bi + 1);
+        // This can never happen, but the JIT doesn't know that. If we
+        // define this assertion before the tight while loops below it
+        // should be able to skip the array bound checks on access.
+        //
+        if (aPtr < 0 || bPtr < 0 || aEnd > aRaw.size || bEnd > bRaw.size) throw ArrayIndexOutOfBoundsException()
 
-			ae = trimTrailingWhitespace(a.content, as, ae);
-			be = trimTrailingWhitespace(b.content, bs, be);
+        while (aPtr < aEnd && bPtr < bEnd && aRaw[aPtr] == bRaw[bPtr]) {
+            aPtr++
+            bPtr++
+        }
 
-			while (as < ae && bs < be) {
-				byte ac = a.content[as];
-				byte bc = b.content[bs];
+        while (aPtr < aEnd && bPtr < bEnd && aRaw[aEnd - 1] == bRaw[bEnd - 1]) {
+            aEnd--
+            bEnd--
+        }
 
-				while (as < ae - 1 && isWhitespace(ac)) {
-					as++;
-					ac = a.content[as];
-				}
+        e.beginA = findForwardLine(a.lines, e.beginA, aPtr)
+        e.beginB = findForwardLine(b.lines, e.beginB, bPtr)
 
-				while (bs < be - 1 && isWhitespace(bc)) {
-					bs++;
-					bc = b.content[bs];
-				}
+        e.endA = findReverseLine(a.lines, e.endA, aEnd)
 
-				if (ac != bc)
-					return false;
+        val partialA = aEnd < a.lines[e.endA + 1]
+        if (partialA) bEnd += a.lines[e.endA + 1] - aEnd
 
-				as++;
-				bs++;
-			}
+        e.endB = findReverseLine(b.lines, e.endB, bEnd)
 
-			return as == ae && bs == be;
-		}
+        if (!partialA && bEnd < b.lines[e.endB + 1]) e.endA++
 
-		@Override
-		protected int hashRegion(byte[] raw, int ptr, int end) {
-			int hash = 5381;
-			for (; ptr < end; ptr++) {
-				byte c = raw[ptr];
-				if (!isWhitespace(c))
-					hash = ((hash << 5) + hash) + (c & 0xff);
-			}
-			return hash;
-		}
-	};
+        return super.reduceCommonStartEnd(a, b, e)
+    }
 
-	/**
-	 * Ignore leading whitespace.
-	 **/
-	public static final RawTextComparator WS_IGNORE_LEADING = new RawTextComparator() {
-		@Override
-		public boolean equals(RawText a, int ai, RawText b, int bi) {
-			ai++;
-			bi++;
+    /**
+     * Compute a hash code for a region.
+     *
+     * @param raw
+     * the raw file content.
+     * @param ptr
+     * first byte of the region to hash.
+     * @param end
+     * 1 past the last byte of the region.
+     * @return hash code for the region `[ptr, end)` of raw.
+     */
+    protected abstract fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int
 
-			int as = a.lines.get(ai);
-			int bs = b.lines.get(bi);
-			int ae = a.lines.get(ai + 1);
-			int be = b.lines.get(bi + 1);
+    companion object {
+        /** No special treatment.  */
+		@JvmField
+		val DEFAULT: RawTextComparator = object : RawTextComparator() {
+            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+                var ai = ai
+                var bi = bi
+                ai++
+                bi++
 
-			as = trimLeadingWhitespace(a.content, as, ae);
-			bs = trimLeadingWhitespace(b.content, bs, be);
+                var `as` = a.lines[ai]
+                var bs = b.lines[bi]
+                val ae = a.lines[ai + 1]
+                val be = b.lines[bi + 1]
 
-			if (ae - as != be - bs)
-				return false;
+                if (ae - `as` != be - bs) return false
 
-			while (as < ae) {
-				if (a.content[as++] != b.content[bs++])
-					return false;
-			}
-			return true;
-		}
+                while (`as` < ae) {
+                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
+                }
+                return true
+            }
 
-		@Override
-		protected int hashRegion(byte[] raw, int ptr, int end) {
-			int hash = 5381;
-			ptr = trimLeadingWhitespace(raw, ptr, end);
-			for (; ptr < end; ptr++)
-				hash = ((hash << 5) + hash) + (raw[ptr] & 0xff);
-			return hash;
-		}
-	};
+            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+                var ptr = ptr
+                var hash = 5381
+                while (ptr < end) {
+                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
+                    ptr++
+                }
+                return hash
+            }
+        }
 
-	/** Ignores trailing whitespace. */
-	public static final RawTextComparator WS_IGNORE_TRAILING = new RawTextComparator() {
-		@Override
-		public boolean equals(RawText a, int ai, RawText b, int bi) {
-			ai++;
-			bi++;
+        /** Ignores all whitespace.  */
+		@JvmField
+		val WS_IGNORE_ALL: RawTextComparator = object : RawTextComparator() {
+            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+                var ai = ai
+                var bi = bi
+                ai++
+                bi++
 
-			int as = a.lines.get(ai);
-			int bs = b.lines.get(bi);
-			int ae = a.lines.get(ai + 1);
-			int be = b.lines.get(bi + 1);
+                var `as` = a.lines[ai]
+                var bs = b.lines[bi]
+                var ae = a.lines[ai + 1]
+                var be = b.lines[bi + 1]
 
-			ae = trimTrailingWhitespace(a.content, as, ae);
-			be = trimTrailingWhitespace(b.content, bs, be);
+                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
 
-			if (ae - as != be - bs)
-				return false;
+                while (`as` < ae && bs < be) {
+                    var ac = a.rawContent[`as`]
+                    var bc = b.rawContent[bs]
 
-			while (as < ae) {
-				if (a.content[as++] != b.content[bs++])
-					return false;
-			}
-			return true;
-		}
+                    while (`as` < ae - 1 && RawCharUtil.isWhitespace(ac)) {
+                        `as`++
+                        ac = a.rawContent[`as`]
+                    }
 
-		@Override
-		protected int hashRegion(byte[] raw, int ptr, int end) {
-			int hash = 5381;
-			end = trimTrailingWhitespace(raw, ptr, end);
-			for (; ptr < end; ptr++)
-				hash = ((hash << 5) + hash) + (raw[ptr] & 0xff);
-			return hash;
-		}
-	};
+                    while (bs < be - 1 && RawCharUtil.isWhitespace(bc)) {
+                        bs++
+                        bc = b.rawContent[bs]
+                    }
 
-	/** Ignores whitespace occurring between non-whitespace characters. */
-	public static final RawTextComparator WS_IGNORE_CHANGE = new RawTextComparator() {
-		@Override
-		public boolean equals(RawText a, int ai, RawText b, int bi) {
-			ai++;
-			bi++;
+                    if (ac != bc) return false
 
-			int as = a.lines.get(ai);
-			int bs = b.lines.get(bi);
-			int ae = a.lines.get(ai + 1);
-			int be = b.lines.get(bi + 1);
+                    `as`++
+                    bs++
+                }
 
-			ae = trimTrailingWhitespace(a.content, as, ae);
-			be = trimTrailingWhitespace(b.content, bs, be);
+                return `as` == ae && bs == be
+            }
 
-			while (as < ae && bs < be) {
-				byte ac = a.content[as++];
-				byte bc = b.content[bs++];
+            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+                var ptr = ptr
+                var hash = 5381
+                while (ptr < end) {
+                    val c = raw[ptr]
+                    if (!RawCharUtil.isWhitespace(c)) hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
+                    ptr++
+                }
+                return hash
+            }
+        }
 
-				if (isWhitespace(ac) && isWhitespace(bc)) {
-					as = trimLeadingWhitespace(a.content, as, ae);
-					bs = trimLeadingWhitespace(b.content, bs, be);
-				} else if (ac != bc) {
-					return false;
-				}
-			}
-			return as == ae && bs == be;
-		}
+        /**
+         * Ignore leading whitespace.
+         */
+		@JvmField
+		val WS_IGNORE_LEADING: RawTextComparator = object : RawTextComparator() {
+            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+                var ai = ai
+                var bi = bi
+                ai++
+                bi++
 
-		@Override
-		protected int hashRegion(byte[] raw, int ptr, int end) {
-			int hash = 5381;
-			end = trimTrailingWhitespace(raw, ptr, end);
-			while (ptr < end) {
-				byte c = raw[ptr++];
-				if (isWhitespace(c)) {
-					ptr = trimLeadingWhitespace(raw, ptr, end);
-					c = ' ';
-				}
-				hash = ((hash << 5) + hash) + (c & 0xff);
-			}
-			return hash;
-		}
-	};
+                var `as` = a.lines[ai]
+                var bs = b.lines[bi]
+                val ae = a.lines[ai + 1]
+                val be = b.lines[bi + 1]
 
-	@Override
-	public int hash(RawText seq, int lno) {
-		final int begin = seq.lines.get(lno + 1);
-		final int end = seq.lines.get(lno + 2);
-		return hashRegion(seq.content, begin, end);
-	}
+                `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
+                bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
 
-	@Override
-	public Edit reduceCommonStartEnd(RawText a, RawText b, Edit e) {
-		// This is a faster exact match based form that tries to improve
-		// performance for the common case of the header and trailer of
-		// a text file not changing at all. After this fast path we use
-		// the slower path based on the super class' using equals() to
-		// allow for whitespace ignore modes to still work.
+                if (ae - `as` != be - bs) return false
 
-		if (e.beginA == e.endA || e.beginB == e.endB)
-			return e;
+                while (`as` < ae) {
+                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
+                }
+                return true
+            }
 
-		byte[] aRaw = a.content;
-		byte[] bRaw = b.content;
+            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+                var ptr = ptr
+                var hash = 5381
+                ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
+                while (ptr < end) {
+                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
+                    ptr++
+                }
+                return hash
+            }
+        }
 
-		int aPtr = a.lines.get(e.beginA + 1);
-		int bPtr = a.lines.get(e.beginB + 1);
+        /** Ignores trailing whitespace.  */
+		@JvmField
+		val WS_IGNORE_TRAILING: RawTextComparator = object : RawTextComparator() {
+            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+                var ai = ai
+                var bi = bi
+                ai++
+                bi++
 
-		int aEnd = a.lines.get(e.endA + 1);
-		int bEnd = b.lines.get(e.endB + 1);
+                var `as` = a.lines[ai]
+                var bs = b.lines[bi]
+                var ae = a.lines[ai + 1]
+                var be = b.lines[bi + 1]
 
-		// This can never happen, but the JIT doesn't know that. If we
-		// define this assertion before the tight while loops below it
-		// should be able to skip the array bound checks on access.
-		//
-		if (aPtr < 0 || bPtr < 0 || aEnd > aRaw.length || bEnd > bRaw.length)
-			throw new ArrayIndexOutOfBoundsException();
+                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
 
-		while (aPtr < aEnd && bPtr < bEnd && aRaw[aPtr] == bRaw[bPtr]) {
-			aPtr++;
-			bPtr++;
-		}
+                if (ae - `as` != be - bs) return false
 
-		while (aPtr < aEnd && bPtr < bEnd && aRaw[aEnd - 1] == bRaw[bEnd - 1]) {
-			aEnd--;
-			bEnd--;
-		}
+                while (`as` < ae) {
+                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
+                }
+                return true
+            }
 
-		e.beginA = findForwardLine(a.lines, e.beginA, aPtr);
-		e.beginB = findForwardLine(b.lines, e.beginB, bPtr);
+            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+                var ptr = ptr
+                var end = end
+                var hash = 5381
+                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
+                while (ptr < end) {
+                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
+                    ptr++
+                }
+                return hash
+            }
+        }
 
-		e.endA = findReverseLine(a.lines, e.endA, aEnd);
+        /** Ignores whitespace occurring between non-whitespace characters.  */
+		@JvmField
+		val WS_IGNORE_CHANGE: RawTextComparator = object : RawTextComparator() {
+            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+                var ai = ai
+                var bi = bi
+                ai++
+                bi++
 
-		final boolean partialA = aEnd < a.lines.get(e.endA + 1);
-		if (partialA)
-			bEnd += a.lines.get(e.endA + 1) - aEnd;
+                var `as` = a.lines[ai]
+                var bs = b.lines[bi]
+                var ae = a.lines[ai + 1]
+                var be = b.lines[bi + 1]
 
-		e.endB = findReverseLine(b.lines, e.endB, bEnd);
+                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
 
-		if (!partialA && bEnd < b.lines.get(e.endB + 1))
-			e.endA++;
+                while (`as` < ae && bs < be) {
+                    val ac = a.rawContent[`as`++]
+                    val bc = b.rawContent[bs++]
 
-		return super.reduceCommonStartEnd(a, b, e);
-	}
+                    if (RawCharUtil.isWhitespace(ac) && RawCharUtil.isWhitespace(bc)) {
+                        `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
+                        bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
+                    } else if (ac != bc) {
+                        return false
+                    }
+                }
+                return `as` == ae && bs == be
+            }
 
-	private static int findForwardLine(IntList lines, int idx, int ptr) {
-		final int end = lines.size() - 2;
-		while (idx < end && lines.get(idx + 2) < ptr)
-			idx++;
-		return idx;
-	}
+            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+                var ptr = ptr
+                var end = end
+                var hash = 5381
+                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
+                while (ptr < end) {
+                    var c = raw[ptr++]
+                    if (RawCharUtil.isWhitespace(c)) {
+                        ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
+                        c = ' '.code.toByte()
+                    }
+                    hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
+                }
+                return hash
+            }
+        }
 
-	private static int findReverseLine(IntList lines, int idx, int ptr) {
-		while (0 < idx && ptr <= lines.get(idx))
-			idx--;
-		return idx;
-	}
+        private fun findForwardLine(lines: IntList, idx: Int, ptr: Int): Int {
+            var idx = idx
+            val end = lines.size() - 2
+            while (idx < end && lines[idx + 2] < ptr) idx++
+            return idx
+        }
 
-	/**
-	 * Compute a hash code for a region.
-	 *
-	 * @param raw
-	 *            the raw file content.
-	 * @param ptr
-	 *            first byte of the region to hash.
-	 * @param end
-	 *            1 past the last byte of the region.
-	 * @return hash code for the region <code>[ptr, end)</code> of raw.
-	 */
-	protected abstract int hashRegion(byte[] raw, int ptr, int end);
+        private fun findReverseLine(lines: IntList, idx: Int, ptr: Int): Int {
+            var idx = idx
+            while (0 < idx && ptr <= lines[idx]) idx--
+            return idx
+        }
+    }
 }

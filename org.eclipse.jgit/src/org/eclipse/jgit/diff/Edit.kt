@@ -7,256 +7,224 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.diff;
+package org.eclipse.jgit.diff
 
 /**
  * A modified region detected between two versions of roughly the same content.
- * <p>
+ *
+ *
  * An edit covers the modified region only. It does not cover a common region.
- * <p>
+ *
+ *
  * Regions should be specified using 0 based notation, so add 1 to the start and
  * end marks for line numbers in a file.
- * <p>
- * An edit where {@code beginA == endA && beginB < endB} is an insert edit, that
- * is sequence B inserted the elements in region <code>[beginB, endB)</code> at
- * <code>beginA</code>.
- * <p>
- * An edit where {@code beginA < endA && beginB == endB} is a delete edit, that
- * is sequence B has removed the elements between <code>[beginA, endA)</code>.
- * <p>
- * An edit where {@code beginA < endA && beginB < endB} is a replace edit, that
+ *
+ *
+ * An edit where `beginA == endA && beginB < endB` is an insert edit, that
+ * is sequence B inserted the elements in region `[beginB, endB)` at
+ * `beginA`.
+ *
+ *
+ * An edit where `beginA < endA && beginB == endB` is a delete edit, that
+ * is sequence B has removed the elements between `[beginA, endA)`.
+ *
+ *
+ * An edit where `beginA < endA && beginB < endB` is a replace edit, that
  * is sequence B has replaced the range of elements between
- * <code>[beginA, endA)</code> with those found in <code>[beginB, endB)</code>.
+ * `[beginA, endA)` with those found in `[beginB, endB)`.
  */
-public class Edit {
-	/** Type of edit */
-	public enum Type {
-		/** Sequence B has inserted the region. */
-		INSERT,
-
-		/** Sequence B has removed the region. */
-		DELETE,
-
-		/** Sequence B has replaced the region with different content. */
-		REPLACE,
-
-		/** Sequence A and B have zero length, describing nothing. */
-		EMPTY;
-	}
-
-	int beginA;
-
-	int endA;
-
-	int beginB;
-
-	int endB;
-
+class Edit
+/**
+ * Create a new edit.
+ *
+ * @param as
+ * beginA: start of region in sequence A; 0 based.
+ * @param ae
+ * endA: end of region in sequence A; must be &gt;= as.
+ * @param bs
+ * beginB: start of region in sequence B; 0 based.
+ * @param be
+ * endB: end of region in sequence B; must be &gt; = bs.
+ */(
 	/**
-	 * Create a new empty edit.
-	 *
-	 * @param as
-	 *            beginA: start and end of region in sequence A; 0 based.
-	 * @param bs
-	 *            beginB: start and end of region in sequence B; 0 based.
-	 */
-	public Edit(int as, int bs) {
-		this(as, as, bs, bs);
-	}
-
+     * Get start point in sequence A
+     *
+     * @return start point in sequence A
+     */
+	@JvmField var beginA: Int,
 	/**
-	 * Create a new edit.
-	 *
-	 * @param as
-	 *            beginA: start of region in sequence A; 0 based.
-	 * @param ae
-	 *            endA: end of region in sequence A; must be &gt;= as.
-	 * @param bs
-	 *            beginB: start of region in sequence B; 0 based.
-	 * @param be
-	 *            endB: end of region in sequence B; must be &gt; = bs.
-	 */
-	public Edit(int as, int ae, int bs, int be) {
-		beginA = as;
-		endA = ae;
-
-		beginB = bs;
-		endB = be;
-	}
-
+     * Get end point in sequence A
+     *
+     * @return end point in sequence A
+     */
+	@JvmField var endA: Int,
 	/**
-	 * Get type
-	 *
-	 * @return the type of this region
-	 */
-	public final Type getType() {
-		if (beginA < endA) {
-			if (beginB < endB) {
-				return Type.REPLACE;
-			}
-			return Type.DELETE;
-
-		}
-		if (beginB < endB) {
-			return Type.INSERT;
-		}
-		// beginB == endB)
-		return Type.EMPTY;
-	}
-
+     * Get start point in sequence B
+     *
+     * @return start point in sequence B
+     */
+	@JvmField var beginB: Int,
 	/**
-	 * Whether edit is empty
-	 *
-	 * @return {@code true} if the edit is empty (lengths of both a and b is
-	 *         zero)
-	 */
-	public final boolean isEmpty() {
-		return beginA == endA && beginB == endB;
-	}
+     * Get end point in sequence B
+     *
+     * @return end point in sequence B
+     */
+	@JvmField var endB: Int
+) {
+    /** Type of edit  */
+    enum class Type {
+        /** Sequence B has inserted the region.  */
+        INSERT,
 
-	/**
-	 * Get start point in sequence A
-	 *
-	 * @return start point in sequence A
-	 */
-	public final int getBeginA() {
-		return beginA;
-	}
+        /** Sequence B has removed the region.  */
+        DELETE,
 
-	/**
-	 * Get end point in sequence A
-	 *
-	 * @return end point in sequence A
-	 */
-	public final int getEndA() {
-		return endA;
-	}
+        /** Sequence B has replaced the region with different content.  */
+        REPLACE,
 
-	/**
-	 * Get start point in sequence B
-	 *
-	 * @return start point in sequence B
-	 */
-	public final int getBeginB() {
-		return beginB;
-	}
+        /** Sequence A and B have zero length, describing nothing.  */
+        EMPTY
+    }
 
-	/**
-	 * Get end point in sequence B
-	 *
-	 * @return end point in sequence B
-	 */
-	public final int getEndB() {
-		return endB;
-	}
+    /**
+     * Create a new empty edit.
+     *
+     * @param as
+     * beginA: start and end of region in sequence A; 0 based.
+     * @param bs
+     * beginB: start and end of region in sequence B; 0 based.
+     */
+    constructor(`as`: Int, bs: Int) : this(`as`, `as`, bs, bs)
 
-	/**
-	 * Get length of the region in A
-	 *
-	 * @return length of the region in A
-	 */
-	public final int getLengthA() {
-		return endA - beginA;
-	}
+    val type: Type
+        /**
+         * Get type
+         *
+         * @return the type of this region
+         */
+        get() {
+            if (beginA < endA) {
+                if (beginB < endB) {
+                    return Type.REPLACE
+                }
+                return Type.DELETE
+            }
+            if (beginB < endB) {
+                return Type.INSERT
+            }
+            // beginB == endB)
+            return Type.EMPTY
+        }
 
-	/**
-	 * Get length of the region in B
-	 *
-	 * @return return length of the region in B
-	 */
-	public final int getLengthB() {
-		return endB - beginB;
-	}
+    val isEmpty: Boolean
+        /**
+         * Whether edit is empty
+         *
+         * @return `true` if the edit is empty (lengths of both a and b is
+         * zero)
+         */
+        get() = beginA == endA && beginB == endB
 
-	/**
-	 * Move the edit region by the specified amount.
-	 *
-	 * @param amount
-	 *            the region is shifted by this amount, and can be positive or
-	 *            negative.
-	 * @since 4.8
-	 */
-	public final void shift(int amount) {
-		beginA += amount;
-		endA += amount;
-		beginB += amount;
-		endB += amount;
-	}
+    val lengthA: Int
+        /**
+         * Get length of the region in A
+         *
+         * @return length of the region in A
+         */
+        get() = endA - beginA
 
-	/**
-	 * Construct a new edit representing the region before cut.
-	 *
-	 * @param cut
-	 *            the cut point. The beginning A and B points are used as the
-	 *            end points of the returned edit.
-	 * @return an edit representing the slice of {@code this} edit that occurs
-	 *         before {@code cut} starts.
-	 */
-	public final Edit before(Edit cut) {
-		return new Edit(beginA, cut.beginA, beginB, cut.beginB);
-	}
+    val lengthB: Int
+        /**
+         * Get length of the region in B
+         *
+         * @return return length of the region in B
+         */
+        get() = endB - beginB
 
-	/**
-	 * Construct a new edit representing the region after cut.
-	 *
-	 * @param cut
-	 *            the cut point. The ending A and B points are used as the
-	 *            starting points of the returned edit.
-	 * @return an edit representing the slice of {@code this} edit that occurs
-	 *         after {@code cut} ends.
-	 */
-	public final Edit after(Edit cut) {
-		return new Edit(cut.endA, endA, cut.endB, endB);
-	}
+    /**
+     * Move the edit region by the specified amount.
+     *
+     * @param amount
+     * the region is shifted by this amount, and can be positive or
+     * negative.
+     * @since 4.8
+     */
+    fun shift(amount: Int) {
+        beginA += amount
+        endA += amount
+        beginB += amount
+        endB += amount
+    }
 
-	/**
-	 * Increase {@link #getEndA()} by 1.
-	 */
-	public void extendA() {
-		endA++;
-	}
+    /**
+     * Construct a new edit representing the region before cut.
+     *
+     * @param cut
+     * the cut point. The beginning A and B points are used as the
+     * end points of the returned edit.
+     * @return an edit representing the slice of `this` edit that occurs
+     * before `cut` starts.
+     */
+    fun before(cut: Edit): Edit {
+        return Edit(beginA, cut.beginA, beginB, cut.beginB)
+    }
 
-	/**
-	 * Increase {@link #getEndB()} by 1.
-	 */
-	public void extendB() {
-		endB++;
-	}
+    /**
+     * Construct a new edit representing the region after cut.
+     *
+     * @param cut
+     * the cut point. The ending A and B points are used as the
+     * starting points of the returned edit.
+     * @return an edit representing the slice of `this` edit that occurs
+     * after `cut` ends.
+     */
+    fun after(cut: Edit): Edit {
+        return Edit(cut.endA, endA, cut.endB, endB)
+    }
 
-	/**
-	 * Swap A and B, so the edit goes the other direction.
-	 */
-	public void swap() {
-		final int sBegin = beginA;
-		final int sEnd = endA;
+    /**
+     * Increase [.getEndA] by 1.
+     */
+    fun extendA() {
+        endA++
+    }
 
-		beginA = beginB;
-		endA = endB;
+    /**
+     * Increase [.getEndB] by 1.
+     */
+    fun extendB() {
+        endB++
+    }
 
-		beginB = sBegin;
-		endB = sEnd;
-	}
+    /**
+     * Swap A and B, so the edit goes the other direction.
+     */
+    fun swap() {
+        val sBegin = beginA
+        val sEnd = endA
 
-	@Override
-	public int hashCode() {
-		return beginA ^ endA;
-	}
+        beginA = beginB
+        endA = endB
 
-	@Override
-	public boolean equals(Object o) {
-		if (o instanceof Edit) {
-			final Edit e = (Edit) o;
-			return this.beginA == e.beginA && this.endA == e.endA
-					&& this.beginB == e.beginB && this.endB == e.endB;
-		}
-		return false;
-	}
+        beginB = sBegin
+        endB = sEnd
+    }
 
-	@SuppressWarnings("nls")
-	@Override
-	public String toString() {
-		final Type t = getType();
-		return t + "(" + beginA + "-" + endA + "," + beginB + "-" + endB + ")";
-	}
+    override fun hashCode(): Int {
+        return beginA xor endA
+    }
+
+    override fun equals(o: Any?): Boolean {
+        if (o is Edit) {
+            val e = o
+            return this.beginA == e.beginA && (this.endA == e.endA
+                ) && (this.beginB == e.beginB) && (this.endB == e.endB)
+        }
+        return false
+    }
+
+    override fun toString(): String {
+        val t = type
+        return "$t($beginA-$endA,$beginB-$endB)"
+    }
 }

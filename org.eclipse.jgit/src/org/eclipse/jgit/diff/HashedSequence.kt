@@ -7,35 +7,26 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.diff;
+package org.eclipse.jgit.diff
 
 /**
- * Wraps a {@link org.eclipse.jgit.diff.Sequence} to assign hash codes to
+ * Wraps a [org.eclipse.jgit.diff.Sequence] to assign hash codes to
  * elements.
- * <p>
+ *
+ *
  * This sequence acts as a proxy for the real sequence, caching element hash
  * codes so they don't need to be recomputed each time. Sequences of this type
- * must be used with a {@link org.eclipse.jgit.diff.HashedSequenceComparator}.
- * <p>
+ * must be used with a [org.eclipse.jgit.diff.HashedSequenceComparator].
+ *
+ *
  * To construct an instance of this type use
- * {@link org.eclipse.jgit.diff.HashedSequencePair}.
+ * [org.eclipse.jgit.diff.HashedSequencePair].
  *
  * @param <S>
- *            the base sequence type.
- */
-public final class HashedSequence<S extends Sequence> extends Sequence {
-	final S base;
-
-	final int[] hashes;
-
-	HashedSequence(S base, int[] hashes) {
-		this.base = base;
-		this.hashes = hashes;
-	}
-
-	@Override
-	public int size() {
-		return base.size();
-	}
+ * the base sequence type.
+</S> */
+class HashedSequence<S : Sequence> internal constructor(val base: S, val hashes: IntArray) : Sequence() {
+    override fun size(): Int {
+        return base.size()
+    }
 }

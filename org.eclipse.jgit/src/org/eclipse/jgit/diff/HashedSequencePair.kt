@@ -7,82 +7,68 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.diff;
+package org.eclipse.jgit.diff
 
 /**
- * Wraps two {@link org.eclipse.jgit.diff.Sequence} instances to cache their
+ * Wraps two [org.eclipse.jgit.diff.Sequence] instances to cache their
  * element hash codes.
- * <p>
+ *
+ *
  * This pair wraps two sequences that contain cached hash codes for the input
  * sequences.
  *
  * @param <S>
- *            the base sequence type.
- */
-public class HashedSequencePair<S extends Sequence> {
-	private final SequenceComparator<? super S> cmp;
+ * the base sequence type.
+</S> */
+class HashedSequencePair<S : Sequence>
+/**
+ * Construct a pair to provide fast hash codes.
+ *
+ * @param cmp
+ * the base comparator for the sequence elements.
+ * @param a
+ * the A sequence.
+ * @param b
+ * the B sequence.
+ */(private val cmp: SequenceComparator<in S>, private val baseA: S, private val baseB: S) {
+    private var cachedA: HashedSequence<S>? = null
 
-	private final S baseA;
+    private var cachedB: HashedSequence<S>? = null
 
-	private final S baseB;
+    val comparator: HashedSequenceComparator<S>
+        /**
+         * Get comparator
+         *
+         * @return obtain a comparator that uses the cached hash codes
+         */
+        get() = HashedSequenceComparator(cmp)
 
-	private HashedSequence<S> cachedA;
+    val a: HashedSequence<S>
+        /**
+         * Get A
+         *
+         * @return wrapper around A that includes cached hash codes
+         */
+        get() {
+            if (cachedA == null) cachedA = wrap(baseA)
+            return cachedA!!
+        }
 
-	private HashedSequence<S> cachedB;
+    val b: HashedSequence<S>
+        /**
+         * Get B
+         *
+         * @return wrapper around B that includes cached hash codes
+         */
+        get() {
+            if (cachedB == null) cachedB = wrap(baseB)
+            return cachedB!!
+        }
 
-	/**
-	 * Construct a pair to provide fast hash codes.
-	 *
-	 * @param cmp
-	 *            the base comparator for the sequence elements.
-	 * @param a
-	 *            the A sequence.
-	 * @param b
-	 *            the B sequence.
-	 */
-	public HashedSequencePair(SequenceComparator<? super S> cmp, S a, S b) {
-		this.cmp = cmp;
-		this.baseA = a;
-		this.baseB = b;
-	}
-
-	/**
-	 * Get comparator
-	 *
-	 * @return obtain a comparator that uses the cached hash codes
-	 */
-	public HashedSequenceComparator<S> getComparator() {
-		return new HashedSequenceComparator<>(cmp);
-	}
-
-	/**
-	 * Get A
-	 *
-	 * @return wrapper around A that includes cached hash codes
-	 */
-	public HashedSequence<S> getA() {
-		if (cachedA == null)
-			cachedA = wrap(baseA);
-		return cachedA;
-	}
-
-	/**
-	 * Get B
-	 *
-	 * @return wrapper around B that includes cached hash codes
-	 */
-	public HashedSequence<S> getB() {
-		if (cachedB == null)
-			cachedB = wrap(baseB);
-		return cachedB;
-	}
-
-	private HashedSequence<S> wrap(S base) {
-		final int end = base.size();
-		final int[] hashes = new int[end];
-		for (int ptr = 0; ptr < end; ptr++)
-			hashes[ptr] = cmp.hash(base, ptr);
-		return new HashedSequence<>(base, hashes);
-	}
+    private fun wrap(base: S): HashedSequence<S> {
+        val end = base!!.size()
+        val hashes = IntArray(end)
+        for (ptr in 0 until end) hashes[ptr] = cmp.hash(base, ptr)
+        return HashedSequence(base, hashes)
+    }
 }

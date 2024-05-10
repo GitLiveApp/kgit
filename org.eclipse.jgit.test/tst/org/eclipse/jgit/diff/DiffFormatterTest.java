@@ -123,10 +123,10 @@ public class DiffFormatterTest extends RepositoryTestCase {
 		assertEquals(1, el.size());
 
 		Edit e = el.get(0);
-		assertEquals(0, e.getBeginA());
-		assertEquals(0, e.getEndA());
-		assertEquals(0, e.getBeginB());
-		assertEquals(2, e.getEndB());
+		assertEquals(0, e.beginA);
+		assertEquals(0, e.endA);
+		assertEquals(0, e.beginB);
+		assertEquals(2, e.endB);
 		assertEquals(Edit.Type.INSERT, e.getType());
 	}
 
@@ -159,10 +159,10 @@ public class DiffFormatterTest extends RepositoryTestCase {
 		assertEquals(1, el.size());
 
 		Edit e = el.get(0);
-		assertEquals(0, e.getBeginA());
-		assertEquals(2, e.getEndA());
-		assertEquals(0, e.getBeginB());
-		assertEquals(0, e.getEndB());
+		assertEquals(0, e.beginA);
+		assertEquals(2, e.endA);
+		assertEquals(0, e.beginB);
+		assertEquals(0, e.endB);
 		assertEquals(Edit.Type.DELETE, e.getType());
 	}
 
@@ -194,10 +194,10 @@ public class DiffFormatterTest extends RepositoryTestCase {
 		assertEquals(1, el.size());
 
 		Edit e = el.get(0);
-		assertEquals(1, e.getBeginA());
-		assertEquals(1, e.getEndA());
-		assertEquals(1, e.getBeginB());
-		assertEquals(3, e.getEndB());
+		assertEquals(1, e.beginA);
+		assertEquals(1, e.endA);
+		assertEquals(1, e.beginB);
+		assertEquals(3, e.endB);
 		assertEquals(Edit.Type.INSERT, e.getType());
 	}
 
@@ -273,10 +273,10 @@ public class DiffFormatterTest extends RepositoryTestCase {
 		assertEquals(1, el.size());
 
 		Edit e = el.get(0);
-		assertEquals(0, e.getBeginA());
-		assertEquals(0, e.getEndA());
-		assertEquals(0, e.getBeginB());
-		assertEquals(1, e.getEndB());
+		assertEquals(0, e.beginA);
+		assertEquals(0, e.endA);
+		assertEquals(0, e.beginB);
+		assertEquals(1, e.endB);
 		assertEquals(Edit.Type.INSERT, e.getType());
 	}
 
@@ -304,10 +304,10 @@ public class DiffFormatterTest extends RepositoryTestCase {
 		assertEquals(1, el.size());
 
 		Edit e = el.get(0);
-		assertEquals(0, e.getBeginA());
-		assertEquals(1, e.getEndA());
-		assertEquals(0, e.getBeginB());
-		assertEquals(0, e.getEndB());
+		assertEquals(0, e.beginA);
+		assertEquals(1, e.endA);
+		assertEquals(0, e.beginB);
+		assertEquals(0, e.endB);
 		assertEquals(Edit.Type.DELETE, e.getType());
 	}
 

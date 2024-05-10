@@ -7,13 +7,13 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.util;
+package org.eclipse.jgit.util
 
 /**
  * A boxed integer that can be modified.
  */
-public final class MutableInteger {
-	/** Current value of this boxed value. */
-	public int value;
+class MutableInteger {
+    /** Current value of this boxed value.  */
+	@JvmField
+	var value: Int = 0
 }
