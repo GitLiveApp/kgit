@@ -7,52 +7,34 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.util.*
 
 /**
  * An exception detailing multiple reasons for failure.
  */
-public class CompoundException extends Exception {
-	private static final long serialVersionUID = 1L;
+class CompoundException(why: Collection<Throwable>) : Exception(format(why)) {
+    /**
+     * Get the complete list of reasons why this failure happened.
+     *
+     * @return unmodifiable collection of all possible reasons.
+     */
+    val allCauses: List<Throwable> = Collections.unmodifiableList(ArrayList(why))
 
-	private static String format(Collection<Throwable> causes) {
-		final StringBuilder msg = new StringBuilder();
-		msg.append(JGitText.get().failureDueToOneOfTheFollowing);
-		for (Throwable c : causes) {
-			msg.append("  "); //$NON-NLS-1$
-			msg.append(c.getMessage());
-			msg.append("\n"); //$NON-NLS-1$
-		}
-		return msg.toString();
-	}
+    companion object {
+        private const val serialVersionUID = 1L
 
-	private final List<Throwable> causeList;
-
-	/**
-	 * Constructs an exception detailing many potential reasons for failure.
-	 *
-	 * @param why
-	 *            Two or more exceptions that may have been the problem.
-	 */
-	public CompoundException(Collection<Throwable> why) {
-		super(format(why));
-		causeList = Collections.unmodifiableList(new ArrayList<>(why));
-	}
-
-	/**
-	 * Get the complete list of reasons why this failure happened.
-	 *
-	 * @return unmodifiable collection of all possible reasons.
-	 */
-	public List<Throwable> getAllCauses() {
-		return causeList;
-	}
+        private fun format(causes: Collection<Throwable>): String {
+            val msg = StringBuilder()
+            msg.append(JGitText.get().failureDueToOneOfTheFollowing)
+            for (c in causes) {
+                msg.append("  ") //$NON-NLS-1$
+                msg.append(c.message)
+                msg.append("\n") //$NON-NLS-1$
+            }
+            return msg.toString()
+        }
+    }
 }

@@ -7,7 +7,7 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * BinaryBlobException is used to signal that binary data was found
@@ -15,16 +15,17 @@ package org.eclipse.jgit.errors;
  *
  * @since 4.10
  */
-public class BinaryBlobException extends Exception {
-	private static final long serialVersionUID = 1L;
+class BinaryBlobException
+/**
+ * Construct a BinaryBlobException.
+ */
+    : Exception() {
+    @Synchronized
+    override fun fillInStackTrace(): Throwable {
+        return this
+    }
 
-	/**
-	 * Construct a BinaryBlobException.
-	 */
-	public BinaryBlobException() {}
-
-	@Override
-	public synchronized Throwable fillInStackTrace() {
-		return this;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

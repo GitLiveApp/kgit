@@ -7,23 +7,21 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * A previously selected representation is no longer available.
  */
-public class StoredObjectRepresentationNotAvailableException extends Exception {
-
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Creates a new instance.
-	 *
-	 * @param cause
-	 *            {@link Throwable} that caused this exception
-	 * @since 6.0
-	 */
-	public StoredObjectRepresentationNotAvailableException(Throwable cause) {
-		super(cause);
-	}
+class StoredObjectRepresentationNotAvailableException
+/**
+ * Creates a new instance.
+ *
+ * @param cause
+ * [Throwable] that caused this exception
+ * @since 6.0
+ */
+    (cause: Throwable?) : Exception(cause) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

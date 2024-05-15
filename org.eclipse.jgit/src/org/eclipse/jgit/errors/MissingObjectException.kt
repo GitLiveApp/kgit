@@ -10,69 +10,72 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.lib.AbbreviatedObjectId;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.internal.JGitText
+import org.eclipse.jgit.lib.AbbreviatedObjectId
+import org.eclipse.jgit.lib.Constants.typeString
+import org.eclipse.jgit.lib.ObjectId
+import java.io.IOException
+import java.text.MessageFormat
 
 /**
  * An expected object is missing.
  */
-public class MissingObjectException extends IOException {
-	private static final long serialVersionUID = 1L;
+class MissingObjectException : IOException {
+    /**
+     * Get the ObjectId that was not found
+     *
+     * @return the ObjectId that was not found
+     */
+    val objectId: ObjectId?
 
-	private final ObjectId missing;
+    /**
+     * Construct a MissingObjectException for the specified object id.
+     * Expected type is reported to simplify tracking down the problem.
+     *
+     * @param id SHA-1
+     * @param type object type
+     */
+    constructor(id: ObjectId, type: String?) : super(
+        MessageFormat.format(
+            JGitText.get().missingObject,
+            type,
+            id.name()
+        )
+    ) {
+        objectId = id.copy()
+    }
 
-	/**
-	 * Construct a MissingObjectException for the specified object id.
-	 * Expected type is reported to simplify tracking down the problem.
-	 *
-	 * @param id SHA-1
-	 * @param type object type
-	 */
-	public MissingObjectException(ObjectId id, String type) {
-		super(MessageFormat.format(JGitText.get().missingObject, type, id.name()));
-		missing = id.copy();
-	}
+    /**
+     * Construct a MissingObjectException for the specified object id.
+     * Expected type is reported to simplify tracking down the problem.
+     *
+     * @param id SHA-1
+     * @param type object type
+     */
+    constructor(id: ObjectId, type: Int) : this(id, typeString(type))
 
-	/**
-	 * Construct a MissingObjectException for the specified object id.
-	 * Expected type is reported to simplify tracking down the problem.
-	 *
-	 * @param id SHA-1
-	 * @param type object type
-	 */
-	public MissingObjectException(ObjectId id, int type) {
-		this(id, Constants.typeString(type));
-	}
+    /**
+     * Construct a MissingObjectException for the specified object id. Expected
+     * type is reported to simplify tracking down the problem.
+     *
+     * @param id
+     * SHA-1
+     * @param type
+     * object type
+     */
+    constructor(id: AbbreviatedObjectId, type: Int) : super(
+        MessageFormat.format(
+            JGitText.get().missingObject,
+            typeString(type),
+            id.name()
+        )
+    ) {
+        objectId = null
+    }
 
-	/**
-	 * Construct a MissingObjectException for the specified object id. Expected
-	 * type is reported to simplify tracking down the problem.
-	 *
-	 * @param id
-	 *            SHA-1
-	 * @param type
-	 *            object type
-	 */
-	public MissingObjectException(AbbreviatedObjectId id, int type) {
-		super(MessageFormat.format(JGitText.get().missingObject, Constants
-				.typeString(type), id.name()));
-		missing = null;
-	}
-
-	/**
-	 * Get the ObjectId that was not found
-	 *
-	 * @return the ObjectId that was not found
-	 */
-	public ObjectId getObjectId() {
-		return missing;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

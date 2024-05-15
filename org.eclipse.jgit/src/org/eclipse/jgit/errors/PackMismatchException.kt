@@ -7,48 +7,38 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
+import java.io.IOException
 
 /**
  * Thrown when a Pack no longer matches the PackIndex.
  */
-public class PackMismatchException extends IOException {
-	private static final long serialVersionUID = 1L;
+class PackMismatchException
+/**
+ * Construct a pack modification error.
+ *
+ * @param why
+ * description of the type of error.
+ */
+    (why: String?) : IOException(why) {
+    /**
+     * Check if this is a permanent problem
+     *
+     * @return if this is a permanent problem and repeatedly scanning the
+     * packlist couldn't fix it
+     * @since 5.9.1
+     */
+    /**
+     * Set the type of the exception
+     *
+     * @param permanent
+     * whether the exception is considered permanent
+     * @since 5.9.1
+     */
+    var isPermanent: Boolean = false
 
-	private boolean permanent;
-
-	/**
-	 * Construct a pack modification error.
-	 *
-	 * @param why
-	 *            description of the type of error.
-	 */
-	public PackMismatchException(String why) {
-		super(why);
-	}
-
-	/**
-	 * Set the type of the exception
-	 *
-	 * @param permanent
-	 *            whether the exception is considered permanent
-	 * @since 5.9.1
-	 */
-	public void setPermanent(boolean permanent) {
-		this.permanent = permanent;
-	}
-
-	/**
-	 * Check if this is a permanent problem
-	 *
-	 * @return if this is a permanent problem and repeatedly scanning the
-	 *         packlist couldn't fix it
-	 * @since 5.9.1
-	 */
-	public boolean isPermanent() {
-		return permanent;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

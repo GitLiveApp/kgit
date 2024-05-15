@@ -35,43 +35,39 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
-import java.io.IOException;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.IOException
 
 /**
  * Cannot write a modified index. This is a serious error that users need to be
  * made aware of.
  */
-public class IndexWriteException extends IOException {
-	private static final long serialVersionUID = 1L;
+class IndexWriteException : IOException {
+    /**
+     * Constructs an IndexWriteException with the default message.
+     */
+    constructor() : super(JGitText.get().indexWriteException)
 
-	/**
-	 * Constructs an IndexWriteException with the default message.
-	 */
-	public IndexWriteException() {
-		super(JGitText.get().indexWriteException);
-	}
+    /**
+     * Constructs an IndexWriteException with the specified detail message.
+     *
+     * @param s message
+     */
+    constructor(s: String?) : super(s)
 
-	/**
-	 * Constructs an IndexWriteException with the specified detail message.
-	 *
-	 * @param s message
-	 */
-	public IndexWriteException(String s) {
-		super(s);
-	}
+    /**
+     * Constructs an IndexWriteException with the specified detail message.
+     *
+     * @param s message
+     * @param cause root cause exception
+     */
+    constructor(s: String?, cause: Throwable?) : super(s) {
+        initCause(cause)
+    }
 
-	/**
-	 * Constructs an IndexWriteException with the specified detail message.
-	 *
-	 * @param s message
-	 * @param cause root cause exception
-	 */
-	public IndexWriteException(String s, Throwable cause) {
-		super(s);
-		initCause(cause);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

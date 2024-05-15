@@ -7,22 +7,16 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
 
 /**
- * Indicates a {@link org.eclipse.jgit.lib.Repository} has no working directory,
+ * Indicates a [org.eclipse.jgit.lib.Repository] has no working directory,
  * and is thus bare.
  */
-public class NoWorkTreeException extends IllegalStateException {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Creates an exception indicating there is no work tree for a repository.
-	 */
-	public NoWorkTreeException() {
-		super(JGitText.get().bareRepositoryNoWorkdirAndIndex);
-	}
+class NoWorkTreeException : IllegalStateException(JGitText.get().bareRepositoryNoWorkdirAndIndex) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

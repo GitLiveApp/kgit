@@ -7,46 +7,42 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * Thrown when a thread executing a diff is interrupted
  *
  * @see org.eclipse.jgit.diff.MyersDiff
+ *
  * @since 4.0
  */
-public class DiffInterruptedException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+class DiffInterruptedException : RuntimeException {
+    /**
+     * Constructor for DiffInterruptedException
+     *
+     * @param message
+     * error message
+     * @param cause
+     * a [java.lang.Throwable]
+     * @since 4.1
+     */
+    constructor(message: String?, cause: Throwable?) : super(message, cause)
 
-	/**
-	 * Constructor for DiffInterruptedException
-	 *
-	 * @param message
-	 *            error message
-	 * @param cause
-	 *            a {@link java.lang.Throwable}
-	 * @since 4.1
-	 */
-	public DiffInterruptedException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    /**
+     * Constructor for DiffInterruptedException
+     *
+     * @param message
+     * error message
+     * @since 4.1
+     */
+    constructor(message: String?) : super(message)
 
-	/**
-	 * Constructor for DiffInterruptedException
-	 *
-	 * @param message
-	 *            error message
-	 * @since 4.1
-	 */
-	public DiffInterruptedException(String message) {
-		super(message);
-	}
+    /**
+     * Indicates that the thread computing a diff was interrupted.
+     */
+    constructor() : super()
 
-	/**
-	 * Indicates that the thread computing a diff was interrupted.
-	 */
-	public DiffInterruptedException() {
-		super();
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

@@ -9,50 +9,46 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import static java.nio.charset.StandardCharsets.US_ASCII;
-
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.nio.charset.StandardCharsets
+import java.text.MessageFormat
 
 /**
  * Thrown when an invalid object id is passed in as an argument.
  */
-public class InvalidObjectIdException extends IllegalArgumentException {
-	private static final long serialVersionUID = 1L;
+class InvalidObjectIdException : IllegalArgumentException {
+    /**
+     * Create exception with bytes of the invalid object id.
+     *
+     * @param bytes containing the invalid id.
+     * @param offset in the byte array where the error occurred.
+     * @param length of the sequence of invalid bytes.
+     */
+    constructor(bytes: ByteArray, offset: Int, length: Int) : super(msg(bytes, offset, length))
 
-	/**
-	 * Create exception with bytes of the invalid object id.
-	 *
-	 * @param bytes containing the invalid id.
-	 * @param offset in the byte array where the error occurred.
-	 * @param length of the sequence of invalid bytes.
-	 */
-	public InvalidObjectIdException(byte[] bytes, int offset, int length) {
-		super(msg(bytes, offset, length));
-	}
+    /**
+     * Constructor for InvalidObjectIdException
+     *
+     * @param id
+     * the invalid id.
+     * @since 4.1
+     */
+    constructor(id: String?) : super(MessageFormat.format(JGitText.get().invalidId, id))
 
-	/**
-	 * Constructor for InvalidObjectIdException
-	 *
-	 * @param id
-	 *            the invalid id.
-	 * @since 4.1
-	 */
-	public InvalidObjectIdException(String id) {
-		super(MessageFormat.format(JGitText.get().invalidId, id));
-	}
+    companion object {
+        private const val serialVersionUID = 1L
 
-	private static String msg(byte[] bytes, int offset, int length) {
-		try {
-			return MessageFormat.format(
-					JGitText.get().invalidId,
-					new String(bytes, offset, length, US_ASCII));
-		} catch (StringIndexOutOfBoundsException e) {
-			return JGitText.get().invalidId0;
-		}
-	}
+        private fun msg(bytes: ByteArray, offset: Int, length: Int): String {
+            return try {
+                MessageFormat.format(
+                    JGitText.get().invalidId,
+                    String(bytes, offset, length, StandardCharsets.US_ASCII)
+                )
+            } catch (e: StringIndexOutOfBoundsException) {
+                JGitText.get().invalidId0
+            }
+        }
+    }
 }

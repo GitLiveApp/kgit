@@ -7,30 +7,31 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.IOException
+import java.text.MessageFormat
 
 /**
  * Thrown when a PackIndex uses an index version not supported by JGit.
  *
  * @since 4.5
  */
-public class UnsupportedPackIndexVersionException extends IOException {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Construct an exception.
-	 *
-	 * @param version
-	 *            pack index version
-	 */
-	public UnsupportedPackIndexVersionException(int version) {
-		super(MessageFormat.format(JGitText.get().unsupportedPackIndexVersion,
-				Integer.valueOf(version)));
-	}
+class UnsupportedPackIndexVersionException
+/**
+ * Construct an exception.
+ *
+ * @param version
+ * pack index version
+ */
+    (version: Int) : IOException(
+    MessageFormat.format(
+        JGitText.get().unsupportedPackIndexVersion,
+        version
+    )
+) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

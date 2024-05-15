@@ -7,27 +7,26 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.IOException
 
 /**
  * Indicates a ReceivePack failure while scanning the pack stream.
  */
-public class UnpackException extends IOException {
-	private static final long serialVersionUID = 1L;
+class UnpackException(why: Throwable?) : IOException(JGitText.get().unpackException) {
+    /**
+     * Creates an exception with a root cause.
+     *
+     * @param why
+     * the root cause of the unpacking failure.
+     */
+    init {
+        initCause(why)
+    }
 
-	/**
-	 * Creates an exception with a root cause.
-	 *
-	 * @param why
-	 *            the root cause of the unpacking failure.
-	 */
-	public UnpackException(Throwable why) {
-		super(JGitText.get().unpackException);
-		initCause(why);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

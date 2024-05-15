@@ -604,7 +604,7 @@ object Constants {
     @JvmStatic
 	@Throws(CorruptObjectException::class)
     fun decodeTypeString(
-        id: AnyObjectId?,
+        id: AnyObjectId,
         typeString: ByteArray, endMark: Byte,
         offset: MutableInteger
     ): Int {

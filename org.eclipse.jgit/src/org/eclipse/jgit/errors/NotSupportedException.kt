@@ -8,37 +8,35 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
+import java.io.IOException
 
 /**
  * JGit encountered a case that it knows it cannot yet handle.
  */
-public class NotSupportedException extends IOException {
-	private static final long serialVersionUID = 1L;
+class NotSupportedException : IOException {
+    /**
+     * Construct a NotSupportedException for some issue JGit cannot
+     * yet handle.
+     *
+     * @param s message describing the issue
+     */
+    constructor(s: String?) : super(s)
 
-	/**
-	 * Construct a NotSupportedException for some issue JGit cannot
-	 * yet handle.
-	 *
-	 * @param s message describing the issue
-	 */
-	public NotSupportedException(String s) {
-		super(s);
-	}
+    /**
+     * Construct a NotSupportedException for some issue JGit cannot yet handle.
+     *
+     * @param s
+     * message describing the issue
+     * @param why
+     * a lower level implementation specific issue.
+     */
+    constructor(s: String?, why: Throwable?) : super(s) {
+        initCause(why)
+    }
 
-	/**
-	 * Construct a NotSupportedException for some issue JGit cannot yet handle.
-	 *
-	 * @param s
-	 *            message describing the issue
-	 * @param why
-	 *            a lower level implementation specific issue.
-	 */
-	public NotSupportedException(String s, Throwable why) {
-		super(s);
-		initCause(why);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

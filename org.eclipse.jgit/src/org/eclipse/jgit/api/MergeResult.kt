@@ -423,9 +423,9 @@ class MergeResult {
         }
         var currentConflict = -1
         val ret = Array(nrOfConflicts) { IntArray(mergedCommits.size + 1) }
+        var endOfChunk = 0
         for (mergeChunk in lowLevelResult) {
             // to store the end of this chunk (end of the last conflicting range)
-            var endOfChunk = 0
             if (mergeChunk.conflictState == ConflictState.FIRST_CONFLICTING_RANGE) {
                 if (currentConflict > -1) {
                     // there was a previous conflicting range for which the end

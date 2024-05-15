@@ -35,11 +35,10 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
-import java.io.IOException;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.IOException
 
 /**
  * Cannot read the index. This is a serious error that users need to be made
@@ -47,36 +46,33 @@ import org.eclipse.jgit.internal.JGitText;
  *
  * @since 4.2
  */
-public class IndexReadException extends IOException {
-	private static final long serialVersionUID = 1L;
+class IndexReadException : IOException {
+    /**
+     * Constructs an IndexReadException with the default message.
+     */
+    constructor() : super(JGitText.get().indexWriteException)
 
-	/**
-	 * Constructs an IndexReadException with the default message.
-	 */
-	public IndexReadException() {
-		super(JGitText.get().indexWriteException);
-	}
+    /**
+     * Constructs an IndexReadException with the specified detail message.
+     *
+     * @param s
+     * message
+     */
+    constructor(s: String?) : super(s)
 
-	/**
-	 * Constructs an IndexReadException with the specified detail message.
-	 *
-	 * @param s
-	 *            message
-	 */
-	public IndexReadException(String s) {
-		super(s);
-	}
+    /**
+     * Constructs an IndexReadException with the specified detail message.
+     *
+     * @param s
+     * message
+     * @param cause
+     * root cause exception
+     */
+    constructor(s: String?, cause: Throwable?) : super(s) {
+        initCause(cause)
+    }
 
-	/**
-	 * Constructs an IndexReadException with the specified detail message.
-	 *
-	 * @param s
-	 *            message
-	 * @param cause
-	 *            root cause exception
-	 */
-	public IndexReadException(String s, Throwable cause) {
-		super(s);
-		initCause(cause);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

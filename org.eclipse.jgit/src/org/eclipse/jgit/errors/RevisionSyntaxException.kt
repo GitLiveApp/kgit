@@ -9,48 +9,44 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 
 /**
  * This signals a revision or object reference was not
  * properly formatted.
  */
-public class RevisionSyntaxException extends IllegalArgumentException {
-	private static final long serialVersionUID = 1L;
+class RevisionSyntaxException : IllegalArgumentException {
+    /**
+     * Get the problematic revision string
+     *
+     * @return the problematic revision string
+     * @since 6.8
+     */
+    val revstr: String
 
-	private final String revstr;
+    /**
+     * Construct a RevisionSyntaxException indicating a syntax problem with a
+     * revision (or object) string.
+     *
+     * @param revstr The problematic revision string
+     */
+    constructor(revstr: String) {
+        this.revstr = revstr
+    }
 
-	/**
-	 * Construct a RevisionSyntaxException indicating a syntax problem with a
-	 * revision (or object) string.
-	 *
-	 * @param revstr The problematic revision string
-	 */
-	public RevisionSyntaxException(String revstr) {
-		this.revstr = revstr;
-	}
+    /**
+     * Construct a RevisionSyntaxException indicating a syntax problem with a
+     * revision (or object) string.
+     *
+     * @param message a specific reason
+     * @param revstr The problematic revision string
+     */
+    constructor(message: String?, revstr: String) : super(message) {
+        this.revstr = revstr
+    }
 
-	/**
-	 * Construct a RevisionSyntaxException indicating a syntax problem with a
-	 * revision (or object) string.
-	 *
-	 * @param message a specific reason
-	 * @param revstr The problematic revision string
-	 */
-	public RevisionSyntaxException(String message, String revstr) {
-		super(message);
-		this.revstr = revstr;
-	}
-
-	/**
-	 * Get the problematic revision string
-	 *
-	 * @return the problematic revision string
-	 * @since 6.8
-	 */
-	public String getRevstr() {
-		return revstr;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

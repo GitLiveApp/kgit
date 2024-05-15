@@ -7,47 +7,43 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
-import java.util.Locale;
+import java.util.*
 
 /**
  * This exception will be thrown when a translation string for a translation
  * bundle and locale is missing.
  */
-public class TranslationStringMissingException extends TranslationBundleException {
-	private static final long serialVersionUID = 1L;
-
-	private final String key;
-
-	/**
-	 * Construct a
-	 * {@link org.eclipse.jgit.errors.TranslationStringMissingException} for the
-	 * specified bundle class, locale and translation key
-	 *
-	 * @param bundleClass
-	 *            the bundle class for which a translation string was missing
-	 * @param locale
-	 *            the locale for which a translation string was missing
-	 * @param key
-	 *            the key of the missing translation string
-	 * @param cause
-	 *            the original exception thrown from the
-	 *            {@link java.util.ResourceBundle#getString(String)} method.
-	 */
-	public TranslationStringMissingException(Class bundleClass, Locale locale, String key, Exception cause) {
-		super("Translation missing for [" + bundleClass.getName() + ", " //$NON-NLS-1$ //$NON-NLS-2$
-				+ locale.toString() + ", " + key + "]", bundleClass, locale, //$NON-NLS-1$ //$NON-NLS-2$
-				cause);
-		this.key = key;
-	}
-
-	/**
-	 * Get the key of the missing translation string
-	 *
-	 * @return the key of the missing translation string
-	 */
-	public String getKey() {
-		return key;
-	}
+class TranslationStringMissingException
+/**
+ * Construct a
+ * [org.eclipse.jgit.errors.TranslationStringMissingException] for the
+ * specified bundle class, locale and translation key
+ *
+ * @param bundleClass
+ * the bundle class for which a translation string was missing
+ * @param locale
+ * the locale for which a translation string was missing
+ * @param key
+ * the key of the missing translation string
+ * @param cause
+ * the original exception thrown from the
+ * [java.util.ResourceBundle.getString] method.
+ */(
+    bundleClass: Class<*>, locale: Locale,
+    /**
+     * Get the key of the missing translation string
+     *
+     * @return the key of the missing translation string
+     */
+    val key: String, cause: Exception?
+) : TranslationBundleException(
+    "Translation missing for [" + bundleClass.name + ", " //$NON-NLS-1$ //$NON-NLS-2$
+        + locale.toString() + ", " + key + "]", bundleClass, locale,  //$NON-NLS-1$ //$NON-NLS-2$
+    cause
+) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

@@ -7,55 +7,51 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import org.eclipse.jgit.annotations.Nullable;
+import org.eclipse.jgit.annotations.Nullable
 
 /**
  * Exception thrown when encounters a corrupt pack index file.
  *
  * @since 4.9
  */
-public class CorruptPackIndexException extends Exception {
-	private static final long serialVersionUID = 1L;
+class CorruptPackIndexException
+/**
+ * Report a specific error condition discovered in an index file.
+ *
+ * @param message
+ * the error message.
+ * @param errorType
+ * the error type of corruption.
+ */(
+    message: String?,
+    /**
+     * Specific the reason of the corrupt index file.
+     *
+     * @return error condition or null.
+     */
+    @get:Nullable val errorType: ErrorType
+) : Exception(message) {
+    /** The error type of a corrupt index file.  */
+    enum class ErrorType {
+        /** Offset does not match index in pack file.  */
+        MISMATCH_OFFSET,
 
-	/** The error type of a corrupt index file. */
-	public enum ErrorType {
-		/** Offset does not match index in pack file. */
-		MISMATCH_OFFSET,
-		/** CRC does not match CRC of the object data in pack file. */
-		MISMATCH_CRC,
-		/** CRC is not present in index file. */
-		MISSING_CRC,
-		/** Object in pack is not present in index file. */
-		MISSING_OBJ,
-		/** Object in index file is not present in pack file. */
-		UNKNOWN_OBJ,
-	}
+        /** CRC does not match CRC of the object data in pack file.  */
+        MISMATCH_CRC,
 
-	private ErrorType errorType;
+        /** CRC is not present in index file.  */
+        MISSING_CRC,
 
-	/**
-	 * Report a specific error condition discovered in an index file.
-	 *
-	 * @param message
-	 *            the error message.
-	 * @param errorType
-	 *            the error type of corruption.
-	 */
-	public CorruptPackIndexException(String message, ErrorType errorType) {
-		super(message);
-		this.errorType = errorType;
-	}
+        /** Object in pack is not present in index file.  */
+        MISSING_OBJ,
 
-	/**
-	 * Specific the reason of the corrupt index file.
-	 *
-	 * @return error condition or null.
-	 */
-	@Nullable
-	public ErrorType getErrorType() {
-		return errorType;
-	}
+        /** Object in index file is not present in pack file.  */
+        UNKNOWN_OBJ,
+    }
+
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

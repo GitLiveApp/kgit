@@ -10,15 +10,13 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.internal.JGitText
+import org.eclipse.jgit.lib.Constants.typeString
+import org.eclipse.jgit.lib.ObjectId
+import java.io.IOException
+import java.text.MessageFormat
 
 /**
  * An inconsistency with respect to handling different object types.
@@ -26,30 +24,27 @@ import org.eclipse.jgit.lib.ObjectId;
  * This most likely signals a programming error rather than a corrupt
  * object database.
  */
-public class IncorrectObjectTypeException extends IOException {
-	private static final long serialVersionUID = 1L;
+class IncorrectObjectTypeException
+/**
+ * Construct an IncorrectObjectTypeException for the specified object id.
+ *
+ * Provide the type to make it easier to track down the problem.
+ *
+ * @param id SHA-1
+ * @param type object type
+ */
+    (id: ObjectId, type: String?) : IOException(MessageFormat.format(JGitText.get().objectIsNotA, id.name(), type)) {
+    /**
+     * Construct an IncorrectObjectTypeException for the specified object id.
+     *
+     * Provide the type to make it easier to track down the problem.
+     *
+     * @param id SHA-1
+     * @param type object type
+     */
+    constructor(id: ObjectId, type: Int) : this(id, typeString(type))
 
-	/**
-	 * Construct an IncorrectObjectTypeException for the specified object id.
-	 *
-	 * Provide the type to make it easier to track down the problem.
-	 *
-	 * @param id SHA-1
-	 * @param type object type
-	 */
-	public IncorrectObjectTypeException(ObjectId id, String type) {
-		super(MessageFormat.format(JGitText.get().objectIsNotA, id.name(), type));
-	}
-
-	/**
-	 * Construct an IncorrectObjectTypeException for the specified object id.
-	 *
-	 * Provide the type to make it easier to track down the problem.
-	 *
-	 * @param id SHA-1
-	 * @param type object type
-	 */
-	public IncorrectObjectTypeException(ObjectId id, int type) {
-		this(id, Constants.typeString(type));
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

@@ -7,41 +7,38 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.URIish
 
 /**
  * Indicates a remote repository does not exist.
  */
-public class NoRemoteRepositoryException extends TransportException {
-	private static final long serialVersionUID = 1L;
+class NoRemoteRepositoryException : TransportException {
+    /**
+     * Constructs an exception indicating a repository does not exist.
+     *
+     * @param uri
+     * URI used for transport
+     * @param s
+     * message
+     */
+    constructor(uri: URIish, s: String) : super(uri, s)
 
-	/**
-	 * Constructs an exception indicating a repository does not exist.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message
-	 */
-	public NoRemoteRepositoryException(URIish uri, String s) {
-		super(uri, s);
-	}
+    /**
+     * Constructs an exception indicating a repository does not exist.
+     *
+     * @param uri
+     * URI used for transport
+     * @param s
+     * message
+     * @param cause
+     * root cause exception
+     * @since 5.13.1
+     */
+    constructor(uri: URIish, s: String, cause: Throwable?) : super(uri, s, cause)
 
-	/**
-	 * Constructs an exception indicating a repository does not exist.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message
-	 * @param cause
-	 *            root cause exception
-	 * @since 5.13.1
-	 */
-	public NoRemoteRepositoryException(URIish uri, String s, Throwable cause) {
-		super(uri, s, cause);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

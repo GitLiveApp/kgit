@@ -8,21 +8,16 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * Stops the driver loop of walker and finish with current results.
  *
  * @see org.eclipse.jgit.revwalk.filter.RevFilter
  */
-public class StopWalkException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+object StopWalkException : RuntimeException() {
+    private const val serialVersionUID = 1L
 
-	/** Singleton instance for throwing within a filter. */
-	public static final StopWalkException INSTANCE = new StopWalkException();
-
-	private StopWalkException() {
-		// Nothing.
-	}
+    /** Singleton instance for throwing within a filter.  */
+    val INSTANCE: StopWalkException = StopWalkException
 }

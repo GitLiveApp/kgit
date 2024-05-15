@@ -7,26 +7,24 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
+import java.io.IOException
 
 /**
  * Thrown when an operation was canceled
  *
  * @since 4.7
  */
-public class CancelledException extends IOException {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Constructor for CancelledException
-	 *
-	 * @param message
-	 *            error message
-	 */
-	public CancelledException(String message) {
-		super(message);
-	}
+class CancelledException
+/**
+ * Constructor for CancelledException
+ *
+ * @param message
+ * error message
+ */
+    (message: String?) : IOException(message) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

@@ -9,66 +9,64 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.URIish
 
 /**
  * Indicates a protocol error has occurred while fetching/pushing objects.
  */
-public class PackProtocolException extends TransportException {
-	private static final long serialVersionUID = 1L;
+open class PackProtocolException : TransportException {
+    /**
+     * Constructs an PackProtocolException with the specified detail message
+     * prefixed with provided URI.
+     *
+     * @param uri
+     * URI used for transport
+     * @param s
+     * message, which may be shown to an end-user.
+     */
+    constructor(uri: URIish, s: String) : super("$uri: $s") //$NON-NLS-1$
 
-	/**
-	 * Constructs an PackProtocolException with the specified detail message
-	 * prefixed with provided URI.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message, which may be shown to an end-user.
-	 */
-	public PackProtocolException(URIish uri, String s) {
-		super(uri + ": " + s); //$NON-NLS-1$
-	}
 
-	/**
-	 * Constructs an PackProtocolException with the specified detail message
-	 * prefixed with provided URI.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message, which may be shown to an end-user.
-	 * @param cause
-	 *            root cause exception
-	 */
-	public PackProtocolException(final URIish uri, final String s,
-			final Throwable cause) {
-		this(uri + ": " + s, cause); //$NON-NLS-1$
-	}
+    /**
+     * Constructs an PackProtocolException with the specified detail message
+     * prefixed with provided URI.
+     *
+     * @param uri
+     * URI used for transport
+     * @param s
+     * message, which may be shown to an end-user.
+     * @param cause
+     * root cause exception
+     */
+    constructor(
+        uri: URIish, s: String,
+        cause: Throwable?
+    ) : this("$uri: $s", cause) //$NON-NLS-1$
 
-	/**
-	 * Constructs an PackProtocolException with the specified detail message.
-	 *
-	 * @param s
-	 *            message, which may be shown to an end-user.
-	 */
-	public PackProtocolException(String s) {
-		super(s);
-	}
 
-	/**
-	 * Constructs an PackProtocolException with the specified detail message.
-	 *
-	 * @param s
-	 *            message, which may be shown to an end-user.
-	 * @param cause
-	 *            root cause exception
-	 */
-	public PackProtocolException(String s, Throwable cause) {
-		super(s);
-		initCause(cause);
-	}
+    /**
+     * Constructs an PackProtocolException with the specified detail message.
+     *
+     * @param s
+     * message, which may be shown to an end-user.
+     */
+    constructor(s: String?) : super(s)
+
+    /**
+     * Constructs an PackProtocolException with the specified detail message.
+     *
+     * @param s
+     * message, which may be shown to an end-user.
+     * @param cause
+     * root cause exception
+     */
+    constructor(s: String?, cause: Throwable?) : super(s) {
+        initCause(cause)
+    }
+
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

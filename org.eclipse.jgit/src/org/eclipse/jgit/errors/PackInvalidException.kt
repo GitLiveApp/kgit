@@ -7,68 +7,58 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.File
+import java.io.IOException
+import java.text.MessageFormat
 
 /**
  * Thrown when a Pack previously failed and is known to be unusable
  */
-public class PackInvalidException extends IOException {
-	private static final long serialVersionUID = 1L;
+class PackInvalidException
+/**
+ * Construct a pack invalid error with cause.
+ *
+ * @param path
+ * path of the invalid pack file.
+ * @param cause
+ * cause of the pack file becoming invalid.
+ * @since 4.5.7
+ */
+    (path: String?, cause: Throwable?) :
+    IOException(MessageFormat.format(JGitText.get().packFileInvalid, path), cause) {
+    /**
+     * Construct a pack invalid error.
+     *
+     * @param path
+     * path of the invalid pack file.
+     */
+    @Deprecated("Use {@link #PackInvalidException(File, Throwable)}.")
+    constructor(path: File) : this(path, null)
 
-	/**
-	 * Construct a pack invalid error.
-	 *
-	 * @param path
-	 *            path of the invalid pack file.
-	 * @deprecated Use {@link #PackInvalidException(File, Throwable)}.
-	 */
-	@Deprecated
-	public PackInvalidException(File path) {
-		this(path, null);
-	}
+    /**
+     * Construct a pack invalid error with cause.
+     *
+     * @param path
+     * path of the invalid pack file.
+     * @param cause
+     * cause of the pack file becoming invalid.
+     * @since 4.5.7
+     */
+    constructor(path: File, cause: Throwable?) : this(path.absolutePath, cause)
 
-	/**
-	 * Construct a pack invalid error with cause.
-	 *
-	 * @param path
-	 *            path of the invalid pack file.
-	 * @param cause
-	 *            cause of the pack file becoming invalid.
-	 * @since 4.5.7
-	 */
-	public PackInvalidException(File path, Throwable cause) {
-		this(path.getAbsolutePath(), cause);
-	}
+    /**
+     * Construct a pack invalid error.
+     *
+     * @param path
+     * path of the invalid pack file.
+     */
+    @Deprecated("Use {@link #PackInvalidException(String, Throwable)}.")
+    constructor(path: String?) : this(path, null)
 
-	/**
-	 * Construct a pack invalid error.
-	 *
-	 * @param path
-	 *            path of the invalid pack file.
-	 * @deprecated Use {@link #PackInvalidException(String, Throwable)}.
-	 */
-	@Deprecated
-	public PackInvalidException(String path) {
-		this(path, null);
-	}
-
-	/**
-	 * Construct a pack invalid error with cause.
-	 *
-	 * @param path
-	 *            path of the invalid pack file.
-	 * @param cause
-	 *            cause of the pack file becoming invalid.
-	 * @since 4.5.7
-	 */
-	public PackInvalidException(String path, Throwable cause) {
-		super(MessageFormat.format(JGitText.get().packFileInvalid, path), cause);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

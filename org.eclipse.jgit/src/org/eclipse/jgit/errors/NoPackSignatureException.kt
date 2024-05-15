@@ -7,26 +7,24 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
+import java.io.IOException
 
 /**
  * Thrown when a Pack is found not to contain the pack signature defined by git.
  *
  * @since 4.5
  */
-public class NoPackSignatureException extends IOException {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Construct an exception.
-	 *
-	 * @param why
-	 *            description of the type of error.
-	 */
-	public NoPackSignatureException(String why) {
-		super(why);
-	}
+class NoPackSignatureException
+/**
+ * Construct an exception.
+ *
+ * @param why
+ * description of the type of error.
+ */
+    (why: String?) : IOException(why) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

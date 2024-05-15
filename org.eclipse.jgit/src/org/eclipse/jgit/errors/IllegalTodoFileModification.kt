@@ -7,23 +7,22 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * Attempt to modify a rebase-todo file in an unsupported way
  *
  * @since 3.2
  */
-public class IllegalTodoFileModification extends Exception {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Constructor for IllegalTodoFileModification
-	 *
-	 * @param msg
-	 *            error message
-	 */
-	public IllegalTodoFileModification(String msg) {
-		super(msg);
-	}
+class IllegalTodoFileModification
+/**
+ * Constructor for IllegalTodoFileModification
+ *
+ * @param msg
+ * error message
+ */
+    (msg: String?) : Exception(msg) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

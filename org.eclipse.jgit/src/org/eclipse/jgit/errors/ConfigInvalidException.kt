@@ -7,34 +7,31 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
 /**
  * Indicates a text string is not a valid Git style configuration.
  */
-public class ConfigInvalidException extends Exception {
-	private static final long serialVersionUID = 1L;
+class ConfigInvalidException : Exception {
+    /**
+     * Construct an invalid configuration error.
+     *
+     * @param message
+     * why the configuration is invalid.
+     */
+    constructor(message: String?) : super(message)
 
-	/**
-	 * Construct an invalid configuration error.
-	 *
-	 * @param message
-	 *            why the configuration is invalid.
-	 */
-	public ConfigInvalidException(String message) {
-		super(message);
-	}
+    /**
+     * Construct an invalid configuration error.
+     *
+     * @param message
+     * why the configuration is invalid.
+     * @param cause
+     * root cause of the error.
+     */
+    constructor(message: String?, cause: Throwable?) : super(message, cause)
 
-	/**
-	 * Construct an invalid configuration error.
-	 *
-	 * @param message
-	 *            why the configuration is invalid.
-	 * @param cause
-	 *            root cause of the error.
-	 */
-	public ConfigInvalidException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

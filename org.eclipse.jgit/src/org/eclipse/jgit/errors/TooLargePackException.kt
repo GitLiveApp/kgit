@@ -7,43 +7,43 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.internal.JGitText
+import org.eclipse.jgit.transport.URIish
+import java.text.MessageFormat
 
 /**
  * Thrown when a pack exceeds a given size limit
  *
  * @since 3.3
  */
-public class TooLargePackException extends TransportException {
-	private static final long serialVersionUID = 1L;
+class TooLargePackException : TransportException {
+    /**
+     * Construct a too large pack exception.
+     *
+     * @param packSizeLimit
+     * the pack size limit (in bytes) that was exceeded
+     */
+    constructor(packSizeLimit: Long) : super(
+        MessageFormat.format(
+            JGitText.get().receivePackTooLarge,
+            packSizeLimit
+        )
+    )
 
-	/**
-	 * Construct a too large pack exception.
-	 *
-	 * @param packSizeLimit
-	 *            the pack size limit (in bytes) that was exceeded
-	 */
-	public TooLargePackException(long packSizeLimit) {
-		super(MessageFormat.format(JGitText.get().receivePackTooLarge,
-				Long.valueOf(packSizeLimit)));
-	}
+    /**
+     * Construct a too large pack exception.
+     *
+     * @param uri
+     * URI used for transport
+     * @param s
+     * message
+     * @since 4.0
+     */
+    constructor(uri: URIish, s: String) : super(uri.setPass(null).toString() + ": " + s) //$NON-NLS-1$
 
-	/**
-	 * Construct a too large pack exception.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message
-	 * @since 4.0
-	 */
-	public TooLargePackException(URIish uri, String s) {
-		super(uri.setPass(null) + ": " + s); //$NON-NLS-1$
-	}
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }

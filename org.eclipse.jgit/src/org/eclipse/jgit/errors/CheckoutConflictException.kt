@@ -9,61 +9,60 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.errors
 
-package org.eclipse.jgit.errors;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.internal.JGitText
+import java.io.IOException
+import java.text.MessageFormat
 
 /**
  * Exception thrown if a conflict occurs during a merge checkout.
  */
-public class CheckoutConflictException extends IOException {
-	private static final long serialVersionUID = 1L;
+class CheckoutConflictException : IOException {
+    /**
+     * Get the relative paths of the conflicting files
+     *
+     * @return the relative paths of the conflicting files (relative to the
+     * working directory root).
+     * @since 4.4
+     */
+    val conflictingFiles: Array<String>
 
-	private final String[] conflicting;
+    /**
+     * Construct a CheckoutConflictException for the specified file
+     *
+     * @param file
+     * relative path of a file
+     */
+    constructor(file: String) : super(MessageFormat.format(JGitText.get().checkoutConflictWithFile, file)) {
+        conflictingFiles = arrayOf(file)
+    }
 
-	/**
-	 * Construct a CheckoutConflictException for the specified file
-	 *
-	 * @param file
-	 *            relative path of a file
-	 */
-	public CheckoutConflictException(String file) {
-		super(MessageFormat.format(JGitText.get().checkoutConflictWithFile, file));
-		conflicting = new String[] { file };
-	}
+    /**
+     * Construct a CheckoutConflictException for the specified set of files
+     *
+     * @param files
+     * an array of relative file paths
+     */
+    constructor(files: Array<String>) : super(
+        MessageFormat.format(
+            JGitText.get().checkoutConflictWithFiles,
+            buildList(files)
+        )
+    ) {
+        conflictingFiles = files
+    }
 
-	/**
-	 * Construct a CheckoutConflictException for the specified set of files
-	 *
-	 * @param files
-	 *            an array of relative file paths
-	 */
-	public CheckoutConflictException(String[] files) {
-		super(MessageFormat.format(JGitText.get().checkoutConflictWithFiles, buildList(files)));
-		conflicting = files;
-	}
+    companion object {
+        private const val serialVersionUID = 1L
 
-	/**
-	 * Get the relative paths of the conflicting files
-	 *
-	 * @return the relative paths of the conflicting files (relative to the
-	 *         working directory root).
-	 * @since 4.4
-	 */
-	public String[] getConflictingFiles() {
-		return conflicting;
-	}
-
-	private static String buildList(String[] files) {
-		StringBuilder builder = new StringBuilder();
-		for (String f : files) {
-			builder.append("\n"); //$NON-NLS-1$
-			builder.append(f);
-		}
-		return builder.toString();
-	}
+        private fun buildList(files: Array<String>): String {
+            val builder = StringBuilder()
+            for (f in files) {
+                builder.append("\n") //$NON-NLS-1$
+                builder.append(f)
+            }
+            return builder.toString()
+        }
+    }
 }

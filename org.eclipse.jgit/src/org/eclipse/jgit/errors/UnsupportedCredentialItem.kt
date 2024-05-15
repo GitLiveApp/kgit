@@ -8,28 +8,27 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.errors;
+package org.eclipse.jgit.errors
 
-import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.URIish
 
 /**
- * An exception thrown when a {@link org.eclipse.jgit.transport.CredentialItem}
- * is requested from a {@link org.eclipse.jgit.transport.CredentialsProvider}
+ * An exception thrown when a [org.eclipse.jgit.transport.CredentialItem]
+ * is requested from a [org.eclipse.jgit.transport.CredentialsProvider]
  * which is not supported by this provider.
  */
-public class UnsupportedCredentialItem extends RuntimeException {
-	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Constructs an UnsupportedCredentialItem with the specified detail message
-	 * prefixed with provided URI.
-	 *
-	 * @param uri
-	 *            URI used for transport
-	 * @param s
-	 *            message
-	 */
-	public UnsupportedCredentialItem(URIish uri, String s) {
-		super(uri.setPass(null) + ": " + s); //$NON-NLS-1$
-	}
+class UnsupportedCredentialItem
+/**
+ * Constructs an UnsupportedCredentialItem with the specified detail message
+ * prefixed with provided URI.
+ *
+ * @param uri
+ * URI used for transport
+ * @param s
+ * message
+ */
+    (uri: URIish, s: String) : RuntimeException(uri.setPass(null).toString() + ": " + s) {
+    companion object {
+        private const val serialVersionUID = 1L
+    }
 }
