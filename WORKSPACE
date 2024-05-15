@@ -110,18 +110,18 @@ maven_jar(
     sha1 = "51cf043c87253c9f58b539c9f7e44c8894223850",
 )
 
-SSHD_VERS = "2.12.0"
+SSHD_VERS = "2.12.1"
 
 maven_jar(
     name = "sshd-osgi",
     artifact = "org.apache.sshd:sshd-osgi:" + SSHD_VERS,
-    sha1 = "32b8de1cbb722ba75bdf9898e0c41d42af00ce57",
+    sha1 = "45b0501857603881ab472c927852ffa406932aef",
 )
 
 maven_jar(
     name = "sshd-sftp",
     artifact = "org.apache.sshd:sshd-sftp:" + SSHD_VERS,
-    sha1 = "0f96f00a07b186ea62838a6a4122e8f4cad44df6",
+    sha1 = "3ef6ded49799618c9438aa1044c6bf01124133bb",
 )
 
 JNA_VERS = "5.14.0"
@@ -170,8 +170,8 @@ maven_jar(
 
 maven_jar(
     name = "commons-compress",
-    artifact = "org.apache.commons:commons-compress:1.26.0",
-    sha1 = "659feffdd12280201c8aacb8f7be94f9a883c824",
+    artifact = "org.apache.commons:commons-compress:1.26.1",
+    sha1 = "44331c1130c370e726a2e1a3e6fba6d2558ef04a",
 )
 
 maven_jar(
@@ -188,8 +188,8 @@ maven_jar(
 
 maven_jar(
     name = "args4j",
-    artifact = "args4j:args4j:2.33",
-    sha1 = "bd87a75374a6d6523de82fef51fc3cfe9baf9fc9",
+    artifact = "args4j:args4j:2.37",
+    sha1 = "244f60c057d72a785227c0562d3560f42a7ea54b",
 )
 
 maven_jar(
@@ -206,8 +206,8 @@ maven_jar(
 
 maven_jar(
     name = "mockito",
-    artifact = "org.mockito:mockito-core:5.10.0",
-    sha1 = "b3812fa2ee069f1d0b41c1c0155da79d0e1dcde0",
+    artifact = "org.mockito:mockito-core:5.12.0",
+    sha1 = "22f8bbaf478e6789164787fa411a3b5ed986e110",
 )
 
 maven_jar(
@@ -216,18 +216,18 @@ maven_jar(
     sha1 = "792b270e73aa1cfc28fa135be0b95e69ea451432",
 )
 
-BYTE_BUDDY_VERSION = "1.14.12"
+BYTE_BUDDY_VERSION = "1.14.15"
 
 maven_jar(
     name = "bytebuddy",
     artifact = "net.bytebuddy:byte-buddy:" + BYTE_BUDDY_VERSION,
-    sha1 = "6e37f743dc15a8d7a4feb3eb0025cbc612d5b9e1",
+    sha1 = "11c9440bc7f9468761e5a82778a05205169d49a9",
 )
 
 maven_jar(
     name = "bytebuddy-agent",
     artifact = "net.bytebuddy:byte-buddy-agent:" + BYTE_BUDDY_VERSION,
-    sha1 = "be4984cb6fd1ef1d11f218a648889dfda44b8a15",
+    sha1 = "0b4cc9d88d5de562bf75b3a54ab436ad01b3f72d",
 )
 
 maven_jar(
@@ -293,32 +293,32 @@ maven_jar(
     src_sha1 = "b012c053d25d902cc64a5c4432a8eedab3241d94",
 )
 
-BOUNCYCASTLE_VER = "1.77"
+BOUNCYCASTLE_VER = "1.78.1"
 
 maven_jar(
     name = "bcpg",
     artifact = "org.bouncycastle:bcpg-jdk18on:" + BOUNCYCASTLE_VER,
-    sha1 = "bb0be51e8b378baae6e0d86f5282cd3887066539",
-    src_sha1 = "33ff3269cede7165dac44033a3b150cc9f9f11cf",
+    sha1 = "6c8dbcec20355278ec54840e735f63db2479150e",
+    src_sha1 = "2ddef60d84dd8c14ebce4c13100f0bc55fed6922",
 )
 
 maven_jar(
     name = "bcprov",
     artifact = "org.bouncycastle:bcprov-jdk18on:" + BOUNCYCASTLE_VER,
-    sha1 = "2cc971b6c20949c1ff98d1a4bc741ee848a09523",
-    src_sha1 = "14ea9a3d759261358c6a1f59490ded125b5273a6",
+    sha1 = "39e9e45359e20998eb79c1828751f94a818d25f8",
+    src_sha1 = "70f58ec93da543dda6a21614b768cb2e386fd512",
 )
 
 maven_jar(
     name = "bcutil",
     artifact = "org.bouncycastle:bcutil-jdk18on:" + BOUNCYCASTLE_VER,
-    sha1 = "de3eaef351545fe8562cf29ddff4a403a45b49b7",
-    src_sha1 = "6f8f56ab009e7a3204817a0d45ed9638f5e30116",
+    sha1 = "5353ca39fe2f148dab9ca1d637a43d0750456254",
+    src_sha1 = "8d2e0747f5d806f39a602f7f91610444d88c4e2c",
 )
 
 maven_jar(
     name = "bcpkix",
     artifact = "org.bouncycastle:bcpkix-jdk18on:" + BOUNCYCASTLE_VER,
-    sha1 = "ed953791ba0229747dd0fd9911e3d76a462acfd3",
-    src_sha1 = "fdff397d5de0306db014f0a17e91717150db2768",
+    sha1 = "17b3541f736df97465f87d9f5b5dfa4991b37bb3",
+    src_sha1 = "3aeaf221772ad0c9c04593688cb86c6eb74d48b9",
 )
