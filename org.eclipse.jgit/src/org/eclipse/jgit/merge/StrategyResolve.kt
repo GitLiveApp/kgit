@@ -8,34 +8,28 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.merge;
+package org.eclipse.jgit.merge
 
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ObjectInserter;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Config
+import org.eclipse.jgit.lib.ObjectInserter
+import org.eclipse.jgit.lib.Repository
 
 /**
  * A three-way merge strategy performing a content-merge if necessary
  */
-public class StrategyResolve extends ThreeWayMergeStrategy {
+open class StrategyResolve : ThreeWayMergeStrategy() {
+    override fun newMerger(db: Repository): ThreeWayMerger {
+        return ResolveMerger(db, false)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(Repository db) {
-		return new ResolveMerger(db, false);
-	}
+    override fun newMerger(db: Repository, inCore: Boolean): ThreeWayMerger {
+        return ResolveMerger(db, inCore)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(Repository db, boolean inCore) {
-		return new ResolveMerger(db, inCore);
-	}
+    override fun newMerger(inserter: ObjectInserter, config: Config): ThreeWayMerger? {
+        return ResolveMerger(inserter, config)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(ObjectInserter inserter, Config config) {
-		return new ResolveMerger(inserter, config);
-	}
-
-	@Override
-	public String getName() {
-		return "resolve"; //$NON-NLS-1$
-	}
+    override val name: String
+        get() = "resolve" //$NON-NLS-1$
 }

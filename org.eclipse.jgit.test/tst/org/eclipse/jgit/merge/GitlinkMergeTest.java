@@ -165,7 +165,7 @@ public class GitlinkMergeTest extends SampleDataRepositoryTestCase {
 			@Override
 			protected boolean mergeImpl() throws IOException {
 				// emulate call with ignore conflicts.
-				return mergeTrees(mergeBase(), sourceTrees[0], sourceTrees[1],
+				return mergeTrees(mergeBase(), getSourceTrees()[0], getSourceTrees()[1],
 						true);
 			}
 		};

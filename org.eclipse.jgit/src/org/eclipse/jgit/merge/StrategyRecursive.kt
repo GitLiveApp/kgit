@@ -7,37 +7,30 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.merge
 
-package org.eclipse.jgit.merge;
-
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ObjectInserter;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Config
+import org.eclipse.jgit.lib.ObjectInserter
+import org.eclipse.jgit.lib.Repository
 
 /**
  * A three-way merge strategy performing a content-merge if necessary
  *
  * @since 3.0
  */
-public class StrategyRecursive extends StrategyResolve {
+class StrategyRecursive : StrategyResolve() {
+    override fun newMerger(db: Repository): ThreeWayMerger {
+        return RecursiveMerger(db, false)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(Repository db) {
-		return new RecursiveMerger(db, false);
-	}
+    override fun newMerger(db: Repository, inCore: Boolean): ThreeWayMerger {
+        return RecursiveMerger(db, inCore)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(Repository db, boolean inCore) {
-		return new RecursiveMerger(db, inCore);
-	}
+    override fun newMerger(inserter: ObjectInserter, config: Config): ThreeWayMerger? {
+        return RecursiveMerger(inserter, config)
+    }
 
-	@Override
-	public ThreeWayMerger newMerger(ObjectInserter inserter, Config config) {
-		return new RecursiveMerger(inserter, config);
-	}
-
-	@Override
-	public String getName() {
-		return "recursive"; //$NON-NLS-1$
-	}
+    override val name: String
+        get() = "recursive" //$NON-NLS-1$
 }

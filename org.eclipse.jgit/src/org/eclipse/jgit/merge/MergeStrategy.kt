@@ -9,154 +9,167 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.merge
 
-package org.eclipse.jgit.merge;
-
-import java.text.MessageFormat;
-import java.util.HashMap;
-
-import org.eclipse.jgit.internal.JGitText;
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ObjectInserter;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.internal.JGitText
+import org.eclipse.jgit.lib.Config
+import org.eclipse.jgit.lib.ObjectInserter
+import org.eclipse.jgit.lib.Repository
+import java.text.MessageFormat
 
 /**
  * A method of combining two or more trees together to form an output tree.
- * <p>
+ *
+ *
  * Different strategies may employ different techniques for deciding which paths
  * (and ObjectIds) to carry from the input trees into the final output tree.
  */
-public abstract class MergeStrategy {
-	/** Simple strategy that sets the output tree to the first input tree. */
-	public static final MergeStrategy OURS = new StrategyOneSided("ours", 0); //$NON-NLS-1$
+abstract class MergeStrategy {
+    /**
+     * Get default name of this strategy implementation.
+     *
+     * @return default name of this strategy implementation.
+     */
+	abstract val name: String
 
-	/** Simple strategy that sets the output tree to the second input tree. */
-	public static final MergeStrategy THEIRS = new StrategyOneSided("theirs", 1); //$NON-NLS-1$
+    /**
+     * Create a new merge instance.
+     *
+     * @param db
+     * repository database the merger will read from, and eventually
+     * write results back to.
+     * @return the new merge instance which implements this strategy.
+     */
+    abstract fun newMerger(db: Repository): Merger?
 
-	/** Simple strategy to merge paths, without simultaneous edits. */
-	public static final ThreeWayMergeStrategy SIMPLE_TWO_WAY_IN_CORE = new StrategySimpleTwoWayInCore();
+    /**
+     * Create a new merge instance.
+     *
+     * @param db
+     * repository database the merger will read from, and eventually
+     * write results back to.
+     * @param inCore
+     * the merge will happen in memory, working folder will not be
+     * modified, in case of a non-trivial merge that requires manual
+     * resolution, the merger will fail.
+     * @return the new merge instance which implements this strategy.
+     */
+    abstract fun newMerger(db: Repository, inCore: Boolean): Merger?
 
-	/**
-	 * Simple strategy to merge paths. It tries to merge also contents. Multiple
-	 * merge bases are not supported
-	 */
-	public static final ThreeWayMergeStrategy RESOLVE = new StrategyResolve();
+    /**
+     * Create a new merge instance.
+     *
+     *
+     * The merge will happen in memory, working folder will not be modified, in
+     * case of a non-trivial merge that requires manual resolution, the merger
+     * will fail.
+     *
+     * @param inserter
+     * inserter to write results back to.
+     * @param config
+     * repo config for reading diff algorithm settings.
+     * @return the new merge instance which implements this strategy.
+     * @since 4.8
+     */
+    abstract fun newMerger(inserter: ObjectInserter, config: Config): Merger?
 
-	/**
-	 * Recursive strategy to merge paths. It tries to merge also contents.
-	 * Multiple merge bases are supported
-	 * @since 3.0
-	 */
-	public static final ThreeWayMergeStrategy RECURSIVE = new StrategyRecursive();
+    companion object {
+        /** Simple strategy that sets the output tree to the first input tree.  */
+		@JvmField
+		val OURS: MergeStrategy = StrategyOneSided("ours", 0) //$NON-NLS-1$
 
-	private static final HashMap<String, MergeStrategy> STRATEGIES = new HashMap<>();
+        /** Simple strategy that sets the output tree to the second input tree.  */
+		@JvmField
+		val THEIRS: MergeStrategy = StrategyOneSided("theirs", 1) //$NON-NLS-1$
 
-	static {
-		register(OURS);
-		register(THEIRS);
-		register(SIMPLE_TWO_WAY_IN_CORE);
-		register(RESOLVE);
-		register(RECURSIVE);
-	}
+        /** Simple strategy to merge paths, without simultaneous edits.  */
+		@JvmField
+		val SIMPLE_TWO_WAY_IN_CORE: ThreeWayMergeStrategy = StrategySimpleTwoWayInCore()
 
-	/**
-	 * Register a merge strategy so it can later be obtained by name.
-	 *
-	 * @param imp
-	 *            the strategy to register.
-	 * @throws java.lang.IllegalArgumentException
-	 *             a strategy by the same name has already been registered.
-	 */
-	public static void register(MergeStrategy imp) {
-		register(imp.getName(), imp);
-	}
+        /**
+         * Simple strategy to merge paths. It tries to merge also contents. Multiple
+         * merge bases are not supported
+         */
+		@JvmField
+		val RESOLVE: ThreeWayMergeStrategy = StrategyResolve()
 
-	/**
-	 * Register a merge strategy so it can later be obtained by name.
-	 *
-	 * @param name
-	 *            name the strategy can be looked up under.
-	 * @param imp
-	 *            the strategy to register.
-	 * @throws java.lang.IllegalArgumentException
-	 *             a strategy by the same name has already been registered.
-	 */
-	public static synchronized void register(final String name,
-			final MergeStrategy imp) {
-		if (STRATEGIES.containsKey(name))
-			throw new IllegalArgumentException(MessageFormat.format(
-					JGitText.get().mergeStrategyAlreadyExistsAsDefault, name));
-		STRATEGIES.put(name, imp);
-	}
+        /**
+         * Recursive strategy to merge paths. It tries to merge also contents.
+         * Multiple merge bases are supported
+         * @since 3.0
+         */
+		@JvmField
+		val RECURSIVE: ThreeWayMergeStrategy = StrategyRecursive()
 
-	/**
-	 * Locate a strategy by name.
-	 *
-	 * @param name
-	 *            name of the strategy to locate.
-	 * @return the strategy instance; null if no strategy matches the name.
-	 */
-	public static synchronized MergeStrategy get(String name) {
-		return STRATEGIES.get(name);
-	}
+        private val STRATEGIES = HashMap<String, MergeStrategy>()
 
-	/**
-	 * Get all registered strategies.
-	 *
-	 * @return the registered strategy instances. No inherit order is returned;
-	 *         the caller may modify (and/or sort) the returned array if
-	 *         necessary to obtain a reasonable ordering.
-	 */
-	public static synchronized MergeStrategy[] get() {
-		final MergeStrategy[] r = new MergeStrategy[STRATEGIES.size()];
-		STRATEGIES.values().toArray(r);
-		return r;
-	}
+        init {
+            register(OURS)
+            register(THEIRS)
+            register(SIMPLE_TWO_WAY_IN_CORE)
+            register(RESOLVE)
+            register(RECURSIVE)
+        }
 
-	/**
-	 * Get default name of this strategy implementation.
-	 *
-	 * @return default name of this strategy implementation.
-	 */
-	public abstract String getName();
+        /**
+         * Register a merge strategy so it can later be obtained by name.
+         *
+         * @param imp
+         * the strategy to register.
+         * @throws java.lang.IllegalArgumentException
+         * a strategy by the same name has already been registered.
+         */
+        fun register(imp: MergeStrategy) {
+            register(imp.name, imp)
+        }
 
-	/**
-	 * Create a new merge instance.
-	 *
-	 * @param db
-	 *            repository database the merger will read from, and eventually
-	 *            write results back to.
-	 * @return the new merge instance which implements this strategy.
-	 */
-	public abstract Merger newMerger(Repository db);
+        /**
+         * Register a merge strategy so it can later be obtained by name.
+         *
+         * @param name
+         * name the strategy can be looked up under.
+         * @param imp
+         * the strategy to register.
+         * @throws java.lang.IllegalArgumentException
+         * a strategy by the same name has already been registered.
+         */
+        @Synchronized
+        fun register(
+            name: String,
+            imp: MergeStrategy
+        ) {
+            require(!STRATEGIES.containsKey(name)) {
+                MessageFormat.format(
+                    JGitText.get().mergeStrategyAlreadyExistsAsDefault, name
+                )
+            }
+            STRATEGIES[name] = imp
+        }
 
-	/**
-	 * Create a new merge instance.
-	 *
-	 * @param db
-	 *            repository database the merger will read from, and eventually
-	 *            write results back to.
-	 * @param inCore
-	 *            the merge will happen in memory, working folder will not be
-	 *            modified, in case of a non-trivial merge that requires manual
-	 *            resolution, the merger will fail.
-	 * @return the new merge instance which implements this strategy.
-	 */
-	public abstract Merger newMerger(Repository db, boolean inCore);
+        /**
+         * Locate a strategy by name.
+         *
+         * @param name
+         * name of the strategy to locate.
+         * @return the strategy instance; null if no strategy matches the name.
+         */
+        @JvmStatic
+		@Synchronized
+        fun get(name: String): MergeStrategy? {
+            return STRATEGIES[name]
+        }
 
-	/**
-	 * Create a new merge instance.
-	 * <p>
-	 * The merge will happen in memory, working folder will not be modified, in
-	 * case of a non-trivial merge that requires manual resolution, the merger
-	 * will fail.
-	 *
-	 * @param inserter
-	 *            inserter to write results back to.
-	 * @param config
-	 *            repo config for reading diff algorithm settings.
-	 * @return the new merge instance which implements this strategy.
-	 * @since 4.8
-	 */
-	public abstract Merger newMerger(ObjectInserter inserter, Config config);
+        /**
+         * Get all registered strategies.
+         *
+         * @return the registered strategy instances. No inherit order is returned;
+         * the caller may modify (and/or sort) the returned array if
+         * necessary to obtain a reasonable ordering.
+         */
+        @JvmStatic
+		@Synchronized
+        fun get(): Array<MergeStrategy> {
+            return STRATEGIES.values.toTypedArray()
+        }
+    }
 }

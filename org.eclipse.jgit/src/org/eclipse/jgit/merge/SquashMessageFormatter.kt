@@ -7,67 +7,58 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-package org.eclipse.jgit.merge;
+package org.eclipse.jgit.merge
 
-import java.util.List;
-
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.util.GitDateFormatter;
-import org.eclipse.jgit.util.GitDateFormatter.Format;
+import org.eclipse.jgit.lib.PersonIdent
+import org.eclipse.jgit.lib.Ref
+import org.eclipse.jgit.revwalk.RevCommit
+import org.eclipse.jgit.util.GitDateFormatter
 
 /**
  * Formatter for constructing the commit message for a squashed commit.
- * <p>
+ *
+ *
  * The format should be the same as C Git does it, for compatibility.
  */
-public class SquashMessageFormatter {
+class SquashMessageFormatter {
+    private val dateFormatter = GitDateFormatter(GitDateFormatter.Format.DEFAULT)
 
-	private GitDateFormatter dateFormatter;
+    /**
+     * Construct the squashed commit message.
+     *
+     * @param squashedCommits
+     * the squashed commits
+     * @param target
+     * the target branch
+     * @return squashed commit message
+     */
+    fun format(squashedCommits: List<RevCommit>, target: Ref?): String {
+        val sb = StringBuilder()
+        sb.append("Squashed commit of the following:\n") //$NON-NLS-1$
+        for (c in squashedCommits) {
+            sb.append("\ncommit ") //$NON-NLS-1$
+            sb.append(c.name)
+            sb.append("\n") //$NON-NLS-1$
+            sb.append(toString(c.authorIdent))
+            sb.append("\n\t") //$NON-NLS-1$
+            sb.append(c.shortMessage)
+            sb.append("\n") //$NON-NLS-1$
+        }
+        return sb.toString()
+    }
 
-	/**
-	 * Create a new squash message formatter.
-	 */
-	public SquashMessageFormatter() {
-		dateFormatter = new GitDateFormatter(Format.DEFAULT);
-	}
-	/**
-	 * Construct the squashed commit message.
-	 *
-	 * @param squashedCommits
-	 *            the squashed commits
-	 * @param target
-	 *            the target branch
-	 * @return squashed commit message
-	 */
-	public String format(List<RevCommit> squashedCommits, Ref target) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Squashed commit of the following:\n"); //$NON-NLS-1$
-		for (RevCommit c : squashedCommits) {
-			sb.append("\ncommit "); //$NON-NLS-1$
-			sb.append(c.getName());
-			sb.append("\n"); //$NON-NLS-1$
-			sb.append(toString(c.getAuthorIdent()));
-			sb.append("\n\t"); //$NON-NLS-1$
-			sb.append(c.getShortMessage());
-			sb.append("\n"); //$NON-NLS-1$
-		}
-		return sb.toString();
-	}
+    private fun toString(author: PersonIdent): String {
+        val a = StringBuilder()
 
-	private String toString(PersonIdent author) {
-		final StringBuilder a = new StringBuilder();
+        a.append("Author: ") //$NON-NLS-1$
+        a.append(author.name)
+        a.append(" <") //$NON-NLS-1$
+        a.append(author.emailAddress)
+        a.append(">\n") //$NON-NLS-1$
+        a.append("Date:   ") //$NON-NLS-1$
+        a.append(dateFormatter.formatDate(author))
+        a.append("\n") //$NON-NLS-1$
 
-		a.append("Author: "); //$NON-NLS-1$
-		a.append(author.getName());
-		a.append(" <"); //$NON-NLS-1$
-		a.append(author.getEmailAddress());
-		a.append(">\n"); //$NON-NLS-1$
-		a.append("Date:   "); //$NON-NLS-1$
-		a.append(dateFormatter.formatDate(author));
-		a.append("\n"); //$NON-NLS-1$
-
-		return a.toString();
-	}
+        return a.toString()
+    }
 }

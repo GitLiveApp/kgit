@@ -8,87 +8,63 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
+package org.eclipse.jgit.merge
 
-package org.eclipse.jgit.merge;
-
-import java.io.IOException;
-
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectInserter;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.Config
+import org.eclipse.jgit.lib.ObjectId
+import org.eclipse.jgit.lib.ObjectInserter
+import org.eclipse.jgit.lib.Repository
+import java.io.IOException
 
 /**
  * Trivial merge strategy to make the resulting tree exactly match an input.
- * <p>
+ *
+ *
  * This strategy can be used to cauterize an entire side branch of history, by
  * setting the output tree to one of the inputs, and ignoring any of the paths
  * of the other inputs.
  */
-public class StrategyOneSided extends MergeStrategy {
-	private final String strategyName;
+class StrategyOneSided
+/**
+ * Create a new merge strategy to select a specific input tree.
+ *
+ * @param name
+ * name of this strategy.
+ * @param index
+ * the position of the input tree to accept as the result.
+ */ constructor(override val name: String, private val treeIndex: Int) : MergeStrategy() {
+    override fun newMerger(db: Repository): Merger? {
+        return OneSide(db, treeIndex)
+    }
 
-	private final int treeIndex;
+    override fun newMerger(db: Repository, inCore: Boolean): Merger? {
+        return OneSide(db, treeIndex)
+    }
 
-	/**
-	 * Create a new merge strategy to select a specific input tree.
-	 *
-	 * @param name
-	 *            name of this strategy.
-	 * @param index
-	 *            the position of the input tree to accept as the result.
-	 */
-	protected StrategyOneSided(String name, int index) {
-		strategyName = name;
-		treeIndex = index;
-	}
+    override fun newMerger(inserter: ObjectInserter, config: Config): Merger? {
+        return OneSide(inserter, treeIndex)
+    }
 
-	@Override
-	public String getName() {
-		return strategyName;
-	}
+    internal class OneSide : Merger {
+        private val treeIndex: Int
 
-	@Override
-	public Merger newMerger(Repository db) {
-		return new OneSide(db, treeIndex);
-	}
+        constructor(local: Repository?, index: Int) : super(local) {
+            treeIndex = index
+        }
 
-	@Override
-	public Merger newMerger(Repository db, boolean inCore) {
-		return new OneSide(db, treeIndex);
-	}
+        constructor(inserter: ObjectInserter, index: Int) : super(inserter) {
+            treeIndex = index
+        }
 
-	@Override
-	public Merger newMerger(ObjectInserter inserter, Config config) {
-		return new OneSide(inserter, treeIndex);
-	}
+        @Throws(IOException::class)
+        override fun mergeImpl(): Boolean {
+            return treeIndex < sourceTrees!!.size
+        }
 
-	static class OneSide extends Merger {
-		private final int treeIndex;
+        override val resultTreeId: ObjectId?
+            get() = sourceTrees!![treeIndex]
 
-		protected OneSide(Repository local, int index) {
-			super(local);
-			treeIndex = index;
-		}
-
-		protected OneSide(ObjectInserter inserter, int index) {
-			super(inserter);
-			treeIndex = index;
-		}
-
-		@Override
-		protected boolean mergeImpl() throws IOException {
-			return treeIndex < sourceTrees.length;
-		}
-
-		@Override
-		public ObjectId getResultTreeId() {
-			return sourceTrees[treeIndex];
-		}
-
-		@Override
-		public ObjectId getBaseCommitId() {
-			return null;
-		}
-	}
+        override val baseCommitId: ObjectId?
+            get() = null
+    }
 }
