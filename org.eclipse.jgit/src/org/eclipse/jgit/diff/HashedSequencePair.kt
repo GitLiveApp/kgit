@@ -66,7 +66,7 @@ class HashedSequencePair<S : Sequence>
         }
 
     private fun wrap(base: S): HashedSequence<S> {
-        val end = base!!.size()
+        val end = base.size()
         val hashes = IntArray(end)
         for (ptr in 0 until end) hashes[ptr] = cmp.hash(base, ptr)
         return HashedSequence(base, hashes)

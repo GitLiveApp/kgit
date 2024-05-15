@@ -214,9 +214,9 @@ class Edit
         return beginA xor endA
     }
 
-    override fun equals(o: Any?): Boolean {
-        if (o is Edit) {
-            val e = o
+    override fun equals(other: Any?): Boolean {
+        if (other is Edit) {
+            val e = other
             return this.beginA == e.beginA && (this.endA == e.endA
                 ) && (this.beginB == e.beginB) && (this.endB == e.endB)
         }

@@ -44,11 +44,6 @@ import kotlin.math.max
  * @since 3.0
  */
 class RecursiveMerger : ResolveMerger {
-    /**
-     * The maximum number of merge bases. This merge will stop when the number
-     * of merge bases exceeds this value
-     */
-    val MAX_BASES: Int = 200
 
     /**
      * Normal recursive merge when you want a choice of DirCache placement
@@ -124,10 +119,10 @@ class RecursiveMerger : ResolveMerger {
 
         if (baseCommits.isEmpty()) return null
         if (baseCommits.size == 1) return baseCommits[0]
-        if (baseCommits.size >= MAX_BASES) throw NoMergeBaseException(
+        if (baseCommits.size >= Companion.MAX_BASES) throw NoMergeBaseException(
             NoMergeBaseException.MergeBaseFailureReason.TOO_MANY_MERGE_BASES, MessageFormat.format(
                 JGitText.get().mergeRecursiveTooManyMergeBasesFor,
-                MAX_BASES, a.name(), b.name(),
+                Companion.MAX_BASES, a.name(), b.name(),
                 baseCommits.size
             )
         )
@@ -151,11 +146,11 @@ class RecursiveMerger : ResolveMerger {
             parents.add(currentBase)
             for (commitIdx in 1 until baseCommits.size) {
                 val nextBase = baseCommits[commitIdx]
-                if (commitIdx >= MAX_BASES) throw NoMergeBaseException(
+                if (commitIdx >= Companion.MAX_BASES) throw NoMergeBaseException(
                     NoMergeBaseException.MergeBaseFailureReason.TOO_MANY_MERGE_BASES,
                     MessageFormat.format(
                         JGitText.get().mergeRecursiveTooManyMergeBasesFor,
-                        MAX_BASES, a.name(), b.name(),
+                        Companion.MAX_BASES, a.name(), b.name(),
                         baseCommits.size
                     )
                 )
@@ -224,5 +219,11 @@ class RecursiveMerger : ResolveMerger {
                 TimeZone.getTimeZone("GMT+0000")
             ) //$NON-NLS-1$
         }
+
+        /**
+         * The maximum number of merge bases. This merge will stop when the number
+         * of merge bases exceeds this value
+         */
+        const val MAX_BASES: Int = 200
     }
 }
