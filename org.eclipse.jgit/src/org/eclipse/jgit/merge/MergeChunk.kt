@@ -40,7 +40,7 @@ class MergeChunk
      * @return the index of the sequence to which this sequence chunks belongs
      * to. Same as in [org.eclipse.jgit.merge.MergeResult.add]
      */
-	@JvmField val sequenceIndex: Int,
+	val sequenceIndex: Int,
 	/**
      * Get the first element from the specified sequence which should be
      * included in the merge result.
@@ -48,7 +48,7 @@ class MergeChunk
      * @return the first element from the specified sequence which should be
      * included in the merge result. Indexes start with 0.
      */
-	@JvmField val begin: Int,
+	val begin: Int,
 	/**
      * Get the end of the range of this chunk.
      *
@@ -57,14 +57,14 @@ class MergeChunk
      * elements between begin (including begin) and this element are
      * added.
      */
-	@JvmField val end: Int,
+	val end: Int,
 	/**
      * Get the state of this chunk.
      *
      * @return the state of this chunk. See
      * [org.eclipse.jgit.merge.MergeChunk.ConflictState]
      */
-	@JvmField val conflictState: ConflictState
+	val conflictState: ConflictState
 ) {
     /**
      * A state telling whether a MergeChunk belongs to a conflict or not. The
