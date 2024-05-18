@@ -134,7 +134,11 @@ class MergeMessageFormatter {
         conflictingPaths: Iterable<String?>, commentChar: Char
     ): String {
         val sb = StringBuilder()
-        val lines = message.split("\n").toTypedArray() //$NON-NLS-1$
+        val lines = message.takeIf { it.isNotEmpty() }
+            ?.split('\n')
+            ?.dropLastWhile { it.isEmpty() }
+            ?.toTypedArray() //$NON-NLS-1$
+            ?: arrayOf("")
         val firstFooterLine = ChangeIdUtil.indexOfFirstFooterLine(lines)
         for (i in 0 until firstFooterLine) {
             sb.append(lines[i]).append('\n')
