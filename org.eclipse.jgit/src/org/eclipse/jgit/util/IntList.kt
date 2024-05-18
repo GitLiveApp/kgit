@@ -8,232 +8,221 @@
  *
  * SPDX-License-Identifier: BSD-3-Clause
  */
-
-package org.eclipse.jgit.util;
+package org.eclipse.jgit.util
 
 /**
  * A more efficient List&lt;Integer&gt; using a primitive integer array.
  */
-public class IntList {
-	private int[] entries;
+class IntList @JvmOverloads constructor(capacity: Int = 10) {
+    private var entries: IntArray
 
-	private int count;
+    private var count = 0
 
-	/**
-	 * Create an empty list with a default capacity.
-	 */
-	public IntList() {
-		this(10);
-	}
+    /**
+     * Create an empty list with the specified capacity.
+     *
+     * @param capacity
+     * number of entries the list can initially hold.
+     */
+    /**
+     * Create an empty list with a default capacity.
+     */
+    init {
+        entries = IntArray(capacity)
+    }
 
-	/**
-	 * Create an empty list with the specified capacity.
-	 *
-	 * @param capacity
-	 *            number of entries the list can initially hold.
-	 */
-	public IntList(int capacity) {
-		entries = new int[capacity];
-	}
+    /**
+     * Get number of entries in this list.
+     *
+     * @return number of entries in this list.
+     */
+    fun size(): Int {
+        return count
+    }
 
-	/**
-	 * Create a list initialized with the values of the given range.
-	 *
-	 * @param start
-	 *            the beginning of the range, inclusive
-	 * @param end
-	 *            the end of the range, exclusive
-	 * @return the list initialized with the given range
-	 * @since 6.6
-	 */
-	public static IntList filledWithRange(int start, int end) {
-		IntList list = new IntList(end - start);
-		for (int val = start; val < end; val++) {
-			list.add(val);
-		}
-		return list;
-	}
+    /**
+     * Check if an entry appears in this collection.
+     *
+     * @param value
+     * the value to search for.
+     * @return true of `value` appears in this list.
+     * @since 4.9
+     */
+    fun contains(value: Int): Boolean {
+        for (i in 0 until count) if (entries[i] == value) return true
+        return false
+    }
 
-	/**
-	 * Get number of entries in this list.
-	 *
-	 * @return number of entries in this list.
-	 */
-	public int size() {
-		return count;
-	}
+    /**
+     * Get the value at the specified index
+     *
+     * @param i
+     * index to read, must be in the range [0, [.size]).
+     * @return the number at the specified index
+     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * the index outside the valid range
+     */
+    operator fun get(i: Int): Int {
+        if (count <= i) throw ArrayIndexOutOfBoundsException(i)
+        return entries[i]
+    }
 
-	/**
-	 * Check if an entry appears in this collection.
-	 *
-	 * @param value
-	 *            the value to search for.
-	 * @return true of {@code value} appears in this list.
-	 * @since 4.9
-	 */
-	public boolean contains(int value) {
-		for (int i = 0; i < count; i++)
-			if (entries[i] == value)
-				return true;
-		return false;
-	}
+    /**
+     * Empty this list
+     */
+    fun clear() {
+        count = 0
+    }
 
-	/**
-	 * Get the value at the specified index
-	 *
-	 * @param i
-	 *            index to read, must be in the range [0, {@link #size()}).
-	 * @return the number at the specified index
-	 * @throws java.lang.ArrayIndexOutOfBoundsException
-	 *             the index outside the valid range
-	 */
-	public int get(int i) {
-		if (count <= i)
-			throw new ArrayIndexOutOfBoundsException(i);
-		return entries[i];
-	}
+    /**
+     * Add an entry to the end of the list.
+     *
+     * @param n
+     * the number to add.
+     */
+    fun add(n: Int) {
+        if (count == entries.size) grow()
+        entries[count++] = n
+    }
 
-	/**
-	 * Empty this list
-	 */
-	public void clear() {
-		count = 0;
-	}
+    /**
+     * Assign an entry in the list.
+     *
+     * @param index
+     * index to set, must be in the range [0, [.size]).
+     * @param n
+     * value to store at the position.
+     */
+    operator fun set(index: Int, n: Int) {
+        if (count < index) throw ArrayIndexOutOfBoundsException(index)
+        else if (count == index) add(n)
+        else entries[index] = n
+    }
 
-	/**
-	 * Add an entry to the end of the list.
-	 *
-	 * @param n
-	 *            the number to add.
-	 */
-	public void add(int n) {
-		if (count == entries.length)
-			grow();
-		entries[count++] = n;
-	}
+    /**
+     * Pad the list with entries.
+     *
+     * @param toIndex
+     * index position to stop filling at. 0 inserts no filler. 1
+     * ensures the list has a size of 1, adding `val` if
+     * the list is currently empty.
+     * @param val
+     * value to insert into padded positions.
+     */
+    fun fillTo(toIndex: Int, `val`: Int) {
+        while (count < toIndex) add(`val`)
+    }
 
-	/**
-	 * Assign an entry in the list.
-	 *
-	 * @param index
-	 *            index to set, must be in the range [0, {@link #size()}).
-	 * @param n
-	 *            value to store at the position.
-	 */
-	public void set(int index, int n) {
-		if (count < index)
-			throw new ArrayIndexOutOfBoundsException(index);
-		else if (count == index)
-			add(n);
-		else
-			entries[index] = n;
-	}
+    /**
+     * Sort the entries of the list in-place, according to the comparator.
+     *
+     * @param comparator
+     * provides the comparison values for sorting the entries
+     * @since 6.6
+     */
+    fun sort(comparator: IntComparator) {
+        quickSort(0, count - 1, comparator)
+    }
 
-	/**
-	 * Pad the list with entries.
-	 *
-	 * @param toIndex
-	 *            index position to stop filling at. 0 inserts no filler. 1
-	 *            ensures the list has a size of 1, adding <code>val</code> if
-	 *            the list is currently empty.
-	 * @param val
-	 *            value to insert into padded positions.
-	 */
-	public void fillTo(int toIndex, int val) {
-		while (count < toIndex)
-			add(val);
-	}
+    /**
+     * Quick sort has average time complexity of O(n log n) and O(log n) space
+     * complexity (for recursion on the stack).
+     *
+     *
+     * Implementation based on https://www.baeldung.com/java-quicksort.
+     *
+     * @param begin
+     * the index to begin partitioning at, inclusive
+     * @param end
+     * the index to end partitioning at, inclusive
+     * @param comparator
+     * provides the comparison values for sorting the entries
+     */
+    private fun quickSort(begin: Int, end: Int, comparator: IntComparator) {
+        if (begin < end) {
+            val partitionIndex = partition(begin, end, comparator)
 
-	/**
-	 * Sort the entries of the list in-place, according to the comparator.
-	 *
-	 * @param comparator
-	 *            provides the comparison values for sorting the entries
-	 * @since 6.6
-	 */
-	public void sort(IntComparator comparator) {
-		quickSort(0, count - 1, comparator);
-	}
+            quickSort(begin, partitionIndex - 1, comparator)
+            quickSort(partitionIndex + 1, end, comparator)
+        }
+    }
 
-	/**
-	 * Quick sort has average time complexity of O(n log n) and O(log n) space
-	 * complexity (for recursion on the stack).
-	 * <p>
-	 * Implementation based on https://www.baeldung.com/java-quicksort.
-	 *
-	 * @param begin
-	 *            the index to begin partitioning at, inclusive
-	 * @param end
-	 *            the index to end partitioning at, inclusive
-	 * @param comparator
-	 *            provides the comparison values for sorting the entries
-	 */
-	private void quickSort(int begin, int end, IntComparator comparator) {
-		if (begin < end) {
-			int partitionIndex = partition(begin, end, comparator);
+    private fun partition(begin: Int, end: Int, comparator: IntComparator): Int {
+        val pivot = entries[end]
+        var writeSmallerIdx = (begin - 1)
 
-			quickSort(begin, partitionIndex - 1, comparator);
-			quickSort(partitionIndex + 1, end, comparator);
-		}
-	}
+        for (findSmallerIdx in begin until end) {
+            if (comparator.compare(entries[findSmallerIdx], pivot) <= 0) {
+                writeSmallerIdx++
 
-	private int partition(int begin, int end, IntComparator comparator) {
-		int pivot = entries[end];
-		int writeSmallerIdx = (begin - 1);
+                val biggerVal = entries[writeSmallerIdx]
+                entries[writeSmallerIdx] = entries[findSmallerIdx]
+                entries[findSmallerIdx] = biggerVal
+            }
+        }
 
-		for (int findSmallerIdx = begin; findSmallerIdx < end; findSmallerIdx++) {
-			if (comparator.compare(entries[findSmallerIdx], pivot) <= 0) {
-				writeSmallerIdx++;
+        val pivotIdx = writeSmallerIdx + 1
+        entries[end] = entries[pivotIdx]
+        entries[pivotIdx] = pivot
 
-				int biggerVal = entries[writeSmallerIdx];
-				entries[writeSmallerIdx] = entries[findSmallerIdx];
-				entries[findSmallerIdx] = biggerVal;
-			}
-		}
+        return pivotIdx
+    }
 
-		int pivotIdx = writeSmallerIdx + 1;
-		entries[end] = entries[pivotIdx];
-		entries[pivotIdx] = pivot;
+    private fun grow() {
+        val n = IntArray((entries.size + 16) * 3 / 2)
+        System.arraycopy(entries, 0, n, 0, count)
+        entries = n
+    }
 
-		return pivotIdx;
-	}
+    override fun toString(): String {
+        val r = StringBuilder()
+        r.append('[')
+        for (i in 0 until count) {
+            if (i > 0) r.append(", ") //$NON-NLS-1$
 
-	private void grow() {
-		final int[] n = new int[(entries.length + 16) * 3 / 2];
-		System.arraycopy(entries, 0, n, 0, count);
-		entries = n;
-	}
+            r.append(entries[i])
+        }
+        r.append(']')
+        return r.toString()
+    }
 
-	@Override
-	public String toString() {
-		final StringBuilder r = new StringBuilder();
-		r.append('[');
-		for (int i = 0; i < count; i++) {
-			if (i > 0)
-				r.append(", "); //$NON-NLS-1$
-			r.append(entries[i]);
-		}
-		r.append(']');
-		return r.toString();
-	}
+    /**
+     * A comparator of primitive ints.
+     *
+     * @since 6.6
+     */
+    interface IntComparator {
+        /**
+         * Compares the two int arguments for order.
+         *
+         * @param first
+         * the first int to compare
+         * @param second
+         * the second int to compare
+         * @return a negative number if first &lt; second, 0 if first == second, or
+         * a positive number if first &gt; second
+         */
+        fun compare(first: Int, second: Int): Int
+    }
 
-	/**
-	 * A comparator of primitive ints.
-	 *
-	 * @since 6.6
-	 */
-	public interface IntComparator {
-
-		/**
-		 * Compares the two int arguments for order.
-		 *
-		 * @param first
-		 *            the first int to compare
-		 * @param second
-		 *            the second int to compare
-		 * @return a negative number if first &lt; second, 0 if first == second, or
-		 *         a positive number if first &gt; second
-		 */
-		int compare(int first, int second);
-	}
+    companion object {
+        /**
+         * Create a list initialized with the values of the given range.
+         *
+         * @param start
+         * the beginning of the range, inclusive
+         * @param end
+         * the end of the range, exclusive
+         * @return the list initialized with the given range
+         * @since 6.6
+         */
+        @JvmStatic
+        fun filledWithRange(start: Int, end: Int): IntList {
+            val list = IntList(end - start)
+            for (`val` in start until end) {
+                list.add(`val`)
+            }
+            return list
+        }
+    }
 }
