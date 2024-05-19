@@ -58,8 +58,8 @@ abstract class LowLevelDiffAlgorithm : DiffAlgorithm() {
      * the region being compared within the two sequences.
     </S> */
     abstract fun <S : Sequence> diffNonCommon(
-        edits: EditList?,
-        cmp: HashedSequenceComparator<S>?, a: HashedSequence<S>?,
-        b: HashedSequence<S>?, region: Edit?
+        edits: EditList,
+        cmp: HashedSequenceComparator<S>, a: HashedSequence<S>,
+        b: HashedSequence<S>, region: Edit
     )
 }

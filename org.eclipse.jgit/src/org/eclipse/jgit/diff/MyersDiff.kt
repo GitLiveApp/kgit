@@ -538,9 +538,9 @@ class MyersDiff<S : Sequence> private constructor(
 		val INSTANCE: DiffAlgorithm = object : LowLevelDiffAlgorithm() {
             @Suppress("unused")
             override fun <S : Sequence> diffNonCommon(
-                edits: EditList?,
-                cmp: HashedSequenceComparator<S>?, a: HashedSequence<S>?,
-                b: HashedSequence<S>?, region: Edit?
+                edits: EditList,
+                cmp: HashedSequenceComparator<S>, a: HashedSequence<S>,
+                b: HashedSequence<S>, region: Edit
             ) {
                 MyersDiff(edits, cmp, a, b, region)
             }
