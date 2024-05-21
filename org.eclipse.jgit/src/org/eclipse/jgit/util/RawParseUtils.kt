@@ -10,12 +10,12 @@
  */
 package org.eclipse.jgit.util
 
-import org.eclipse.jgit.annotations.Nullable
+//import org.eclipse.jgit.annotations.Nullable
 import org.eclipse.jgit.diff.RawText.Companion.isBinary
-import org.eclipse.jgit.errors.BinaryBlobException
+//import org.eclipse.jgit.errors.BinaryBlobException
 import org.eclipse.jgit.lib.Constants.encode
-import org.eclipse.jgit.lib.ObjectChecker
-import org.eclipse.jgit.lib.PersonIdent
+//import org.eclipse.jgit.lib.ObjectChecker
+//import org.eclipse.jgit.lib.PersonIdent
 import java.nio.ByteBuffer
 import java.nio.charset.*
 import java.util.*
@@ -212,39 +212,39 @@ object RawParseUtils {
      * @return the value at this location; 0 if the location is not a valid
      * numeric.
      */
-    @JvmStatic
-    fun parseBase10(
-        b: ByteArray, ptr: Int,
-        ptrResult: MutableInteger?
-    ): Int {
-        var ptr = ptr
-        var r = 0
-        var sign = 0
-        try {
-            val sz = b.size
-            while (ptr < sz && b[ptr] == ' '.code.toByte()) ptr++
-            if (ptr >= sz) return 0
-
-            when (b[ptr]) {
-                '-'.code.toByte() -> {
-                    sign = -1
-                    ptr++
-                }
-
-                '+'.code.toByte() -> ptr++
-            }
-            while (ptr < sz) {
-                val v = digits10[b[ptr].toInt()]
-                if (v < 0) break
-                r = (r * 10) + v
-                ptr++
-            }
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            // Not a valid digit.
-        }
-        if (ptrResult != null) ptrResult.value = ptr
-        return if (sign < 0) -r else r
-    }
+//    @JvmStatic
+//    fun parseBase10(
+//        b: ByteArray, ptr: Int,
+//        ptrResult: MutableInteger?
+//    ): Int {
+//        var ptr = ptr
+//        var r = 0
+//        var sign = 0
+//        try {
+//            val sz = b.size
+//            while (ptr < sz && b[ptr] == ' '.code.toByte()) ptr++
+//            if (ptr >= sz) return 0
+//
+//            when (b[ptr]) {
+//                '-'.code.toByte() -> {
+//                    sign = -1
+//                    ptr++
+//                }
+//
+//                '+'.code.toByte() -> ptr++
+//            }
+//            while (ptr < sz) {
+//                val v = digits10[b[ptr].toInt()]
+//                if (v < 0) break
+//                r = (r * 10) + v
+//                ptr++
+//            }
+//        } catch (e: ArrayIndexOutOfBoundsException) {
+//            // Not a valid digit.
+//        }
+//        if (ptrResult != null) ptrResult.value = ptr
+//        return if (sign < 0) -r else r
+//    }
 
     /**
      * Parse a base 10 numeric from a sequence of ASCII digits into a long.
@@ -265,39 +265,39 @@ object RawParseUtils {
      * @return the value at this location; 0 if the location is not a valid
      * numeric.
      */
-    @JvmStatic
-    fun parseLongBase10(
-        b: ByteArray, ptr: Int,
-        ptrResult: MutableInteger?
-    ): Long {
-        var ptr = ptr
-        var r: Long = 0
-        var sign = 0
-        try {
-            val sz = b.size
-            while (ptr < sz && b[ptr] == ' '.code.toByte()) ptr++
-            if (ptr >= sz) return 0
-
-            when (b[ptr]) {
-                '-'.code.toByte() -> {
-                    sign = -1
-                    ptr++
-                }
-
-                '+'.code.toByte() -> ptr++
-            }
-            while (ptr < sz) {
-                val v = digits10[b[ptr].toInt()]
-                if (v < 0) break
-                r = (r * 10) + v
-                ptr++
-            }
-        } catch (e: ArrayIndexOutOfBoundsException) {
-            // Not a valid digit.
-        }
-        if (ptrResult != null) ptrResult.value = ptr
-        return if (sign < 0) -r else r
-    }
+//    @JvmStatic
+//    fun parseLongBase10(
+//        b: ByteArray, ptr: Int,
+//        ptrResult: MutableInteger?
+//    ): Long {
+//        var ptr = ptr
+//        var r: Long = 0
+//        var sign = 0
+//        try {
+//            val sz = b.size
+//            while (ptr < sz && b[ptr] == ' '.code.toByte()) ptr++
+//            if (ptr >= sz) return 0
+//
+//            when (b[ptr]) {
+//                '-'.code.toByte() -> {
+//                    sign = -1
+//                    ptr++
+//                }
+//
+//                '+'.code.toByte() -> ptr++
+//            }
+//            while (ptr < sz) {
+//                val v = digits10[b[ptr].toInt()]
+//                if (v < 0) break
+//                r = (r * 10) + v
+//                ptr++
+//            }
+//        } catch (e: ArrayIndexOutOfBoundsException) {
+//            // Not a valid digit.
+//        }
+//        if (ptrResult != null) ptrResult.value = ptr
+//        return if (sign < 0) -r else r
+//    }
 
     /**
      * Parse 4 character base 16 (hex) formatted string to unsigned integer.
@@ -485,17 +485,17 @@ object RawParseUtils {
      * position within buffer to start parsing digits at.
      * @return the timezone at this location, expressed in minutes.
      */
-    @JvmOverloads
-    @JvmStatic
-    fun parseTimeZoneOffset(
-        b: ByteArray, ptr: Int,
-        ptrResult: MutableInteger? = null
-    ): Int {
-        val v = parseBase10(b, ptr, ptrResult)
-        val tzMins = v % 100
-        val tzHours = v / 100
-        return tzHours * 60 + tzMins
-    }
+//    @JvmOverloads
+//    @JvmStatic
+//    fun parseTimeZoneOffset(
+//        b: ByteArray, ptr: Int,
+//        ptrResult: MutableInteger? = null
+//    ): Int {
+//        val v = parseBase10(b, ptr, ptrResult)
+//        val tzMins = v % 100
+//        val tzHours = v / 100
+//        return tzHours * 60 + tzMins
+//    }
 
     /**
      * Locate the first position after a given character.
@@ -693,26 +693,26 @@ object RawParseUtils {
      * @return whether the message starts with any known headers
      * @since 6.9
      */
-    @JvmStatic
-    fun hasAnyKnownHeaders(b: ByteArray): Boolean {
-        return match(b, 0, ObjectChecker.tree) != -1 || match(
-            b,
-            0,
-            ObjectChecker.parent
-        ) != -1 || match(
-            b,
-            0,
-            ObjectChecker.author
-        ) != -1 || match(b, 0, ObjectChecker.committer) != -1 || match(
-            b,
-            0,
-            ObjectChecker.encoding
-        ) != -1 || match(b, 0, ObjectChecker.`object`) != -1 || match(
-            b,
-            0,
-            ObjectChecker.type
-        ) != -1 || match(b, 0, ObjectChecker.tag) != -1 || match(b, 0, ObjectChecker.tagger) != -1
-    }
+//    @JvmStatic
+//    fun hasAnyKnownHeaders(b: ByteArray): Boolean {
+//        return match(b, 0, ObjectChecker.tree) != -1 || match(
+//            b,
+//            0,
+//            ObjectChecker.parent
+//        ) != -1 || match(
+//            b,
+//            0,
+//            ObjectChecker.author
+//        ) != -1 || match(b, 0, ObjectChecker.committer) != -1 || match(
+//            b,
+//            0,
+//            ObjectChecker.encoding
+//        ) != -1 || match(b, 0, ObjectChecker.`object`) != -1 || match(
+//            b,
+//            0,
+//            ObjectChecker.type
+//        ) != -1 || match(b, 0, ObjectChecker.tag) != -1 || match(b, 0, ObjectChecker.tagger) != -1
+//    }
 
     /**
      * Locate the first position before a given character.
@@ -832,34 +832,34 @@ object RawParseUtils {
      * if a NUL byte or a lone CR is found.
      * @since 5.0
      */
-    @Throws(BinaryBlobException::class)
-    @JvmStatic
-    fun lineMapOrBinary(buf: ByteArray, ptr: Int, end: Int): IntList {
-        // Experimentally derived from multiple source repositories
-        // the average number of bytes/line is 36. Its a rough guess
-        // to initially size our map close to the target.
-        var ptr = ptr
-        val map = IntList((end - ptr) / 36)
-        map.add(Int.MIN_VALUE)
-        var last = '\n'.code.toByte() // Must be \n to add the initial ptr
-        while (ptr < end) {
-            if (last == '\n'.code.toByte()) {
-                map.add(ptr)
-            }
-            val curr = buf[ptr]
-            if (isBinary(curr, last)) {
-                throw BinaryBlobException()
-            }
-            last = curr
-            ptr++
-        }
-        if (last == '\r'.code.toByte()) {
-            // Counts as binary
-            throw BinaryBlobException()
-        }
-        map.add(end)
-        return map
-    }
+//    @Throws(BinaryBlobException::class)
+//    @JvmStatic
+//    fun lineMapOrBinary(buf: ByteArray, ptr: Int, end: Int): IntList {
+//        // Experimentally derived from multiple source repositories
+//        // the average number of bytes/line is 36. Its a rough guess
+//        // to initially size our map close to the target.
+//        var ptr = ptr
+//        val map = IntList((end - ptr) / 36)
+//        map.add(Int.MIN_VALUE)
+//        var last = '\n'.code.toByte() // Must be \n to add the initial ptr
+//        while (ptr < end) {
+//            if (last == '\n'.code.toByte()) {
+//                map.add(ptr)
+//            }
+//            val curr = buf[ptr]
+//            if (isBinary(curr, last)) {
+//                throw BinaryBlobException()
+//            }
+//            last = curr
+//            ptr++
+//        }
+//        if (last == '\r'.code.toByte()) {
+//            // Counts as binary
+//            throw BinaryBlobException()
+//        }
+//        map.add(end)
+//        return map
+//    }
 
     /**
      * Locate the "author " header line data.
@@ -874,16 +874,16 @@ object RawParseUtils {
      * character of the author's name. If no author header can be
      * located -1 is returned.
      */
-    @JvmStatic
-    fun author(b: ByteArray, ptr: Int): Int {
-        var ptr = ptr
-        val sz = b.size
-        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
-
-        while (ptr < sz && b[ptr] == 'p'.code.toByte()) ptr += 48 // skip this parent.
-
-        return match(b, ptr, ObjectChecker.author)
-    }
+//    @JvmStatic
+//    fun author(b: ByteArray, ptr: Int): Int {
+//        var ptr = ptr
+//        val sz = b.size
+//        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
+//
+//        while (ptr < sz && b[ptr] == 'p'.code.toByte()) ptr += 48 // skip this parent.
+//
+//        return match(b, ptr, ObjectChecker.author)
+//    }
 
     /**
      * Locate the "committer " header line data.
@@ -898,17 +898,17 @@ object RawParseUtils {
      * character of the committer's name. If no committer header can be
      * located -1 is returned.
      */
-    @JvmStatic
-    fun committer(b: ByteArray, ptr: Int): Int {
-        var ptr = ptr
-        val sz = b.size
-        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
-
-        while (ptr < sz && b[ptr] == 'p'.code.toByte()) ptr += 48 // skip this parent.
-
-        if (ptr < sz && b[ptr] == 'a'.code.toByte()) ptr = nextLF(b, ptr)
-        return match(b, ptr, ObjectChecker.committer)
-    }
+//    @JvmStatic
+//    fun committer(b: ByteArray, ptr: Int): Int {
+//        var ptr = ptr
+//        val sz = b.size
+//        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
+//
+//        while (ptr < sz && b[ptr] == 'p'.code.toByte()) ptr += 48 // skip this parent.
+//
+//        if (ptr < sz && b[ptr] == 'a'.code.toByte()) ptr = nextLF(b, ptr)
+//        return match(b, ptr, ObjectChecker.committer)
+//    }
 
     /**
      * Locate the "tagger " header line data.
@@ -923,20 +923,20 @@ object RawParseUtils {
      * character of the tagger's name. If no tagger header can be
      * located -1 is returned.
      */
-    @JvmStatic
-    fun tagger(b: ByteArray, ptr: Int): Int {
-        var ptr = ptr
-        val sz = b.size
-        if (ptr == 0) ptr += 48 // skip the "object ..." line.
-
-        while (ptr < sz) {
-            if (b[ptr] == '\n'.code.toByte()) return -1
-            val m = match(b, ptr, ObjectChecker.tagger)
-            if (m >= 0) return m
-            ptr = nextLF(b, ptr)
-        }
-        return -1
-    }
+//    @JvmStatic
+//    fun tagger(b: ByteArray, ptr: Int): Int {
+//        var ptr = ptr
+//        val sz = b.size
+//        if (ptr == 0) ptr += 48 // skip the "object ..." line.
+//
+//        while (ptr < sz) {
+//            if (b[ptr] == '\n'.code.toByte()) return -1
+//            val m = match(b, ptr, ObjectChecker.tagger)
+//            if (m >= 0) return m
+//            ptr = nextLF(b, ptr)
+//        }
+//        return -1
+//    }
 
     /**
      * Locate the "encoding " header line.
@@ -951,17 +951,17 @@ object RawParseUtils {
      * character of the encoding's name. If no encoding header can be
      * located -1 is returned (and UTF-8 should be assumed).
      */
-    @JvmStatic
-    fun encoding(b: ByteArray, ptr: Int): Int {
-        var ptr = ptr
-        val sz = b.size
-        while (ptr < sz) {
-            if (b[ptr] == '\n'.code.toByte()) return -1
-            if (b[ptr] == 'e'.code.toByte()) break
-            ptr = nextLF(b, ptr)
-        }
-        return match(b, ptr, ObjectChecker.encoding)
-    }
+//    @JvmStatic
+//    fun encoding(b: ByteArray, ptr: Int): Int {
+//        var ptr = ptr
+//        val sz = b.size
+//        while (ptr < sz) {
+//            if (b[ptr] == '\n'.code.toByte()) return -1
+//            if (b[ptr] == 'e'.code.toByte()) break
+//            ptr = nextLF(b, ptr)
+//        }
+//        return match(b, ptr, ObjectChecker.encoding)
+//    }
 
     /**
      * Parse the "encoding " header as a string.
@@ -975,16 +975,16 @@ object RawParseUtils {
      * header was not present and should be assumed.
      * @since 4.2
      */
-    @Nullable
-    @JvmStatic
-    fun parseEncodingName(b: ByteArray): String? {
-        val enc = encoding(b, 0)
-        if (enc < 0) {
-            return null
-        }
-        val lf = nextLF(b, enc)
-        return decode(StandardCharsets.UTF_8, b, enc, lf - 1)
-    }
+//    @Nullable
+//    @JvmStatic
+//    fun parseEncodingName(b: ByteArray): String? {
+//        val enc = encoding(b, 0)
+//        if (enc < 0) {
+//            return null
+//        }
+//        val lf = nextLF(b, enc)
+//        return decode(StandardCharsets.UTF_8, b, enc, lf - 1)
+//    }
 
     /**
      * Parse the "encoding " header into a character set reference.
@@ -1007,27 +1007,27 @@ object RawParseUtils {
      * if the JRE does not support the character set requested by
      * the encoding header.
      */
-    @JvmStatic
-    fun parseEncoding(b: ByteArray): Charset {
-        val enc = parseEncodingName(b) ?: return StandardCharsets.UTF_8
-
-        val name = enc.trim { it <= ' ' }
-        try {
-            return Charset.forName(name)
-        } catch (badName: IllegalCharsetNameException) {
-            val aliased = charsetForAlias(name)
-            if (aliased != null) {
-                return aliased
-            }
-            throw badName
-        } catch (badName: UnsupportedCharsetException) {
-            val aliased = charsetForAlias(name)
-            if (aliased != null) {
-                return aliased
-            }
-            throw badName
-        }
-    }
+//    @JvmStatic
+//    fun parseEncoding(b: ByteArray): Charset {
+//        val enc = parseEncodingName(b) ?: return StandardCharsets.UTF_8
+//
+//        val name = enc.trim { it <= ' ' }
+//        try {
+//            return Charset.forName(name)
+//        } catch (badName: IllegalCharsetNameException) {
+//            val aliased = charsetForAlias(name)
+//            if (aliased != null) {
+//                return aliased
+//            }
+//            throw badName
+//        } catch (badName: UnsupportedCharsetException) {
+//            val aliased = charsetForAlias(name)
+//            if (aliased != null) {
+//                return aliased
+//            }
+//            throw badName
+//        }
+//    }
 
     /**
      * Parse the "encoding " header into a character set reference.
@@ -1042,16 +1042,16 @@ object RawParseUtils {
      * @see .parseEncoding
      * @since 6.7
      */
-    @JvmStatic
-    fun guessEncoding(buffer: ByteArray): Charset {
-        return try {
-            parseEncoding(buffer)
-        } catch (e: IllegalCharsetNameException) {
-            StandardCharsets.UTF_8
-        } catch (e: UnsupportedCharsetException) {
-            StandardCharsets.UTF_8
-        }
-    }
+//    @JvmStatic
+//    fun guessEncoding(buffer: ByteArray): Charset {
+//        return try {
+//            parseEncoding(buffer)
+//        } catch (e: IllegalCharsetNameException) {
+//            StandardCharsets.UTF_8
+//        } catch (e: UnsupportedCharsetException) {
+//            StandardCharsets.UTF_8
+//        }
+//    }
 
     /**
      * Parse a name string (e.g. author, committer, tagger) into a PersonIdent.
@@ -1065,10 +1065,10 @@ object RawParseUtils {
      * @return the parsed identity or null in case the identity could not be
      * parsed.
      */
-    @JvmStatic
-    fun parsePersonIdent(`in`: String?): PersonIdent? {
-        return parsePersonIdent(encode(`in`), 0)
-    }
+//    @JvmStatic
+//    fun parsePersonIdent(`in`: String?): PersonIdent? {
+//        return parsePersonIdent(encode(`in`), 0)
+//    }
 
     /**
      * Parse a name line (e.g. author, committer, tagger) into a PersonIdent.
@@ -1089,54 +1089,54 @@ object RawParseUtils {
      * @return the parsed identity or null in case the identity could not be
      * parsed.
      */
-    @JvmStatic
-    fun parsePersonIdent(raw: ByteArray, nameB: Int): PersonIdent? {
-        var cs = try {
-            parseEncoding(raw)
-        } catch (e: IllegalCharsetNameException) {
-            // Assume UTF-8 for person identities, usually this is correct.
-            // If not decode() will fall back to the ISO-8859-1 encoding.
-            StandardCharsets.UTF_8
-        } catch (e: UnsupportedCharsetException) {
-            StandardCharsets.UTF_8
-        }
-
-        val emailB = nextLF(raw, nameB, '<')
-        val emailE = nextLF(raw, emailB, '>')
-        if (emailB >= raw.size || raw[emailB] == '\n'.code.toByte() ||
-            (emailE >= raw.size - 1 && raw[emailE - 1] != '>'.code.toByte())
-        ) return null
-
-        val nameEnd = if (emailB - 2 >= nameB && raw[emailB - 2] == ' '.code.toByte()) emailB - 2 else emailB - 1
-        val name = decode(cs, raw, nameB, nameEnd)
-        val email = decode(cs, raw, emailB, emailE - 1)
-
-        // Start searching from end of line, as after first name-email pair,
-        // another name-email pair may occur. We will ignore all kinds of
-        // "junk" following the first email.
-        //
-        // We've to use (emailE - 1) for the case that raw[email] is LF,
-        // otherwise we would run too far. "-2" is necessary to position
-        // before the LF in case of LF termination resp. the penultimate
-        // character if there is no trailing LF.
-        val tzBegin = lastIndexOfTrim(
-            raw, ' ',
-            nextLF(raw, emailE - 1) - 2
-        ) + 1
-        if (tzBegin <= emailE) // No time/zone, still valid
-            return PersonIdent(name, email, 0, 0)
-
-        val whenBegin = max(
-            emailE.toDouble(),
-            (lastIndexOfTrim(raw, ' ', tzBegin - 1) + 1).toDouble()
-        ).toInt()
-        if (whenBegin >= tzBegin - 1) // No time/zone, still valid
-            return PersonIdent(name, email, 0, 0)
-
-        val `when` = parseLongBase10(raw, whenBegin, null)
-        val tz = parseTimeZoneOffset(raw, tzBegin)
-        return PersonIdent(name, email, `when` * 1000L, tz)
-    }
+//    @JvmStatic
+//    fun parsePersonIdent(raw: ByteArray, nameB: Int): PersonIdent? {
+//        var cs = try {
+//            parseEncoding(raw)
+//        } catch (e: IllegalCharsetNameException) {
+//            // Assume UTF-8 for person identities, usually this is correct.
+//            // If not decode() will fall back to the ISO-8859-1 encoding.
+//            StandardCharsets.UTF_8
+//        } catch (e: UnsupportedCharsetException) {
+//            StandardCharsets.UTF_8
+//        }
+//
+//        val emailB = nextLF(raw, nameB, '<')
+//        val emailE = nextLF(raw, emailB, '>')
+//        if (emailB >= raw.size || raw[emailB] == '\n'.code.toByte() ||
+//            (emailE >= raw.size - 1 && raw[emailE - 1] != '>'.code.toByte())
+//        ) return null
+//
+//        val nameEnd = if (emailB - 2 >= nameB && raw[emailB - 2] == ' '.code.toByte()) emailB - 2 else emailB - 1
+//        val name = decode(cs, raw, nameB, nameEnd)
+//        val email = decode(cs, raw, emailB, emailE - 1)
+//
+//        // Start searching from end of line, as after first name-email pair,
+//        // another name-email pair may occur. We will ignore all kinds of
+//        // "junk" following the first email.
+//        //
+//        // We've to use (emailE - 1) for the case that raw[email] is LF,
+//        // otherwise we would run too far. "-2" is necessary to position
+//        // before the LF in case of LF termination resp. the penultimate
+//        // character if there is no trailing LF.
+//        val tzBegin = lastIndexOfTrim(
+//            raw, ' ',
+//            nextLF(raw, emailE - 1) - 2
+//        ) + 1
+//        if (tzBegin <= emailE) // No time/zone, still valid
+//            return PersonIdent(name, email, 0, 0)
+//
+//        val whenBegin = max(
+//            emailE.toDouble(),
+//            (lastIndexOfTrim(raw, ' ', tzBegin - 1) + 1).toDouble()
+//        ).toInt()
+//        if (whenBegin >= tzBegin - 1) // No time/zone, still valid
+//            return PersonIdent(name, email, 0, 0)
+//
+//        val `when` = parseLongBase10(raw, whenBegin, null)
+//        val tz = parseTimeZoneOffset(raw, tzBegin)
+//        return PersonIdent(name, email, `when` * 1000L, tz)
+//    }
 
     /**
      * Parse a name data (e.g. as within a reflog) into a PersonIdent.
@@ -1156,34 +1156,34 @@ object RawParseUtils {
      * identity line.
      * @return the parsed identity. Never null.
      */
-    @JvmStatic
-    fun parsePersonIdentOnly(
-        raw: ByteArray,
-        nameB: Int
-    ): PersonIdent {
-        val stop = nextLF(raw, nameB)
-        val emailB = nextLF(raw, nameB, '<')
-        val emailE = nextLF(raw, emailB, '>')
-        val email = if (emailE < stop) {
-            decode(raw, emailB, emailE - 1)
-        } else {
-            "invalid" //$NON-NLS-1$
-        }
-        val name = if (emailB < stop) decode(raw, nameB, emailB - 2)
-        else decode(raw, nameB, stop)
-
-        val ptrout = MutableInteger()
-        val `when`: Long
-        val tz: Int
-        if (emailE < stop) {
-            `when` = parseLongBase10(raw, emailE + 1, ptrout)
-            tz = parseTimeZoneOffset(raw, ptrout.value)
-        } else {
-            `when` = 0
-            tz = 0
-        }
-        return PersonIdent(name, email, `when` * 1000L, tz)
-    }
+//    @JvmStatic
+//    fun parsePersonIdentOnly(
+//        raw: ByteArray,
+//        nameB: Int
+//    ): PersonIdent {
+//        val stop = nextLF(raw, nameB)
+//        val emailB = nextLF(raw, nameB, '<')
+//        val emailE = nextLF(raw, emailB, '>')
+//        val email = if (emailE < stop) {
+//            decode(raw, emailB, emailE - 1)
+//        } else {
+//            "invalid" //$NON-NLS-1$
+//        }
+//        val name = if (emailB < stop) decode(raw, nameB, emailB - 2)
+//        else decode(raw, nameB, stop)
+//
+//        val ptrout = MutableInteger()
+//        val `when`: Long
+//        val tz: Int
+//        if (emailE < stop) {
+//            `when` = parseLongBase10(raw, emailE + 1, ptrout)
+//            tz = parseTimeZoneOffset(raw, ptrout.value)
+//        } else {
+//            `when` = 0
+//            tz = 0
+//        }
+//        return PersonIdent(name, email, `when` * 1000L, tz)
+//    }
 
     /**
      * Locate the end of a footer line key string.
@@ -1248,14 +1248,14 @@ object RawParseUtils {
      * @return a string representation of the range `[start,end)`,
      * after decoding the region through the specified character set.
      */
-    @JvmOverloads
-    @JvmStatic
-    fun decode(
-        buffer: ByteArray, start: Int = 0,
-        end: Int = buffer.size
-    ): String {
-        return decode(StandardCharsets.UTF_8, buffer, start, end)
-    }
+//    @JvmOverloads
+//    @JvmStatic
+//    fun decode(
+//        buffer: ByteArray, start: Int = 0,
+//        end: Int = buffer.size
+//    ): String {
+//        return decode(StandardCharsets.UTF_8, buffer, start, end)
+//    }
 
     /**
      * Decode a region of the buffer under the specified character set if possible.
@@ -1288,21 +1288,21 @@ object RawParseUtils {
      * @return a string representation of the range `[start,end)`,
      * after decoding the region through the specified character set.
      */
-    @JvmOverloads
-    @JvmStatic
-    fun decode(
-        cs: Charset?, buffer: ByteArray,
-        start: Int = 0, end: Int = buffer.size
-    ): String {
-        return try {
-            decodeNoFallback(cs, buffer, start, end)
-        } catch (e: CharacterCodingException) {
-            // Fall back to an ISO-8859-1 style encoding. At least all of
-            // the bytes will be present in the output.
-            //
-            extractBinaryString(buffer, start, end)
-        }
-    }
+//    @JvmOverloads
+//    @JvmStatic
+//    fun decode(
+//        cs: Charset?, buffer: ByteArray,
+//        start: Int = 0, end: Int = buffer.size
+//    ): String {
+//        return try {
+//            decodeNoFallback(cs, buffer, start, end)
+//        } catch (e: CharacterCodingException) {
+//            // Fall back to an ISO-8859-1 style encoding. At least all of
+//            // the bytes will be present in the output.
+//            //
+//            extractBinaryString(buffer, start, end)
+//        }
+//    }
 
     /**
      * Decode a region of the buffer under the specified character set if
@@ -1325,47 +1325,47 @@ object RawParseUtils {
      * @throws java.nio.charset.CharacterCodingException
      * the input is not in any of the tested character sets.
      */
-    @JvmStatic
-    @Throws(CharacterCodingException::class)
-    fun decodeNoFallback(
-        cs: Charset?,
-        buffer: ByteArray?, start: Int, end: Int
-    ): String {
-        val b = ByteBuffer.wrap(buffer, start, end - start)
-        b.mark()
-
-        // Try our built-in favorite. The assumption here is that
-        // decoding will fail if the data is not actually encoded
-        // using that encoder.
-        try {
-            return decode(b, StandardCharsets.UTF_8)
-        } catch (e: CharacterCodingException) {
-            b.reset()
-        }
-
-        if (cs != StandardCharsets.UTF_8) {
-            // Try the suggested encoding, it might be right since it was
-            // provided by the caller.
-            try {
-                return decode(b, cs!!)
-            } catch (e: CharacterCodingException) {
-                b.reset()
-            }
-        }
-
-        // Try the default character set. A small group of people
-        // might actually use the same (or very similar) locale.
-        val defcs = SystemReader.getInstance().defaultCharset
-        if (defcs != cs && defcs != StandardCharsets.UTF_8) {
-            try {
-                return decode(b, defcs)
-            } catch (e: CharacterCodingException) {
-                b.reset()
-            }
-        }
-
-        throw CharacterCodingException()
-    }
+//    @JvmStatic
+//    @Throws(CharacterCodingException::class)
+//    fun decodeNoFallback(
+//        cs: Charset?,
+//        buffer: ByteArray?, start: Int, end: Int
+//    ): String {
+//        val b = ByteBuffer.wrap(buffer, start, end - start)
+//        b.mark()
+//
+//        // Try our built-in favorite. The assumption here is that
+//        // decoding will fail if the data is not actually encoded
+//        // using that encoder.
+//        try {
+//            return decode(b, StandardCharsets.UTF_8)
+//        } catch (e: CharacterCodingException) {
+//            b.reset()
+//        }
+//
+//        if (cs != StandardCharsets.UTF_8) {
+//            // Try the suggested encoding, it might be right since it was
+//            // provided by the caller.
+//            try {
+//                return decode(b, cs!!)
+//            } catch (e: CharacterCodingException) {
+//                b.reset()
+//            }
+//        }
+//
+//        // Try the default character set. A small group of people
+//        // might actually use the same (or very similar) locale.
+//        val defcs = SystemReader.getInstance().defaultCharset
+//        if (defcs != cs && defcs != StandardCharsets.UTF_8) {
+//            try {
+//                return decode(b, defcs)
+//            } catch (e: CharacterCodingException) {
+//                b.reset()
+//            }
+//        }
+//
+//        throw CharacterCodingException()
+//    }
 
     /**
      * Decode a region of the buffer under the ISO-8859-1 encoding.
@@ -1497,7 +1497,7 @@ object RawParseUtils {
         return pos
     }
 
-    private fun charsetForAlias(name: String): Charset? {
-        return encodingAliases[StringUtils.toLowerCase(name)]
-    }
+//    private fun charsetForAlias(name: String): Charset? {
+//        return encodingAliases[StringUtils.toLowerCase(name)]
+//    }
 }

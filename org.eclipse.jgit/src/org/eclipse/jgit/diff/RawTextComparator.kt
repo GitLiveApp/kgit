@@ -11,7 +11,7 @@
 package org.eclipse.jgit.diff
 
 import org.eclipse.jgit.util.IntList
-import org.eclipse.jgit.util.RawCharUtil
+//import org.eclipse.jgit.util.RawCharUtil
 
 /**
  * Equivalence function for [org.eclipse.jgit.diff.RawText].
@@ -120,181 +120,181 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
         }
 
         /** Ignores all whitespace.  */
-		@JvmField
-		val WS_IGNORE_ALL: RawTextComparator = object : RawTextComparator() {
-            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
-                var ai = ai
-                var bi = bi
-                ai++
-                bi++
-
-                var `as` = a.lines[ai]
-                var bs = b.lines[bi]
-                var ae = a.lines[ai + 1]
-                var be = b.lines[bi + 1]
-
-                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
-                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
-
-                while (`as` < ae && bs < be) {
-                    var ac = a.rawContent[`as`]
-                    var bc = b.rawContent[bs]
-
-                    while (`as` < ae - 1 && RawCharUtil.isWhitespace(ac)) {
-                        `as`++
-                        ac = a.rawContent[`as`]
-                    }
-
-                    while (bs < be - 1 && RawCharUtil.isWhitespace(bc)) {
-                        bs++
-                        bc = b.rawContent[bs]
-                    }
-
-                    if (ac != bc) return false
-
-                    `as`++
-                    bs++
-                }
-
-                return `as` == ae && bs == be
-            }
-
-            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
-                var ptr = ptr
-                var hash = 5381
-                while (ptr < end) {
-                    val c = raw[ptr]
-                    if (!RawCharUtil.isWhitespace(c)) hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
-                    ptr++
-                }
-                return hash
-            }
-        }
-
-        /**
-         * Ignore leading whitespace.
-         */
-		@JvmField
-		val WS_IGNORE_LEADING: RawTextComparator = object : RawTextComparator() {
-            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
-                var ai = ai
-                var bi = bi
-                ai++
-                bi++
-
-                var `as` = a.lines[ai]
-                var bs = b.lines[bi]
-                val ae = a.lines[ai + 1]
-                val be = b.lines[bi + 1]
-
-                `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
-                bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
-
-                if (ae - `as` != be - bs) return false
-
-                while (`as` < ae) {
-                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
-                }
-                return true
-            }
-
-            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
-                var ptr = ptr
-                var hash = 5381
-                ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
-                while (ptr < end) {
-                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
-                    ptr++
-                }
-                return hash
-            }
-        }
-
-        /** Ignores trailing whitespace.  */
-		@JvmField
-		val WS_IGNORE_TRAILING: RawTextComparator = object : RawTextComparator() {
-            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
-                var ai = ai
-                var bi = bi
-                ai++
-                bi++
-
-                var `as` = a.lines[ai]
-                var bs = b.lines[bi]
-                var ae = a.lines[ai + 1]
-                var be = b.lines[bi + 1]
-
-                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
-                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
-
-                if (ae - `as` != be - bs) return false
-
-                while (`as` < ae) {
-                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
-                }
-                return true
-            }
-
-            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
-                var ptr = ptr
-                var end = end
-                var hash = 5381
-                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
-                while (ptr < end) {
-                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
-                    ptr++
-                }
-                return hash
-            }
-        }
-
-        /** Ignores whitespace occurring between non-whitespace characters.  */
-		@JvmField
-		val WS_IGNORE_CHANGE: RawTextComparator = object : RawTextComparator() {
-            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
-                var ai = ai
-                var bi = bi
-                ai++
-                bi++
-
-                var `as` = a.lines[ai]
-                var bs = b.lines[bi]
-                var ae = a.lines[ai + 1]
-                var be = b.lines[bi + 1]
-
-                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
-                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
-
-                while (`as` < ae && bs < be) {
-                    val ac = a.rawContent[`as`++]
-                    val bc = b.rawContent[bs++]
-
-                    if (RawCharUtil.isWhitespace(ac) && RawCharUtil.isWhitespace(bc)) {
-                        `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
-                        bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
-                    } else if (ac != bc) {
-                        return false
-                    }
-                }
-                return `as` == ae && bs == be
-            }
-
-            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
-                var ptr = ptr
-                var end = end
-                var hash = 5381
-                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
-                while (ptr < end) {
-                    var c = raw[ptr++]
-                    if (RawCharUtil.isWhitespace(c)) {
-                        ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
-                        c = ' '.code.toByte()
-                    }
-                    hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
-                }
-                return hash
-            }
-        }
+//		@JvmField
+//		val WS_IGNORE_ALL: RawTextComparator = object : RawTextComparator() {
+//            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+//                var ai = ai
+//                var bi = bi
+//                ai++
+//                bi++
+//
+//                var `as` = a.lines[ai]
+//                var bs = b.lines[bi]
+//                var ae = a.lines[ai + 1]
+//                var be = b.lines[bi + 1]
+//
+//                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+//                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
+//
+//                while (`as` < ae && bs < be) {
+//                    var ac = a.rawContent[`as`]
+//                    var bc = b.rawContent[bs]
+//
+//                    while (`as` < ae - 1 && RawCharUtil.isWhitespace(ac)) {
+//                        `as`++
+//                        ac = a.rawContent[`as`]
+//                    }
+//
+//                    while (bs < be - 1 && RawCharUtil.isWhitespace(bc)) {
+//                        bs++
+//                        bc = b.rawContent[bs]
+//                    }
+//
+//                    if (ac != bc) return false
+//
+//                    `as`++
+//                    bs++
+//                }
+//
+//                return `as` == ae && bs == be
+//            }
+//
+//            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+//                var ptr = ptr
+//                var hash = 5381
+//                while (ptr < end) {
+//                    val c = raw[ptr]
+//                    if (!RawCharUtil.isWhitespace(c)) hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
+//                    ptr++
+//                }
+//                return hash
+//            }
+//        }
+//
+//        /**
+//         * Ignore leading whitespace.
+//         */
+//		@JvmField
+//		val WS_IGNORE_LEADING: RawTextComparator = object : RawTextComparator() {
+//            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+//                var ai = ai
+//                var bi = bi
+//                ai++
+//                bi++
+//
+//                var `as` = a.lines[ai]
+//                var bs = b.lines[bi]
+//                val ae = a.lines[ai + 1]
+//                val be = b.lines[bi + 1]
+//
+//                `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
+//                bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
+//
+//                if (ae - `as` != be - bs) return false
+//
+//                while (`as` < ae) {
+//                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
+//                }
+//                return true
+//            }
+//
+//            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+//                var ptr = ptr
+//                var hash = 5381
+//                ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
+//                while (ptr < end) {
+//                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
+//                    ptr++
+//                }
+//                return hash
+//            }
+//        }
+//
+//        /** Ignores trailing whitespace.  */
+//		@JvmField
+//		val WS_IGNORE_TRAILING: RawTextComparator = object : RawTextComparator() {
+//            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+//                var ai = ai
+//                var bi = bi
+//                ai++
+//                bi++
+//
+//                var `as` = a.lines[ai]
+//                var bs = b.lines[bi]
+//                var ae = a.lines[ai + 1]
+//                var be = b.lines[bi + 1]
+//
+//                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+//                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
+//
+//                if (ae - `as` != be - bs) return false
+//
+//                while (`as` < ae) {
+//                    if (a.rawContent[`as`++] != b.rawContent[bs++]) return false
+//                }
+//                return true
+//            }
+//
+//            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+//                var ptr = ptr
+//                var end = end
+//                var hash = 5381
+//                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
+//                while (ptr < end) {
+//                    hash = ((hash shl 5) + hash) + (raw[ptr].toInt() and 0xff)
+//                    ptr++
+//                }
+//                return hash
+//            }
+//        }
+//
+//        /** Ignores whitespace occurring between non-whitespace characters.  */
+//		@JvmField
+//		val WS_IGNORE_CHANGE: RawTextComparator = object : RawTextComparator() {
+//            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
+//                var ai = ai
+//                var bi = bi
+//                ai++
+//                bi++
+//
+//                var `as` = a.lines[ai]
+//                var bs = b.lines[bi]
+//                var ae = a.lines[ai + 1]
+//                var be = b.lines[bi + 1]
+//
+//                ae = RawCharUtil.trimTrailingWhitespace(a.rawContent, `as`, ae)
+//                be = RawCharUtil.trimTrailingWhitespace(b.rawContent, bs, be)
+//
+//                while (`as` < ae && bs < be) {
+//                    val ac = a.rawContent[`as`++]
+//                    val bc = b.rawContent[bs++]
+//
+//                    if (RawCharUtil.isWhitespace(ac) && RawCharUtil.isWhitespace(bc)) {
+//                        `as` = RawCharUtil.trimLeadingWhitespace(a.rawContent, `as`, ae)
+//                        bs = RawCharUtil.trimLeadingWhitespace(b.rawContent, bs, be)
+//                    } else if (ac != bc) {
+//                        return false
+//                    }
+//                }
+//                return `as` == ae && bs == be
+//            }
+//
+//            override fun hashRegion(raw: ByteArray, ptr: Int, end: Int): Int {
+//                var ptr = ptr
+//                var end = end
+//                var hash = 5381
+//                end = RawCharUtil.trimTrailingWhitespace(raw, ptr, end)
+//                while (ptr < end) {
+//                    var c = raw[ptr++]
+//                    if (RawCharUtil.isWhitespace(c)) {
+//                        ptr = RawCharUtil.trimLeadingWhitespace(raw, ptr, end)
+//                        c = ' '.code.toByte()
+//                    }
+//                    hash = ((hash shl 5) + hash) + (c.toInt() and 0xff)
+//                }
+//                return hash
+//            }
+//        }
 
         private fun findForwardLine(lines: IntList, idx: Int, ptr: Int): Int {
             var idx = idx

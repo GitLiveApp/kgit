@@ -11,9 +11,9 @@
  */
 package org.eclipse.jgit.lib
 
-import org.eclipse.jgit.errors.CorruptObjectException
-import org.eclipse.jgit.internal.JGitText
-import org.eclipse.jgit.util.MutableInteger
+//import org.eclipse.jgit.errors.CorruptObjectException
+//import org.eclipse.jgit.internal.JGitText
+//import org.eclipse.jgit.util.MutableInteger
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -524,15 +524,15 @@ object Constants {
      */
 	@JvmStatic
 	fun newMessageDigest(): MessageDigest {
-        try {
+//        try {
             return MessageDigest.getInstance(HASH_FUNCTION)
-        } catch (nsae: NoSuchAlgorithmException) {
-            throw RuntimeException(
-                MessageFormat.format(
-                    JGitText.get().requiredHashFunctionNotAvailable, HASH_FUNCTION
-                ), nsae
-            )
-        }
+//        } catch (nsae: NoSuchAlgorithmException) {
+//            throw RuntimeException(
+//                MessageFormat.format(
+//                    JGitText.get().requiredHashFunctionNotAvailable, HASH_FUNCTION
+//                ), nsae
+//            )
+//        }
     }
 
     /**
@@ -541,20 +541,20 @@ object Constants {
      * @param typeCode the type code, from a pack representation.
      * @return the canonical string name of this type.
      */
-	@JvmStatic
-	fun typeString(typeCode: Int): String {
-        return when (typeCode) {
-            OBJ_COMMIT -> TYPE_COMMIT
-            OBJ_TREE -> TYPE_TREE
-            OBJ_BLOB -> TYPE_BLOB
-            OBJ_TAG -> TYPE_TAG
-            else -> throw IllegalArgumentException(
-                MessageFormat.format(
-                    JGitText.get().badObjectType, typeCode
-                )
-            )
-        }
-    }
+//	@JvmStatic
+//	fun typeString(typeCode: Int): String {
+//        return when (typeCode) {
+//            OBJ_COMMIT -> TYPE_COMMIT
+//            OBJ_TREE -> TYPE_TREE
+//            OBJ_BLOB -> TYPE_BLOB
+//            OBJ_TAG -> TYPE_TAG
+//            else -> throw IllegalArgumentException(
+//                MessageFormat.format(
+//                    JGitText.get().badObjectType, typeCode
+//                )
+//            )
+//        }
+//    }
 
     /**
      * Convert an OBJ_* type constant to an ASCII encoded string constant.
@@ -566,20 +566,20 @@ object Constants {
      * @param typeCode the type code, from a pack representation.
      * @return the canonical ASCII encoded name of this type.
      */
-	@JvmStatic
-	fun encodedTypeString(typeCode: Int): ByteArray {
-        return when (typeCode) {
-            OBJ_COMMIT -> ENCODED_TYPE_COMMIT
-            OBJ_TREE -> ENCODED_TYPE_TREE
-            OBJ_BLOB -> ENCODED_TYPE_BLOB
-            OBJ_TAG -> ENCODED_TYPE_TAG
-            else -> throw IllegalArgumentException(
-                MessageFormat.format(
-                    JGitText.get().badObjectType, typeCode
-                )
-            )
-        }
-    }
+//	@JvmStatic
+//	fun encodedTypeString(typeCode: Int): ByteArray {
+//        return when (typeCode) {
+//            OBJ_COMMIT -> ENCODED_TYPE_COMMIT
+//            OBJ_TREE -> ENCODED_TYPE_TREE
+//            OBJ_BLOB -> ENCODED_TYPE_BLOB
+//            OBJ_TAG -> ENCODED_TYPE_TAG
+//            else -> throw IllegalArgumentException(
+//                MessageFormat.format(
+//                    JGitText.get().badObjectType, typeCode
+//                )
+//            )
+//        }
+//    }
 
     /**
      * Parse an encoded type string into a type constant.
@@ -601,66 +601,66 @@ object Constants {
      * @throws org.eclipse.jgit.errors.CorruptObjectException
      * there is no valid type identified by `typeString`.
      */
-    @JvmStatic
-	@Throws(CorruptObjectException::class)
-    fun decodeTypeString(
-        id: AnyObjectId,
-        typeString: ByteArray, endMark: Byte,
-        offset: MutableInteger
-    ): Int {
-        try {
-            val position = offset.value
-            when (typeString[position].toChar()) {
-                'b' -> {
-                    if (typeString[position + 1] != 'l'.code.toByte() || typeString[position + 2] != 'o'.code.toByte() || typeString[position + 3] != 'b'.code.toByte() || typeString[position + 4] != endMark) throw CorruptObjectException(
-                        id,
-                        JGitText.get().corruptObjectInvalidType
-                    )
-                    offset.value = position + 5
-                    return OBJ_BLOB
-                }
-
-                'c' -> {
-                    if (typeString[position + 1] != 'o'.code.toByte() || typeString[position + 2] != 'm'.code.toByte() || typeString[position + 3] != 'm'.code.toByte() || typeString[position + 4] != 'i'.code.toByte() || typeString[position + 5] != 't'.code.toByte() || typeString[position + 6] != endMark) throw CorruptObjectException(
-                        id,
-                        JGitText.get().corruptObjectInvalidType
-                    )
-                    offset.value = position + 7
-                    return OBJ_COMMIT
-                }
-
-                't' -> when (typeString[position + 1].toChar()) {
-                    'a' -> {
-                        if (typeString[position + 2] != 'g'.code.toByte()
-                            || typeString[position + 3] != endMark
-                        ) throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
-                        offset.value = position + 4
-                        return OBJ_TAG
-                    }
-
-                    'r' -> {
-                        if (typeString[position + 2] != 'e'.code.toByte() || typeString[position + 3] != 'e'.code.toByte() || typeString[position + 4] != endMark) throw CorruptObjectException(
-                            id,
-                            JGitText.get().corruptObjectInvalidType
-                        )
-                        offset.value = position + 5
-                        return OBJ_TREE
-                    }
-
-                    else -> throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
-                }
-
-                else -> throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
-            }
-        } catch (bad: ArrayIndexOutOfBoundsException) {
-            val coe = CorruptObjectException(
-                id,
-                JGitText.get().corruptObjectInvalidType
-            )
-            coe.initCause(bad)
-            throw coe
-        }
-    }
+//    @JvmStatic
+//	@Throws(CorruptObjectException::class)
+//    fun decodeTypeString(
+//        id: AnyObjectId,
+//        typeString: ByteArray, endMark: Byte,
+//        offset: MutableInteger
+//    ): Int {
+//        try {
+//            val position = offset.value
+//            when (typeString[position].toChar()) {
+//                'b' -> {
+//                    if (typeString[position + 1] != 'l'.code.toByte() || typeString[position + 2] != 'o'.code.toByte() || typeString[position + 3] != 'b'.code.toByte() || typeString[position + 4] != endMark) throw CorruptObjectException(
+//                        id,
+//                        JGitText.get().corruptObjectInvalidType
+//                    )
+//                    offset.value = position + 5
+//                    return OBJ_BLOB
+//                }
+//
+//                'c' -> {
+//                    if (typeString[position + 1] != 'o'.code.toByte() || typeString[position + 2] != 'm'.code.toByte() || typeString[position + 3] != 'm'.code.toByte() || typeString[position + 4] != 'i'.code.toByte() || typeString[position + 5] != 't'.code.toByte() || typeString[position + 6] != endMark) throw CorruptObjectException(
+//                        id,
+//                        JGitText.get().corruptObjectInvalidType
+//                    )
+//                    offset.value = position + 7
+//                    return OBJ_COMMIT
+//                }
+//
+//                't' -> when (typeString[position + 1].toChar()) {
+//                    'a' -> {
+//                        if (typeString[position + 2] != 'g'.code.toByte()
+//                            || typeString[position + 3] != endMark
+//                        ) throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
+//                        offset.value = position + 4
+//                        return OBJ_TAG
+//                    }
+//
+//                    'r' -> {
+//                        if (typeString[position + 2] != 'e'.code.toByte() || typeString[position + 3] != 'e'.code.toByte() || typeString[position + 4] != endMark) throw CorruptObjectException(
+//                            id,
+//                            JGitText.get().corruptObjectInvalidType
+//                        )
+//                        offset.value = position + 5
+//                        return OBJ_TREE
+//                    }
+//
+//                    else -> throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
+//                }
+//
+//                else -> throw CorruptObjectException(id, JGitText.get().corruptObjectInvalidType)
+//            }
+//        } catch (bad: ArrayIndexOutOfBoundsException) {
+//            val coe = CorruptObjectException(
+//                id,
+//                JGitText.get().corruptObjectInvalidType
+//            )
+//            coe.initCause(bad)
+//            throw coe
+//        }
+//    }
 
     /**
      * Convert an integer into its decimal representation.
@@ -692,7 +692,7 @@ object Constants {
         val r = ByteArray(s.length)
         for (k in r.indices.reversed()) {
             val c = s[k]
-            require(c.code <= 127) { MessageFormat.format(JGitText.get().notASCIIString, s) }
+//            require(c.code <= 127) { MessageFormat.format(JGitText.get().notASCIIString, s) }
             r[k] = c.code.toByte()
         }
         return r
@@ -722,7 +722,7 @@ object Constants {
     }
 
     init {
-        if (OBJECT_ID_LENGTH != newMessageDigest().digestLength) throw LinkageError(JGitText.get().incorrectOBJECT_ID_LENGTH)
+//        if (OBJECT_ID_LENGTH != newMessageDigest().digestLength) throw LinkageError(JGitText.get().incorrectOBJECT_ID_LENGTH)
         CHARSET = StandardCharsets.UTF_8
         CHARACTER_ENCODING = StandardCharsets.UTF_8.name()
     }
@@ -761,17 +761,17 @@ object Constants {
      *
      * @since 0.9.1
      */
-	@JvmField
-	val EMPTY_BLOB_ID: ObjectId = ObjectId
-        .fromString("e69de29bb2d1d6434b8b29ae775ad8c2e48c5391")
+//	@JvmField
+//	val EMPTY_BLOB_ID: ObjectId = ObjectId
+//        .fromString("e69de29bb2d1d6434b8b29ae775ad8c2e48c5391")
 
     /**
      * Well-known object ID for the empty tree.
      *
      * @since 5.1
      */
-    val EMPTY_TREE_ID: ObjectId = ObjectId
-        .fromString("4b825dc642cb6eb9a060e54bf8d69288fbee4904")
+//    val EMPTY_TREE_ID: ObjectId = ObjectId
+//        .fromString("4b825dc642cb6eb9a060e54bf8d69288fbee4904")
 
     /**
      * Suffix of lock file name

@@ -9,9 +9,10 @@
  */
 package org.eclipse.jgit.merge
 
-import org.eclipse.jgit.annotations.NonNull
+//import org.eclipse.jgit.annotations.NonNull
 import org.eclipse.jgit.diff.*
 import org.eclipse.jgit.merge.MergeChunk.ConflictState
+import org.jetbrains.annotations.NotNull
 import kotlin.math.max
 import kotlin.math.min
 
@@ -25,10 +26,10 @@ class MergeAlgorithm
  * Creates a new MergeAlgorithm which uses
  * [org.eclipse.jgit.diff.HistogramDiff] as diff algorithm
  */ @JvmOverloads constructor(private val diffAlg: DiffAlgorithm = HistogramDiff()) {
-    @NonNull
+    @NotNull
     private var strategy = ContentMergeStrategy.CONFLICT
 
-    @get:NonNull
+    @get:NotNull
     var contentMergeStrategy: ContentMergeStrategy?
         /**
          * Retrieves the [ContentMergeStrategy].

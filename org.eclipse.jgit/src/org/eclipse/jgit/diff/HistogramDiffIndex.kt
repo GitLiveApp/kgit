@@ -9,7 +9,7 @@
  */
 package org.eclipse.jgit.diff
 
-import org.eclipse.jgit.internal.JGitText
+//import org.eclipse.jgit.internal.JGitText
 import kotlin.math.max
 import kotlin.math.min
 
@@ -95,7 +95,7 @@ internal class HistogramDiffIndex<S : Sequence>(
     private var hasCommon = false
 
     init {
-        require(region.endA < MAX_PTR) { JGitText.get().sequenceTooLargeForDiffAlgorithm }
+//        require(region.endA < MAX_PTR) { JGitText.get().sequenceTooLargeForDiffAlgorithm }
 
         val sz = region.lengthA
         val tableBits = tableBits(sz)

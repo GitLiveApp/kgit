@@ -10,10 +10,10 @@
 package org.eclipse.jgit.merge
 
 import org.eclipse.jgit.lib.Constants
-import org.eclipse.jgit.lib.Ref
-import org.eclipse.jgit.lib.Repository
-import org.eclipse.jgit.util.ChangeIdUtil
-import org.eclipse.jgit.util.StringUtils
+//import org.eclipse.jgit.lib.Ref
+//import org.eclipse.jgit.lib.Repository
+//import org.eclipse.jgit.util.ChangeIdUtil
+//import org.eclipse.jgit.util.StringUtils
 
 /**
  * Formatter for constructing the commit message for a merge commit.
@@ -31,70 +31,70 @@ class MergeMessageFormatter {
      * the branch ref which will be merged into
      * @return merge commit message
      */
-    fun format(refsToMerge: List<Ref>, target: Ref): String {
-        val sb = StringBuilder()
-        sb.append("Merge ") //$NON-NLS-1$
-
-        val branches: MutableList<String> = ArrayList()
-        val remoteBranches: MutableList<String> = ArrayList()
-        val tags: MutableList<String> = ArrayList()
-        val commits: MutableList<String> = ArrayList()
-        val others: MutableList<String> = ArrayList()
-        for (ref in refsToMerge) {
-            if (ref.name.startsWith(Constants.R_HEADS)) {
-                branches.add(
-                    "'" + Repository.shortenRefName(ref.name) //$NON-NLS-1$
-                        + "'"
-                ) //$NON-NLS-1$
-            } else if (ref.name.startsWith(Constants.R_REMOTES)) {
-                remoteBranches.add(
-                    "'" //$NON-NLS-1$
-                        + Repository.shortenRefName(ref.name) + "'"
-                ) //$NON-NLS-1$
-            } else if (ref.name.startsWith(Constants.R_TAGS)) {
-                tags.add("'" + Repository.shortenRefName(ref.name) + "'") //$NON-NLS-1$ //$NON-NLS-2$
-            } else {
-                val objectId = ref.objectId
-                if (objectId != null && ref.name == objectId.name) {
-                    commits.add("'" + ref.name + "'") //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
-                    others.add(ref.name)
-                }
-            }
-        }
-
-        val listings: MutableList<String> = ArrayList()
-
-        if (!branches.isEmpty()) listings.add(joinNames(branches, "branch", "branches")) //$NON-NLS-1$//$NON-NLS-2$
-
-
-        if (!remoteBranches.isEmpty()) listings.add(
-            joinNames(
-                remoteBranches, "remote-tracking branch",  //$NON-NLS-1$
-                "remote-tracking branches"
-            )
-        ) //$NON-NLS-1$
-
-
-        if (!tags.isEmpty()) listings.add(joinNames(tags, "tag", "tags")) //$NON-NLS-1$ //$NON-NLS-2$
-
-
-        if (!commits.isEmpty()) listings.add(joinNames(commits, "commit", "commits")) //$NON-NLS-1$ //$NON-NLS-2$
-
-
-        if (!others.isEmpty()) listings.add(StringUtils.join(others, ", ", " and ")) //$NON-NLS-1$ //$NON-NLS-2$
-
-
-        sb.append(StringUtils.join(listings, ", ")) //$NON-NLS-1$
-
-        val targetName = target.leaf.name
-        if (targetName != Constants.R_HEADS + Constants.MASTER) {
-            val targetShortName = Repository.shortenRefName(targetName)
-            sb.append(" into $targetShortName") //$NON-NLS-1$
-        }
-
-        return sb.toString()
-    }
+//    fun format(refsToMerge: List<Ref>, target: Ref): String {
+//        val sb = StringBuilder()
+//        sb.append("Merge ") //$NON-NLS-1$
+//
+//        val branches: MutableList<String> = ArrayList()
+//        val remoteBranches: MutableList<String> = ArrayList()
+//        val tags: MutableList<String> = ArrayList()
+//        val commits: MutableList<String> = ArrayList()
+//        val others: MutableList<String> = ArrayList()
+//        for (ref in refsToMerge) {
+//            if (ref.name.startsWith(Constants.R_HEADS)) {
+//                branches.add(
+//                    "'" + Repository.shortenRefName(ref.name) //$NON-NLS-1$
+//                        + "'"
+//                ) //$NON-NLS-1$
+//            } else if (ref.name.startsWith(Constants.R_REMOTES)) {
+//                remoteBranches.add(
+//                    "'" //$NON-NLS-1$
+//                        + Repository.shortenRefName(ref.name) + "'"
+//                ) //$NON-NLS-1$
+//            } else if (ref.name.startsWith(Constants.R_TAGS)) {
+//                tags.add("'" + Repository.shortenRefName(ref.name) + "'") //$NON-NLS-1$ //$NON-NLS-2$
+//            } else {
+//                val objectId = ref.objectId
+//                if (objectId != null && ref.name == objectId.name) {
+//                    commits.add("'" + ref.name + "'") //$NON-NLS-1$ //$NON-NLS-2$
+//                } else {
+//                    others.add(ref.name)
+//                }
+//            }
+//        }
+//
+//        val listings: MutableList<String> = ArrayList()
+//
+//        if (!branches.isEmpty()) listings.add(joinNames(branches, "branch", "branches")) //$NON-NLS-1$//$NON-NLS-2$
+//
+//
+//        if (!remoteBranches.isEmpty()) listings.add(
+//            joinNames(
+//                remoteBranches, "remote-tracking branch",  //$NON-NLS-1$
+//                "remote-tracking branches"
+//            )
+//        ) //$NON-NLS-1$
+//
+//
+//        if (!tags.isEmpty()) listings.add(joinNames(tags, "tag", "tags")) //$NON-NLS-1$ //$NON-NLS-2$
+//
+//
+//        if (!commits.isEmpty()) listings.add(joinNames(commits, "commit", "commits")) //$NON-NLS-1$ //$NON-NLS-2$
+//
+//
+//        if (!others.isEmpty()) listings.add(StringUtils.join(others, ", ", " and ")) //$NON-NLS-1$ //$NON-NLS-2$
+//
+//
+//        sb.append(StringUtils.join(listings, ", ")) //$NON-NLS-1$
+//
+//        val targetName = target.leaf.name
+//        if (targetName != Constants.R_HEADS + Constants.MASTER) {
+//            val targetShortName = Repository.shortenRefName(targetName)
+//            sb.append(" into $targetShortName") //$NON-NLS-1$
+//        }
+//
+//        return sb.toString()
+//    }
 
     /**
      * Add section with conflicting paths to merge message. Lines are prefixed
@@ -110,12 +110,12 @@ class MergeMessageFormatter {
         """since 6.1; use
 	              {@link #formatWithConflicts(String, Iterable, char)} instead"""
     )
-    fun formatWithConflicts(
-        message: String,
-        conflictingPaths: List<String?>
-    ): String {
-        return formatWithConflicts(message, conflictingPaths, '#')
-    }
+//    fun formatWithConflicts(
+//        message: String,
+//        conflictingPaths: List<String?>
+//    ): String {
+//        return formatWithConflicts(message, conflictingPaths, '#')
+//    }
 
     /**
      * Add section with conflicting paths to merge message.
@@ -129,32 +129,32 @@ class MergeMessageFormatter {
      * @return merge message with conflicting paths added
      * @since 6.1
      */
-    fun formatWithConflicts(
-        message: String,
-        conflictingPaths: Iterable<String?>, commentChar: Char
-    ): String {
-        val sb = StringBuilder()
-        val lines = message.takeIf { it.isNotEmpty() }
-            ?.split('\n')
-            ?.dropLastWhile { it.isEmpty() }
-            ?.toTypedArray() //$NON-NLS-1$
-            ?: arrayOf("")
-        val firstFooterLine = ChangeIdUtil.indexOfFirstFooterLine(lines)
-        for (i in 0 until firstFooterLine) {
-            sb.append(lines[i]).append('\n')
-        }
-        if (firstFooterLine == lines.size && message.isNotEmpty()) {
-            sb.append('\n')
-        }
-        addConflictsMessage(conflictingPaths, sb, commentChar)
-        if (firstFooterLine < lines.size) {
-            sb.append('\n')
-        }
-        for (i in firstFooterLine until lines.size) {
-            sb.append(lines[i]).append('\n')
-        }
-        return sb.toString()
-    }
+//    fun formatWithConflicts(
+//        message: String,
+//        conflictingPaths: Iterable<String?>, commentChar: Char
+//    ): String {
+//        val sb = StringBuilder()
+//        val lines = message.takeIf { it.isNotEmpty() }
+//            ?.split('\n')
+//            ?.dropLastWhile { it.isEmpty() }
+//            ?.toTypedArray() //$NON-NLS-1$
+//            ?: arrayOf("")
+//        val firstFooterLine = ChangeIdUtil.indexOfFirstFooterLine(lines)
+//        for (i in 0 until firstFooterLine) {
+//            sb.append(lines[i]).append('\n')
+//        }
+//        if (firstFooterLine == lines.size && message.isNotEmpty()) {
+//            sb.append('\n')
+//        }
+//        addConflictsMessage(conflictingPaths, sb, commentChar)
+//        if (firstFooterLine < lines.size) {
+//            sb.append('\n')
+//        }
+//        for (i in firstFooterLine until lines.size) {
+//            sb.append(lines[i]).append('\n')
+//        }
+//        return sb.toString()
+//    }
 
     companion object {
         private fun addConflictsMessage(
@@ -168,14 +168,14 @@ class MergeMessageFormatter {
             }
         }
 
-        private fun joinNames(
-            names: List<String>, singular: String,
-            plural: String
-        ): String {
-            if (names.size == 1) {
-                return singular + " " + names[0] //$NON-NLS-1$
-            }
-            return plural + " " + StringUtils.join(names, ", ", " and ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
+//        private fun joinNames(
+//            names: List<String>, singular: String,
+//            plural: String
+//        ): String {
+//            if (names.size == 1) {
+//                return singular + " " + names[0] //$NON-NLS-1$
+//            }
+//            return plural + " " + StringUtils.join(names, ", ", " and ") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//        }
     }
 }

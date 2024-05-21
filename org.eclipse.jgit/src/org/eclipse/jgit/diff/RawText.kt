@@ -10,10 +10,10 @@
  */
 package org.eclipse.jgit.diff
 
-import org.eclipse.jgit.errors.BinaryBlobException
-import org.eclipse.jgit.errors.LargeObjectException.OutOfMemory
-import org.eclipse.jgit.lib.ObjectLoader
-import org.eclipse.jgit.util.IO
+//import org.eclipse.jgit.errors.BinaryBlobException
+//import org.eclipse.jgit.errors.LargeObjectException.OutOfMemory
+//import org.eclipse.jgit.lib.ObjectLoader
+//import org.eclipse.jgit.util.IO
 import org.eclipse.jgit.util.IntList
 import org.eclipse.jgit.util.RawParseUtils
 import java.io.*
@@ -83,7 +83,7 @@ class RawText
      * @throws java.io.IOException
      * if Exceptions occur while reading the file
      */
-    constructor(file: File?) : this(IO.readFully(file))
+//    constructor(file: File?) : this(IO.readFully(file))
 
     /** @return total number of items in the sequence.
      */
@@ -143,9 +143,9 @@ class RawText
      * number 1 is actually index 0.
      * @return the text for the line, without a trailing LF.
      */
-    fun getString(i: Int): String {
-        return getString(i, i + 1, true)
-    }
+//    fun getString(i: Int): String {
+//        return getString(i, i + 1, true)
+//    }
 
     /**
      * Get the raw text for a single line.
@@ -159,14 +159,14 @@ class RawText
      * on the start of the line and the limit at the end.
      * @since 5.12
      */
-    fun getRawString(i: Int): ByteBuffer {
-        val s = getStart(i)
-        var e = getEnd(i)
-        if (e > 0 && rawContent[e - 1] == '\n'.code.toByte()) {
-            e--
-        }
-        return ByteBuffer.wrap(rawContent, s, e - s)
-    }
+//    fun getRawString(i: Int): ByteBuffer {
+//        val s = getStart(i)
+//        var e = getEnd(i)
+//        if (e > 0 && rawContent[e - 1] == '\n'.code.toByte()) {
+//            e--
+//        }
+//        return ByteBuffer.wrap(rawContent, s, e - s)
+//    }
 
     /**
      * Get the text for a region of lines.
@@ -181,15 +181,15 @@ class RawText
      * dropped, if present.
      * @return the text for lines `[begin, end)`.
      */
-    fun getString(begin: Int, end: Int, dropLF: Boolean): String {
-        if (begin == end) return "" //$NON-NLS-1$
-
-
-        val s = getStart(begin)
-        var e = getEnd(end - 1)
-        if (dropLF && rawContent[e - 1] == '\n'.code.toByte()) e--
-        return decode(s, e)
-    }
+//    fun getString(begin: Int, end: Int, dropLF: Boolean): String {
+//        if (begin == end) return "" //$NON-NLS-1$
+//
+//
+//        val s = getStart(begin)
+//        var e = getEnd(end - 1)
+//        if (dropLF && rawContent[e - 1] == '\n'.code.toByte()) e--
+//        return decode(s, e)
+//    }
 
     /**
      * Decode a region of the text into a String.
@@ -204,9 +204,9 @@ class RawText
      * one past the last byte of the content to decode.
      * @return the region `[start, end)` decoded as a String.
      */
-    protected fun decode(start: Int, end: Int): String {
-        return RawParseUtils.decode(rawContent, start, end)
-    }
+//    protected fun decode(start: Int, end: Int): String {
+//        return RawParseUtils.decode(rawContent, start, end)
+//    }
 
     private fun getStart(i: Int): Int {
         return lines[i + 1]
@@ -524,58 +524,58 @@ class RawText
          * @throws java.io.IOException
          * if the input could not be read.
          */
-        @JvmStatic
-		@Throws(IOException::class, BinaryBlobException::class)
-        fun load(ldr: ObjectLoader, threshold: Int): RawText {
-            val sz = ldr.size
-
-            if (sz > threshold) {
-                throw BinaryBlobException()
-            }
-
-            val bufferSize = bufferSize
-            if (sz <= bufferSize) {
-                val data = ldr.getCachedBytes(bufferSize)
-                if (isBinary(data, data.size, true)) {
-                    throw BinaryBlobException()
-                }
-                return RawText(data)
-            }
-
-            val head = ByteArray(bufferSize)
-            ldr.openStream().use { stream ->
-                var off = 0
-                var left = head.size
-                var last = 'x'.code.toByte() // Just something inconspicuous
-                while (left > 0) {
-                    var n = stream.read(head, off, left)
-                    if (n < 0) {
-                        throw EOFException()
-                    }
-                    left -= n
-
-                    while (n > 0) {
-                        val curr = head[off]
-                        if (isBinary(curr, last)) {
-                            throw BinaryBlobException()
-                        }
-                        last = curr
-                        off++
-                        n--
-                    }
-                }
-
-                val data: ByteArray
-                try {
-                    data = ByteArray(sz.toInt())
-                } catch (e: OutOfMemoryError) {
-                    throw OutOfMemory(e)
-                }
-
-                System.arraycopy(head, 0, data, 0, head.size)
-                IO.readFully(stream, data, off, (sz - off).toInt())
-                return RawText(data, RawParseUtils.lineMapOrBinary(data, 0, sz.toInt()))
-            }
-        }
+//        @JvmStatic
+//		@Throws(IOException::class, BinaryBlobException::class)
+//        fun load(ldr: ObjectLoader, threshold: Int): RawText {
+//            val sz = ldr.size
+//
+//            if (sz > threshold) {
+//                throw BinaryBlobException()
+//            }
+//
+//            val bufferSize = bufferSize
+//            if (sz <= bufferSize) {
+//                val data = ldr.getCachedBytes(bufferSize)
+//                if (isBinary(data, data.size, true)) {
+//                    throw BinaryBlobException()
+//                }
+//                return RawText(data)
+//            }
+//
+//            val head = ByteArray(bufferSize)
+//            ldr.openStream().use { stream ->
+//                var off = 0
+//                var left = head.size
+//                var last = 'x'.code.toByte() // Just something inconspicuous
+//                while (left > 0) {
+//                    var n = stream.read(head, off, left)
+//                    if (n < 0) {
+//                        throw EOFException()
+//                    }
+//                    left -= n
+//
+//                    while (n > 0) {
+//                        val curr = head[off]
+//                        if (isBinary(curr, last)) {
+//                            throw BinaryBlobException()
+//                        }
+//                        last = curr
+//                        off++
+//                        n--
+//                    }
+//                }
+//
+//                val data: ByteArray
+//                try {
+//                    data = ByteArray(sz.toInt())
+//                } catch (e: OutOfMemoryError) {
+//                    throw OutOfMemory(e)
+//                }
+//
+//                System.arraycopy(head, 0, data, 0, head.size)
+//                IO.readFully(stream, data, off, (sz - off).toInt())
+//                return RawText(data, RawParseUtils.lineMapOrBinary(data, 0, sz.toInt()))
+//            }
+//        }
     }
 }

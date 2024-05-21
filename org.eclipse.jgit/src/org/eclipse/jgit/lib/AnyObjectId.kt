@@ -10,8 +10,8 @@
 package org.eclipse.jgit.lib
 
 import org.eclipse.jgit.lib.ObjectId
-import org.eclipse.jgit.util.NB
-import org.eclipse.jgit.util.References
+//import org.eclipse.jgit.util.NB
+//import org.eclipse.jgit.util.References
 import java.io.IOException
 import java.io.OutputStream
 import java.io.Writer
@@ -25,7 +25,7 @@ import java.nio.ByteBuffer
  * concept of equality with this instance can alter at any time, if this
  * instance is modified to represent a different object name.
  */
-abstract class AnyObjectId : Comparable<AnyObjectId> {
+abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
     @JvmField
 	var w1: Int = 0
 
@@ -90,23 +90,23 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      *
      * Compare this ObjectId to another and obtain a sort ordering.
      */
-    override fun compareTo(other: AnyObjectId): Int {
-        if (this === other) return 0
-
-        var cmp = NB.compareUInt32(w1, other.w1)
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w2, other.w2)
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w3, other.w3)
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w4, other.w4)
-        if (cmp != 0) return cmp
-
-        return NB.compareUInt32(w5, other.w5)
-    }
+//    override fun compareTo(other: AnyObjectId): Int {
+//        if (this === other) return 0
+//
+//        var cmp = NB.compareUInt32(w1, other.w1)
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w2, other.w2)
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w3, other.w3)
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w4, other.w4)
+//        if (cmp != 0) return cmp
+//
+//        return NB.compareUInt32(w5, other.w5)
+//    }
 
     /**
      * Compare this ObjectId to a network-byte-order ObjectId.
@@ -119,21 +119,21 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * @return a negative integer, zero, or a positive integer as this object is
      * less than, equal to, or greater than the specified object.
      */
-    fun compareTo(bs: ByteArray?, p: Int): Int {
-        var cmp = NB.compareUInt32(w1, NB.decodeInt32(bs, p))
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w2, NB.decodeInt32(bs, p + 4))
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w3, NB.decodeInt32(bs, p + 8))
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w4, NB.decodeInt32(bs, p + 12))
-        if (cmp != 0) return cmp
-
-        return NB.compareUInt32(w5, NB.decodeInt32(bs, p + 16))
-    }
+//    fun compareTo(bs: ByteArray?, p: Int): Int {
+//        var cmp = NB.compareUInt32(w1, NB.decodeInt32(bs, p))
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w2, NB.decodeInt32(bs, p + 4))
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w3, NB.decodeInt32(bs, p + 8))
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w4, NB.decodeInt32(bs, p + 12))
+//        if (cmp != 0) return cmp
+//
+//        return NB.compareUInt32(w5, NB.decodeInt32(bs, p + 16))
+//    }
 
     /**
      * Compare this ObjectId to a network-byte-order ObjectId.
@@ -146,21 +146,21 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * @return a negative integer, zero, or a positive integer as this object is
      * less than, equal to, or greater than the specified object.
      */
-    fun compareTo(bs: IntArray, p: Int): Int {
-        var cmp = NB.compareUInt32(w1, bs[p])
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w2, bs[p + 1])
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w3, bs[p + 2])
-        if (cmp != 0) return cmp
-
-        cmp = NB.compareUInt32(w4, bs[p + 3])
-        if (cmp != 0) return cmp
-
-        return NB.compareUInt32(w5, bs[p + 4])
-    }
+//    fun compareTo(bs: IntArray, p: Int): Int {
+//        var cmp = NB.compareUInt32(w1, bs[p])
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w2, bs[p + 1])
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w3, bs[p + 2])
+//        if (cmp != 0) return cmp
+//
+//        cmp = NB.compareUInt32(w4, bs[p + 3])
+//        if (cmp != 0) return cmp
+//
+//        return NB.compareUInt32(w5, bs[p + 4])
+//    }
 
     /**
      * Tests if this ObjectId starts with the given abbreviation.
@@ -169,9 +169,9 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * the abbreviation.
      * @return true if this ObjectId begins with the abbreviation; else false.
      */
-    fun startsWith(abbr: AbbreviatedObjectId): Boolean {
-        return abbr.prefixCompare(this) == 0
-    }
+//    fun startsWith(abbr: AbbreviatedObjectId): Boolean {
+//        return abbr.prefixCompare(this) == 0
+//    }
 
     override fun hashCode(): Int {
         return w2
@@ -184,9 +184,9 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * the other id to compare to. May be null.
      * @return true only if both ObjectIds have identical bits.
      */
-    fun equals(other: AnyObjectId?): Boolean {
-        return if (other != null) isEqual(this, other) else false
-    }
+//    fun equals(other: AnyObjectId?): Boolean {
+//        return if (other != null) isEqual(this, other) else false
+//    }
 
     override fun equals(o: Any?): Boolean {
         if (o is AnyObjectId) {
@@ -217,13 +217,13 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * @param o
      * the offset within b to write at.
      */
-    fun copyRawTo(b: ByteArray?, o: Int) {
-        NB.encodeInt32(b, o, w1)
-        NB.encodeInt32(b, o + 4, w2)
-        NB.encodeInt32(b, o + 8, w3)
-        NB.encodeInt32(b, o + 12, w4)
-        NB.encodeInt32(b, o + 16, w5)
-    }
+//    fun copyRawTo(b: ByteArray?, o: Int) {
+//        NB.encodeInt32(b, o, w1)
+//        NB.encodeInt32(b, o + 4, w2)
+//        NB.encodeInt32(b, o + 8, w3)
+//        NB.encodeInt32(b, o + 12, w4)
+//        NB.encodeInt32(b, o + 16, w5)
+//    }
 
     /**
      * Copy this ObjectId to an int array.
@@ -403,14 +403,14 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
      * length of the abbreviated string.
      * @return SHA-1 abbreviation.
      */
-    fun abbreviate(len: Int): AbbreviatedObjectId {
-        val a = AbbreviatedObjectId.mask(len, 1, w1)
-        val b = AbbreviatedObjectId.mask(len, 2, w2)
-        val c = AbbreviatedObjectId.mask(len, 3, w3)
-        val d = AbbreviatedObjectId.mask(len, 4, w4)
-        val e = AbbreviatedObjectId.mask(len, 5, w5)
-        return AbbreviatedObjectId(len, a, b, c, d, e)
-    }
+//    fun abbreviate(len: Int): AbbreviatedObjectId {
+//        val a = AbbreviatedObjectId.mask(len, 1, w1)
+//        val b = AbbreviatedObjectId.mask(len, 2, w2)
+//        val c = AbbreviatedObjectId.mask(len, 3, w3)
+//        val d = AbbreviatedObjectId.mask(len, 4, w4)
+//        val e = AbbreviatedObjectId.mask(len, 5, w5)
+//        return AbbreviatedObjectId(len, a, b, c, d, e)
+//    }
 
     /**
      * Obtain an immutable copy of this current object name value.
@@ -455,13 +455,13 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
          * the second identifier to compare. Must not be null.
          * @return true if the two identifiers are the same.
          */
-        @Deprecated("use {@link #isEqual(AnyObjectId, AnyObjectId)} instead")
-        fun equals(
-            firstObjectId: AnyObjectId,
-            secondObjectId: AnyObjectId
-        ): Boolean {
-            return isEqual(firstObjectId, secondObjectId)
-        }
+//        @Deprecated("use {@link #isEqual(AnyObjectId, AnyObjectId)} instead")
+//        fun equals(
+//            firstObjectId: AnyObjectId,
+//            secondObjectId: AnyObjectId
+//        ): Boolean {
+//            return isEqual(firstObjectId, secondObjectId)
+//        }
 
         /**
          * Compare two object identifier byte sequences for equality.
@@ -473,23 +473,23 @@ abstract class AnyObjectId : Comparable<AnyObjectId> {
          * @return true if the two identifiers are the same.
          * @since 5.4
          */
-		@JvmStatic
-		fun isEqual(
-            firstObjectId: AnyObjectId,
-            secondObjectId: AnyObjectId
-        ): Boolean {
-            if (References.isSameObject(firstObjectId, secondObjectId)) {
-                return true
-            }
-            // We test word 3 first since the git file-based ODB
-            // uses the first byte of w1, and we use w2 as the
-            // hash code, one of those probably came up with these
-            // two instances which we are comparing for equality.
-            // Therefore the first two words are very likely to be
-            // identical. We want to break away from collisions as
-            // quickly as possible.
-            return firstObjectId.w3 == secondObjectId.w3 && firstObjectId.w4 == secondObjectId.w4 && firstObjectId.w5 == secondObjectId.w5 && firstObjectId.w1 == secondObjectId.w1 && firstObjectId.w2 == secondObjectId.w2
-        }
+//		@JvmStatic
+//		fun isEqual(
+//            firstObjectId: AnyObjectId,
+//            secondObjectId: AnyObjectId
+//        ): Boolean {
+//            if (References.isSameObject(firstObjectId, secondObjectId)) {
+//                return true
+//            }
+//            // We test word 3 first since the git file-based ODB
+//            // uses the first byte of w1, and we use w2 as the
+//            // hash code, one of those probably came up with these
+//            // two instances which we are comparing for equality.
+//            // Therefore the first two words are very likely to be
+//            // identical. We want to break away from collisions as
+//            // quickly as possible.
+//            return firstObjectId.w3 == secondObjectId.w3 && firstObjectId.w4 == secondObjectId.w4 && firstObjectId.w5 == secondObjectId.w5 && firstObjectId.w1 == secondObjectId.w1 && firstObjectId.w2 == secondObjectId.w2
+//        }
 
         @Throws(IOException::class)
         private fun writeRawInt(w: OutputStream, v: Int) {
