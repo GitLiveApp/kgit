@@ -10,12 +10,12 @@
 
 package org.eclipse.jgit.merge;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static kotlinx.io.Utf8Kt.readString;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import kotlinx.io.Buffer;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.Constants;
@@ -350,15 +350,15 @@ public class MergeAlgorithmTest {
 
 	private String merge(String commonBase, String ours, String theirs,
 			boolean diff3) throws IOException {
-		MergeResult r = new MergeAlgorithm().merge(RawTextComparator.DEFAULT,
+		MergeResult<RawText> r = new MergeAlgorithm().merge(RawTextComparator.DEFAULT,
 				T(commonBase), T(ours), T(theirs));
-		ByteArrayOutputStream bo=new ByteArrayOutputStream(50);
+		Buffer buffer = new Buffer();
 		if (diff3) {
-			fmt.formatMergeDiff3(bo, r, "B", "O", "T", UTF_8);
+			fmt.formatMergeDiff3(buffer, r, "B", "O", "T"/*, UTF_8*/);
 		} else {
-			fmt.formatMerge(bo, r, "B", "O", "T", UTF_8);
+			fmt.formatMerge(buffer, r, "B", "O", "T"/*, UTF_8*/);
 		}
-		return new String(bo.toByteArray(), UTF_8);
+		return readString(buffer);
 	}
 
 	public String t(String text) {

@@ -10,15 +10,15 @@
  */
 package org.eclipse.jgit.diff
 
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.updateAndGet
+import kotlinx.io.*
 //import org.eclipse.jgit.errors.BinaryBlobException
 //import org.eclipse.jgit.errors.LargeObjectException.OutOfMemory
 //import org.eclipse.jgit.lib.ObjectLoader
 //import org.eclipse.jgit.util.IO
 import org.eclipse.jgit.util.IntList
 import org.eclipse.jgit.util.RawParseUtils
-import java.io.*
-import java.nio.ByteBuffer
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.max
 
 /**
@@ -116,11 +116,11 @@ class RawText
      * the stream write operation failed.
      */
     @Throws(IOException::class)
-    fun writeLine(out: OutputStream, i: Int) {
+    fun writeLine(out: Sink, i: Int) {
         val start = getStart(i)
         var end = getEnd(i)
         if (rawContent[end - 1] == '\n'.code.toByte()) end--
-        out.write(rawContent, start, end - start)
+        out.write(rawContent, start, end)
     }
 
     val isMissingNewlineAtEnd: Boolean
@@ -250,9 +250,7 @@ class RawText
         /**
          * Number of bytes to check for heuristics in [.isBinary].
          */
-        private val BUFFER_SIZE = AtomicInteger(
-            FIRST_FEW_BYTES
-        )
+        private val BUFFER_SIZE = atomic(FIRST_FEW_BYTES)
 
         @JvmStatic
 		val bufferSize: Int
@@ -263,7 +261,7 @@ class RawText
              * @return the buffer size, by default [.FIRST_FEW_BYTES] bytes
              * @since 6.0
              */
-            get() = BUFFER_SIZE.get()
+            get() = BUFFER_SIZE.value
 
         /**
          * Sets the buffer size to use for analyzing whether certain content is text
@@ -299,11 +297,11 @@ class RawText
          */
         @JvmStatic
 		@Throws(IOException::class)
-        fun isBinary(raw: InputStream): Boolean {
+        fun isBinary(raw: Source): Boolean {
             val buffer = ByteArray(bufferSize + 1)
             var cnt = 0
             while (cnt < buffer.size) {
-                val n = raw.read(buffer, cnt, buffer.size - cnt)
+                val n = raw.readAtMostTo(buffer, cnt, buffer.size)
                 if (n == -1) {
                     break
                 }
@@ -439,11 +437,11 @@ class RawText
          */
         @JvmStatic
 		@Throws(IOException::class)
-        fun isCrLfText(raw: InputStream): Boolean {
+        fun isCrLfText(raw: Source): Boolean {
             val buffer = ByteArray(bufferSize)
             var cnt = 0
             while (cnt < buffer.size) {
-                val n = raw.read(buffer, cnt, buffer.size - cnt)
+                val n = raw.readAtMostTo(buffer, cnt, buffer.size)
                 if (n == -1) {
                     break
                 }

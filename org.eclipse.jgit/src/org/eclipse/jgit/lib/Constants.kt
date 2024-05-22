@@ -708,18 +708,18 @@ object Constants {
      * @see .CHARACTER_ENCODING
      */
 	@JvmStatic
-	fun encode(str: String?): ByteArray {
-        val bb = StandardCharsets.UTF_8.encode(str)
-        val len = bb.limit()
-        if (bb.hasArray() && bb.arrayOffset() == 0) {
-            val arr = bb.array()
-            if (arr.size == len) return arr
-        }
-
-        val arr = ByteArray(len)
-        bb[arr]
-        return arr
-    }
+	fun encode(str: String): ByteArray = str.encodeToByteArray()
+//        val bb = StandardCharsets.UTF_8.encode(str)
+//        val len = bb.limit()
+//        if (bb.hasArray() && bb.arrayOffset() == 0) {
+//            val arr = bb.array()
+//            if (arr.size == len) return arr
+//        }
+//
+//        val arr = ByteArray(len)
+//        bb[arr]
+//        return arr
+//    }
 
     init {
 //        if (OBJECT_ID_LENGTH != newMessageDigest().digestLength) throw LinkageError(JGitText.get().incorrectOBJECT_ID_LENGTH)

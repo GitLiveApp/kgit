@@ -46,7 +46,7 @@ object RawParseUtils {
 //        encodingAliases["iso-latin-1"] = StandardCharsets.ISO_8859_1 //$NON-NLS-1$
 
         digits10 = ByteArray('9'.code + 1)
-        Arrays.fill(digits10, (-1).toByte())
+        digits10.fill((-1).toByte())
         run {
             var i = '0'
             while (i <= '9') {
@@ -56,7 +56,7 @@ object RawParseUtils {
         }
 
         digits16 = ByteArray('f'.code + 1)
-        Arrays.fill(digits16, (-1).toByte())
+        digits16.fill((-1).toByte())
         run {
             var i = '0'
             while (i <= '9') {

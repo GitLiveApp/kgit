@@ -9,10 +9,9 @@
  */
 package org.eclipse.jgit.merge
 
+import kotlinx.io.Buffer
 import org.eclipse.jgit.diff.RawText
-import java.io.IOException
-import java.io.OutputStream
-import java.nio.charset.Charset
+import kotlinx.io.IOException
 
 /**
  * A class to convert merge results into a Git conformant textual presentation
@@ -50,10 +49,11 @@ class MergeFormatter {
         IOException::class
     )
     fun formatMerge(
-        out: OutputStream, res: MergeResult<RawText>,
+        out: Buffer, res: MergeResult<RawText>,
         seqName: List<String>, charsetName: String
     ) {
-        formatMerge(out, res, seqName, Charset.forName(charsetName))
+        require(charsetName == "utf8") { "Only utf8 supported in KMP"}
+        formatMerge(out, res, seqName, /*Charset.forName(charsetName)*/)
     }
 
     /**
@@ -81,10 +81,11 @@ class MergeFormatter {
      */
     @Throws(IOException::class)
     fun formatMerge(
-        out: OutputStream, res: MergeResult<RawText>,
-        seqName: List<String>, charset: Charset?
+        out: Buffer, res: MergeResult<RawText>,
+        seqName: List<String>,
+//        charset: Charset?
     ) {
-        MergeFormatterPass(out, res, seqName, charset!!).formatMerge()
+        MergeFormatterPass(out, res, seqName, /*charset!!*/).formatMerge()
     }
 
     /**
@@ -112,10 +113,11 @@ class MergeFormatter {
      */
     @Throws(IOException::class)
     fun formatMergeDiff3(
-        out: OutputStream,
-        res: MergeResult<RawText>, seqName: List<String>, charset: Charset
+        out: Buffer,
+        res: MergeResult<RawText>, seqName: List<String>,
+//        charset: Charset
     ) {
-        MergeFormatterPass(out, res, seqName!!, charset!!, true).formatMerge()
+        MergeFormatterPass(out, res, seqName, /*charset!!,*/ true).formatMerge()
     }
 
     /**
@@ -151,12 +153,13 @@ class MergeFormatter {
         IOException::class
     )
     fun formatMerge(
-        out: OutputStream, res: MergeResult<*>, baseName: String,
+        out: Buffer, res: MergeResult<*>, baseName: String,
         oursName: String, theirsName: String, charsetName: String
     ) {
+        require(charsetName == "utf8") { "Only utf8 supported in KMP"}
         formatMerge(
             out, res as MergeResult<RawText>, baseName, oursName, theirsName,
-            Charset.forName(charsetName)
+//            Charset.forName(charsetName)
         )
     }
 
@@ -186,14 +189,15 @@ class MergeFormatter {
      */
     @Throws(IOException::class)
     fun formatMerge(
-        out: OutputStream, res: MergeResult<*>, baseName: String,
-        oursName: String, theirsName: String, charset: Charset
+        out: Buffer, res: MergeResult<*>, baseName: String,
+        oursName: String, theirsName: String,
+//        charset: Charset
     ) {
         val names: MutableList<String> = ArrayList(3)
         names.add(baseName)
         names.add(oursName)
         names.add(theirsName)
-        formatMerge(out, res as MergeResult<RawText>, names, charset)
+        formatMerge(out, res as MergeResult<RawText>, names, /*charset*/)
     }
 
     /**
@@ -222,14 +226,15 @@ class MergeFormatter {
      */
     @Throws(IOException::class)
     fun formatMergeDiff3(
-        out: OutputStream,
+        out: Buffer,
         res: MergeResult<*>, baseName: String, oursName: String,
-        theirsName: String, charset: Charset
+        theirsName: String,
+//        charset: Charset
     ) {
         val names: MutableList<String> = ArrayList(3)
         names.add(baseName)
         names.add(oursName)
         names.add(theirsName)
-        formatMergeDiff3(out, res as  MergeResult<RawText>, names, charset)
+        formatMergeDiff3(out, res as  MergeResult<RawText>, names, /*charset*/)
     }
 }

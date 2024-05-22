@@ -10,20 +10,18 @@
  */
 package org.eclipse.jgit.merge
 
+import kotlinx.io.*
 import org.eclipse.jgit.diff.RawText
 import org.eclipse.jgit.merge.MergeChunk.ConflictState
-import java.io.IOException
-import java.io.OutputStream
-import java.nio.charset.Charset
 
 internal class MergeFormatterPass @JvmOverloads constructor(
-    out: OutputStream,
+    private val buffer: Buffer,
     private val res: MergeResult<RawText>,
-    private val seqName: List<String>, private val charset: Charset, // diff3-style requested
+    private val seqName: List<String>,
+//    private val charset: String,
+    // diff3-style requested
     private val writeBase: Boolean = false
 ) {
-    private val out = EolAwareOutputStream(out)
-
     private val threeWayMerge = res.sequences.size == 3
 
     private var lastConflictingName: String? = null // is set to non-null whenever we are in
@@ -62,7 +60,7 @@ internal class MergeFormatterPass @JvmOverloads constructor(
         // one possible leftover: if the merge result ended with a conflict we
         // have to close the last conflict here
         if (lastConflictingName != null) writeConflictEnd()
-        if (!missingNewlineAtEnd) out.beginln()
+        if (!missingNewlineAtEnd) beginln()
     }
 
     @Throws(IOException::class)
@@ -119,16 +117,29 @@ internal class MergeFormatterPass @JvmOverloads constructor(
 
     @Throws(IOException::class)
     private fun writeln(s: String) {
-        out.beginln()
-        out.write((s + "\n").toByteArray(charset)) //$NON-NLS-1$
+        beginln()
+        buffer.writeString(s + "\n", /*charset*/)
     }
 
     @Throws(IOException::class)
     private fun writeLine(seq: RawText, i: Int) {
-        out.beginln()
-        seq.writeLine(out, i)
+        beginln()
+        seq.writeLine(buffer, i)
         // still BOL? It was a blank line. But writeLine won't lf, so we do.
-        if (out.isBeginln) out.write('\n'.code)
+        if (buffer.exhausted() || buffer[buffer.size-1] != '\n'.code.toByte()) return
+        buffer.writeCodePointValue('\n'.code)
+    }
+
+    /**
+     * Begin a new line if not already in one.
+     *
+     * @exception IOException
+     * if an I/O error occurs.
+     */
+    @Throws(IOException::class)
+    fun beginln() {
+        if (buffer.exhausted() || buffer[buffer.size-1] == '\n'.code.toByte()) return
+        buffer.writeCodePointValue('\n'.code)
     }
 
     private fun isBase(chunk: MergeChunk): Boolean {

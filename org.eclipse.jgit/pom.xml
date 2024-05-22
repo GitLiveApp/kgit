@@ -33,10 +33,26 @@
   <properties>
     <translate-qualifier/>
     <source-bundle-manifest>${project.build.directory}/META-INF/SOURCE-MANIFEST.MF</source-bundle-manifest>
-      <kotlin.version>1.9.24</kotlin.version>
+    <kotlin.version>1.9.24</kotlin.version>
+    <atomicfu.version>0.24.0</atomicfu.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>atomicfu</artifactId>
+      <version>${atomicfu.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-io-core-jvm</artifactId>
+      <version>0.3.5</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-datetime-jvm</artifactId>
+      <version>0.6.0</version>
+    </dependency>
     <dependency>
       <groupId>com.googlecode.javaewah</groupId>
       <artifactId>JavaEWAH</artifactId>
@@ -63,7 +79,6 @@
           <version>${kotlin.version}</version>
           <scope>test</scope>
       </dependency>
-
   </dependencies>
 
   <build>
@@ -176,6 +191,7 @@
           </execution>
         </executions>
       </plugin>
+        <!-- compile Kotlin files to staging directory -->
         <plugin>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-plugin</artifactId>
@@ -187,18 +203,29 @@
                     <goals>
                         <goal>compile</goal>
                     </goals>
-                </execution>
-                <execution>
-                    <id>test-compile</id>
-                    <phase>test-compile</phase>
-                    <goals>
-                        <goal>test-compile</goal>
-                    </goals>
+                    <configuration>
+                        <output>${project.build.directory}/classes-pre-atomicfu</output>
+                    </configuration>
                 </execution>
             </executions>
-            <configuration>
-                <jvmTarget>1.8</jvmTarget>
-            </configuration>
+        </plugin>
+        <!-- transform classes with AtomicFU plugin -->
+        <plugin>
+            <groupId>org.jetbrains.kotlinx</groupId>
+            <artifactId>atomicfu-maven-plugin</artifactId>
+            <version>${atomicfu.version}</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>transform</goal>
+                    </goals>
+                    <configuration>
+                        <input>${project.build.directory}/classes-pre-atomicfu</input>
+                        <!-- "VH" to use Java 9 VarHandle, "BOTH" to produce multi-version code -->
+                        <variant>FU</variant>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
