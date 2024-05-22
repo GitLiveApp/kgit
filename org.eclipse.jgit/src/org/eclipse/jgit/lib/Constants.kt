@@ -14,11 +14,11 @@ package org.eclipse.jgit.lib
 //import org.eclipse.jgit.errors.CorruptObjectException
 //import org.eclipse.jgit.internal.JGitText
 //import org.eclipse.jgit.util.MutableInteger
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
-import java.text.MessageFormat
+//import java.nio.charset.Charset
+//import java.nio.charset.StandardCharsets
+//import java.security.MessageDigest
+//import java.security.NoSuchAlgorithmException
+//import java.text.MessageFormat
 
 /**
  * Misc. constants and helpers used throughout JGit.
@@ -225,21 +225,21 @@ object Constants {
      * Native character encoding for commit messages, file names...
      *
      */
-    @Deprecated(
-        """Use {@link java.nio.charset.StandardCharsets#UTF_8} directly
-	              instead."""
-    )
-    val CHARSET: Charset
+//    @Deprecated(
+//        """Use {@link java.nio.charset.StandardCharsets#UTF_8} directly
+//	              instead."""
+//    )
+//    val CHARSET: Charset
 
     /**
      * Native character encoding for commit messages, file names...
      *
      */
-    @Deprecated(
-        """Use {@link java.nio.charset.StandardCharsets#UTF_8} directly
-	              instead."""
-    )
-    val CHARACTER_ENCODING: String
+//    @Deprecated(
+//        """Use {@link java.nio.charset.StandardCharsets#UTF_8} directly
+//	              instead."""
+//    )
+//    val CHARACTER_ENCODING: String
 
     /** Default main branch name  */
     const val MASTER: String = "master"
@@ -522,10 +522,10 @@ object Constants {
      * function. Very unlikely given that JGit uses a hash function
      * that is in the Java reference specification.
      */
-	@JvmStatic
-	fun newMessageDigest(): MessageDigest {
+//	@JvmStatic
+//	fun newMessageDigest(): MessageDigest {
 //        try {
-            return MessageDigest.getInstance(HASH_FUNCTION)
+//            return MessageDigest.getInstance(HASH_FUNCTION)
 //        } catch (nsae: NoSuchAlgorithmException) {
 //            throw RuntimeException(
 //                MessageFormat.format(
@@ -533,7 +533,7 @@ object Constants {
 //                ), nsae
 //            )
 //        }
-    }
+//    }
 
     /**
      * Convert an OBJ_* type constant to a TYPE_* type constant.
@@ -670,10 +670,10 @@ object Constants {
      * @return a decimal representation of the input integer. The returned array
      * is the smallest array that will hold the value.
      */
-	@JvmStatic
-	fun encodeASCII(s: Long): ByteArray {
-        return encodeASCII(s.toString())
-    }
+//	@JvmStatic
+//	fun encodeASCII(s: Long): ByteArray {
+//        return encodeASCII(s.toString())
+//    }
 
     /**
      * Convert a string to US-ASCII encoding.
@@ -723,8 +723,8 @@ object Constants {
 
     init {
 //        if (OBJECT_ID_LENGTH != newMessageDigest().digestLength) throw LinkageError(JGitText.get().incorrectOBJECT_ID_LENGTH)
-        CHARSET = StandardCharsets.UTF_8
-        CHARACTER_ENCODING = StandardCharsets.UTF_8.name()
+//        CHARSET = StandardCharsets.UTF_8
+//        CHARACTER_ENCODING = StandardCharsets.UTF_8.name()
     }
 
     /** name of the file containing the commit msg for a merge commit  */

@@ -14,10 +14,10 @@ package org.eclipse.jgit.diff
 //import org.eclipse.jgit.internal.JGitText
 import org.eclipse.jgit.util.IntList
 //import org.eclipse.jgit.util.LongList
-import java.io.File
-import java.io.OutputStreamWriter
-import java.io.PrintWriter
-import java.nio.charset.StandardCharsets
+//import java.io.File
+//import java.io.OutputStreamWriter
+//import java.io.PrintWriter
+//import java.nio.charset.StandardCharsets
 import java.text.MessageFormat
 
 /**
@@ -570,8 +570,8 @@ class MyersDiff<S : Sequence> private constructor(
 //            }
 //        }
 
-        private fun err(): PrintWriter {
-            return PrintWriter(OutputStreamWriter(System.err, StandardCharsets.UTF_8))
-        }
+//        private fun err(): PrintWriter {
+//            return PrintWriter(OutputStreamWriter(System.err, StandardCharsets.UTF_8))
+//        }
     }
 }

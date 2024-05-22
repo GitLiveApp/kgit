@@ -16,9 +16,9 @@ import org.eclipse.jgit.diff.RawText.Companion.isBinary
 import org.eclipse.jgit.lib.Constants.encode
 //import org.eclipse.jgit.lib.ObjectChecker
 //import org.eclipse.jgit.lib.PersonIdent
-import java.nio.ByteBuffer
-import java.nio.charset.*
-import java.util.*
+//import java.nio.ByteBuffer
+//import java.nio.charset.*
+//import java.util.*
 import kotlin.math.max
 
 /**
@@ -30,8 +30,8 @@ object RawParseUtils {
      *
      * @since 2.2
      */
-    @Deprecated("use {@link java.nio.charset.StandardCharsets#UTF_8} instead")
-    val UTF8_CHARSET: Charset = StandardCharsets.UTF_8
+//    @Deprecated("use {@link java.nio.charset.StandardCharsets#UTF_8} instead")
+//    val UTF8_CHARSET: Charset = StandardCharsets.UTF_8
 
     private val digits10: ByteArray
 
@@ -39,11 +39,11 @@ object RawParseUtils {
 
     private val footerLineKeyChars: ByteArray
 
-    private val encodingAliases: MutableMap<String, Charset> = HashMap()
+//    private val encodingAliases: MutableMap<String, Charset> = HashMap()
 
     init {
-        encodingAliases["latin-1"] = StandardCharsets.ISO_8859_1 //$NON-NLS-1$
-        encodingAliases["iso-latin-1"] = StandardCharsets.ISO_8859_1 //$NON-NLS-1$
+//        encodingAliases["latin-1"] = StandardCharsets.ISO_8859_1 //$NON-NLS-1$
+//        encodingAliases["iso-latin-1"] = StandardCharsets.ISO_8859_1 //$NON-NLS-1$
 
         digits10 = ByteArray('9'.code + 1)
         Arrays.fill(digits10, (-1).toByte())
@@ -1392,14 +1392,14 @@ object RawParseUtils {
         return r.toString()
     }
 
-    @JvmStatic
-    @Throws(CharacterCodingException::class)
-    private fun decode(b: ByteBuffer, charset: Charset): String {
-        val d = charset.newDecoder()
-        d.onMalformedInput(CodingErrorAction.REPORT)
-        d.onUnmappableCharacter(CodingErrorAction.REPORT)
-        return d.decode(b).toString()
-    }
+//    @JvmStatic
+//    @Throws(CharacterCodingException::class)
+//    private fun decode(b: ByteBuffer, charset: Charset): String {
+//        val d = charset.newDecoder()
+//        d.onMalformedInput(CodingErrorAction.REPORT)
+//        d.onUnmappableCharacter(CodingErrorAction.REPORT)
+//        return d.decode(b).toString()
+//    }
 
     /**
      * Locate the position of the commit message body.

@@ -16,15 +16,15 @@ import org.eclipse.jgit.lib.Constants.encodeASCII
 //import org.eclipse.jgit.util.NB
 import org.eclipse.jgit.util.RawParseUtils
 import org.jetbrains.annotations.Nullable
-import java.io.IOException
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import java.io.Serializable
+//import java.io.IOException
+//import java.io.ObjectInputStream
+//import java.io.ObjectOutputStream
+//import java.io.Serializable
 
 /**
  * A SHA-1 abstraction.
  */
-open class ObjectId : AnyObjectId, Serializable {
+open class ObjectId : AnyObjectId/*, Serializable*/ {
     /**
      * Construct an ObjectId from 160 bits provided in 5 words.
      *
@@ -71,23 +71,23 @@ open class ObjectId : AnyObjectId, Serializable {
         return this
     }
 
-    @Throws(IOException::class)
-    private fun writeObject(os: ObjectOutputStream) {
-        os.writeInt(w1)
-        os.writeInt(w2)
-        os.writeInt(w3)
-        os.writeInt(w4)
-        os.writeInt(w5)
-    }
-
-    @Throws(IOException::class)
-    private fun readObject(ois: ObjectInputStream) {
-        w1 = ois.readInt()
-        w2 = ois.readInt()
-        w3 = ois.readInt()
-        w4 = ois.readInt()
-        w5 = ois.readInt()
-    }
+//    @Throws(IOException::class)
+//    private fun writeObject(os: ObjectOutputStream) {
+//        os.writeInt(w1)
+//        os.writeInt(w2)
+//        os.writeInt(w3)
+//        os.writeInt(w4)
+//        os.writeInt(w5)
+//    }
+//
+//    @Throws(IOException::class)
+//    private fun readObject(ois: ObjectInputStream) {
+//        w1 = ois.readInt()
+//        w2 = ois.readInt()
+//        w3 = ois.readInt()
+//        w4 = ois.readInt()
+//        w5 = ois.readInt()
+//    }
 
     companion object {
         private const val serialVersionUID = 1L

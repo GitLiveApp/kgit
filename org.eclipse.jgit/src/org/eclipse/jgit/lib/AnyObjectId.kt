@@ -12,10 +12,10 @@ package org.eclipse.jgit.lib
 import org.eclipse.jgit.lib.ObjectId
 //import org.eclipse.jgit.util.NB
 //import org.eclipse.jgit.util.References
-import java.io.IOException
-import java.io.OutputStream
-import java.io.Writer
-import java.nio.ByteBuffer
+//import java.io.IOException
+//import java.io.OutputStream
+//import java.io.Writer
+//import java.nio.ByteBuffer
 
 /**
  * A (possibly mutable) SHA-1 abstraction.
@@ -201,13 +201,13 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @param w
      * the buffer to copy to. Must be in big endian order.
      */
-    fun copyRawTo(w: ByteBuffer) {
-        w.putInt(w1)
-        w.putInt(w2)
-        w.putInt(w3)
-        w.putInt(w4)
-        w.putInt(w5)
-    }
+//    fun copyRawTo(w: ByteBuffer) {
+//        w.putInt(w1)
+//        w.putInt(w2)
+//        w.putInt(w3)
+//        w.putInt(w4)
+//        w.putInt(w5)
+//    }
 
     /**
      * Copy this ObjectId to a byte array.
@@ -249,14 +249,14 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @throws java.io.IOException
      * the stream writing failed.
      */
-    @Throws(IOException::class)
-    fun copyRawTo(w: OutputStream) {
-        writeRawInt(w, w1)
-        writeRawInt(w, w2)
-        writeRawInt(w, w3)
-        writeRawInt(w, w4)
-        writeRawInt(w, w5)
-    }
+//    @Throws(IOException::class)
+//    fun copyRawTo(w: OutputStream) {
+//        writeRawInt(w, w1)
+//        writeRawInt(w, w2)
+//        writeRawInt(w, w3)
+//        writeRawInt(w, w4)
+//        writeRawInt(w, w5)
+//    }
 
     /**
      * Copy this ObjectId to an output writer in hex format.
@@ -266,10 +266,10 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @throws java.io.IOException
      * the stream writing failed.
      */
-    @Throws(IOException::class)
-    fun copyTo(w: OutputStream) {
-        w.write(toHexByteArray())
-    }
+//    @Throws(IOException::class)
+//    fun copyTo(w: OutputStream) {
+//        w.write(toHexByteArray())
+//    }
 
     /**
      * Copy this ObjectId to a byte array in hex format.
@@ -293,9 +293,9 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @param b
      * the buffer to copy to.
      */
-    fun copyTo(b: ByteBuffer) {
-        b.put(toHexByteArray())
-    }
+//    fun copyTo(b: ByteBuffer) {
+//        b.put(toHexByteArray())
+//    }
 
     private fun toHexByteArray(): ByteArray {
         val dst = ByteArray(Constants.OBJECT_ID_STRING_LENGTH)
@@ -315,10 +315,10 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @throws java.io.IOException
      * the stream writing failed.
      */
-    @Throws(IOException::class)
-    fun copyTo(w: Writer) {
-        w.write(toHexCharArray())
-    }
+//    @Throws(IOException::class)
+//    fun copyTo(w: Writer) {
+//        w.write(toHexCharArray())
+//    }
 
     /**
      * Copy this ObjectId to an output writer in hex format.
@@ -332,11 +332,11 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @throws java.io.IOException
      * the stream writing failed.
      */
-    @Throws(IOException::class)
-    fun copyTo(tmp: CharArray, w: Writer) {
-        toHexCharArray(tmp)
-        w.write(tmp, 0, Constants.OBJECT_ID_STRING_LENGTH)
-    }
+//    @Throws(IOException::class)
+//    fun copyTo(tmp: CharArray, w: Writer) {
+//        toHexCharArray(tmp)
+//        w.write(tmp, 0, Constants.OBJECT_ID_STRING_LENGTH)
+//    }
 
     /**
      * Copy this ObjectId to a StringBuilder in hex format.
@@ -491,13 +491,13 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
 //            return firstObjectId.w3 == secondObjectId.w3 && firstObjectId.w4 == secondObjectId.w4 && firstObjectId.w5 == secondObjectId.w5 && firstObjectId.w1 == secondObjectId.w1 && firstObjectId.w2 == secondObjectId.w2
 //        }
 
-        @Throws(IOException::class)
-        private fun writeRawInt(w: OutputStream, v: Int) {
-            w.write(v ushr 24)
-            w.write(v ushr 16)
-            w.write(v ushr 8)
-            w.write(v)
-        }
+//        @Throws(IOException::class)
+//        private fun writeRawInt(w: OutputStream, v: Int) {
+//            w.write(v ushr 24)
+//            w.write(v ushr 16)
+//            w.write(v ushr 8)
+//            w.write(v)
+//        }
 
         private val hexbyte = byteArrayOf(
             '0'.code.toByte(),
