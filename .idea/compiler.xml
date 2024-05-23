@@ -16,6 +16,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="kgit.org.eclipse.jgit" target="17" />
       <module name="org.eclipse.jgit.ant" target="11" />
       <module name="org.eclipse.jgit.ant.test" target="11" />
       <module name="org.eclipse.jgit.archive" target="11" />
