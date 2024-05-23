@@ -13,7 +13,7 @@ package org.eclipse.jgit.util
 /**
  * A more efficient List&lt;Integer&gt; using a primitive integer array.
  */
-class IntList @JvmOverloads constructor(capacity: Int = 10) {
+class IntList constructor(capacity: Int = 10) {
     private var entries: IntArray
 
     private var count = 0
@@ -59,11 +59,11 @@ class IntList @JvmOverloads constructor(capacity: Int = 10) {
      * @param i
      * index to read, must be in the range [0, [.size]).
      * @return the number at the specified index
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * the index outside the valid range
      */
     operator fun get(i: Int): Int {
-        if (count <= i) throw ArrayIndexOutOfBoundsException(i)
+        if (count <= i) throw IndexOutOfBoundsException(i.toString())
         return entries[i]
     }
 
@@ -94,7 +94,7 @@ class IntList @JvmOverloads constructor(capacity: Int = 10) {
      * value to store at the position.
      */
     operator fun set(index: Int, n: Int) {
-        if (count < index) throw ArrayIndexOutOfBoundsException(index)
+        if (count < index) throw IndexOutOfBoundsException(index.toString())
         else if (count == index) add(n)
         else entries[index] = n
     }
@@ -170,7 +170,7 @@ class IntList @JvmOverloads constructor(capacity: Int = 10) {
 
     private fun grow() {
         val n = IntArray((entries.size + 16) * 3 / 2)
-        System.arraycopy(entries, 0, n, 0, count)
+        entries.copyInto(n, 0, 0, count)
         entries = n
     }
 
@@ -216,7 +216,6 @@ class IntList @JvmOverloads constructor(capacity: Int = 10) {
          * @return the list initialized with the given range
          * @since 6.6
          */
-        @JvmStatic
         fun filledWithRange(start: Int, end: Int): IntList {
             val list = IntList(end - start)
             for (`val` in start until end) {

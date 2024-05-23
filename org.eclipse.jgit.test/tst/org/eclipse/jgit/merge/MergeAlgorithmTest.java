@@ -19,6 +19,7 @@ import kotlinx.io.Buffer;
 import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.util.RawParseUtils;
 import org.junit.Assume;
 import org.junit.Test;
 import org.junit.experimental.theories.DataPoints;
@@ -350,7 +351,7 @@ public class MergeAlgorithmTest {
 
 	private String merge(String commonBase, String ours, String theirs,
 			boolean diff3) throws IOException {
-		MergeResult<RawText> r = new MergeAlgorithm().merge(RawTextComparator.DEFAULT,
+		MergeResult<RawText> r = new MergeAlgorithm().merge(RawTextComparator.Companion.getDEFAULT(),
 				T(commonBase), T(ours), T(theirs));
 		Buffer buffer = new Buffer();
 		if (diff3) {
@@ -388,6 +389,7 @@ public class MergeAlgorithmTest {
 	}
 
 	public RawText T(String text) {
-		return new RawText(Constants.encode(t(text)));
+		byte[] rawContent = Constants.INSTANCE.encode(t(text));
+		return new RawText(rawContent, RawParseUtils.INSTANCE.lineMap(rawContent, 0, rawContent.length));
 	}
 }

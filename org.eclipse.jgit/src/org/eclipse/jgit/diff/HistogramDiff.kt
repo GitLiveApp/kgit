@@ -162,7 +162,6 @@ class HistogramDiff : LowLevelDiffAlgorithm() {
                 else diffReplace(r)
 
                 Edit.Type.EMPTY -> throw IllegalStateException()
-                else -> throw IllegalStateException()
             }
         }
 

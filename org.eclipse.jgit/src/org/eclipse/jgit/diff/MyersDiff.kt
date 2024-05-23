@@ -18,7 +18,7 @@ import org.eclipse.jgit.util.IntList
 //import java.io.OutputStreamWriter
 //import java.io.PrintWriter
 //import java.nio.charset.StandardCharsets
-import java.text.MessageFormat
+//import java.text.MessageFormat
 
 /**
  * Diff algorithm, based on "An O(ND) Difference Algorithm and its Variations",
@@ -534,7 +534,6 @@ class MyersDiff<S : Sequence> private constructor(
 
     companion object {
         /** Singleton instance of MyersDiff.  */
-		@JvmField
 		val INSTANCE: DiffAlgorithm = object : LowLevelDiffAlgorithm() {
             @Suppress("unused")
             override fun <S : Sequence> diffNonCommon(

@@ -125,7 +125,6 @@ abstract class DiffAlgorithm {
          * returned
          * @return an implementation of the specified diff algorithm
          */
-		@JvmStatic
 		fun getAlgorithm(alg: SupportedAlgorithm?): DiffAlgorithm {
             return when (alg) {
                 SupportedAlgorithm.MYERS -> MyersDiff.INSTANCE

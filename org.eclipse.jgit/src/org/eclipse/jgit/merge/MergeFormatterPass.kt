@@ -14,7 +14,7 @@ import kotlinx.io.*
 import org.eclipse.jgit.diff.RawText
 import org.eclipse.jgit.merge.MergeChunk.ConflictState
 
-internal class MergeFormatterPass @JvmOverloads constructor(
+internal class MergeFormatterPass constructor(
     private val buffer: Buffer,
     private val res: MergeResult<RawText>,
     private val seqName: List<String>,

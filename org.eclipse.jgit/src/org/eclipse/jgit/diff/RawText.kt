@@ -45,7 +45,7 @@ class RawText
  * @param input
  * the content array. The object retains a reference to this
  * array, so it should be immutable.
- */ @JvmOverloads constructor(
+ */ constructor(
     /** The file content for this sequence.  */
     val rawContent: ByteArray,
     /** Map of line number to starting position within [.content].  */
@@ -239,7 +239,6 @@ class RawText
 
     companion object {
         /** A RawText of length 0  */
-		@JvmField
 		val EMPTY_TEXT: RawText = RawText(ByteArray(0))
 
         /**
@@ -252,7 +251,6 @@ class RawText
          */
         private val BUFFER_SIZE = atomic(FIRST_FEW_BYTES)
 
-        @JvmStatic
 		val bufferSize: Int
             /**
              * Obtains the buffer size to use for analyzing whether certain content is
@@ -274,7 +272,6 @@ class RawText
          * @return the size actually set
          * @since 6.0
          */
-		@JvmStatic
 		fun setBufferSize(bufferSize: Int): Int {
             val newSize = max(FIRST_FEW_BYTES.toDouble(), bufferSize.toDouble()).toInt()
             return BUFFER_SIZE.updateAndGet { curr: Int -> newSize }
@@ -295,7 +292,6 @@ class RawText
          * @throws java.io.IOException
          * if input stream could not be read
          */
-        @JvmStatic
 		@Throws(IOException::class)
         fun isBinary(raw: Source): Boolean {
             val buffer = ByteArray(bufferSize + 1)
@@ -353,7 +349,6 @@ class RawText
          * @return true if raw is likely to be a binary file, false otherwise
          * @since 6.0
          */
-		@JvmStatic
 		fun isBinary(raw: ByteArray, length: Int, complete: Boolean): Boolean {
             // Similar heuristic as C Git. Differences:
             // - limited buffer size; may be only the beginning of a large blob
@@ -398,7 +393,6 @@ class RawText
          * not LF, `false` otherwise
          * @since 6.0
          */
-		@JvmStatic
 		fun isBinary(curr: Byte, prev: Byte): Boolean {
             return curr == '\u0000'.code.toByte() || (curr != '\n'.code.toByte() && prev == '\r'.code.toByte()) || prev == '\u0000'.code.toByte()
         }
@@ -413,7 +407,6 @@ class RawText
          * `false` otherwise
          * @since 5.3
          */
-		@JvmStatic
 		fun isCrLfText(raw: ByteArray): Boolean {
             return isCrLfText(raw, raw.size)
         }
@@ -435,7 +428,6 @@ class RawText
          * if input stream could not be read
          * @since 5.3
          */
-        @JvmStatic
 		@Throws(IOException::class)
         fun isCrLfText(raw: Source): Boolean {
             val buffer = ByteArray(bufferSize)
@@ -480,7 +472,6 @@ class RawText
          * whether `raw` contains the whole data
          * @since 6.0
          */
-		@JvmStatic
 		fun isCrLfText(raw: ByteArray, length: Int, complete: Boolean): Boolean {
             var has_crlf = false
             var last = 'x'.code.toByte() // Just something inconspicuous
@@ -522,8 +513,7 @@ class RawText
          * @throws java.io.IOException
          * if the input could not be read.
          */
-//        @JvmStatic
-//		@Throws(IOException::class, BinaryBlobException::class)
+////		@Throws(IOException::class, BinaryBlobException::class)
 //        fun load(ldr: ObjectLoader, threshold: Int): RawText {
 //            val sz = ldr.size
 //

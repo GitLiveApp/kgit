@@ -113,7 +113,6 @@ object RawParseUtils {
      * the buffer to test for equality with b.
      * @return ptr + src.length if b[ptr.src.length] == src; else -1.
      */
-    @JvmStatic
     fun match(b: ByteArray, ptr: Int, src: ByteArray): Int {
         var ptr = ptr
         if (ptr + src.size > b.size) return -1
@@ -175,7 +174,6 @@ object RawParseUtils {
      * the last byte written. Additional writing should start at one
      * position earlier.
      */
-    @JvmStatic
     fun formatBase10(b: ByteArray, o: Int, value: Int): Int {
         var o = o
         var value = value
@@ -212,8 +210,7 @@ object RawParseUtils {
      * @return the value at this location; 0 if the location is not a valid
      * numeric.
      */
-//    @JvmStatic
-//    fun parseBase10(
+////    fun parseBase10(
 //        b: ByteArray, ptr: Int,
 //        ptrResult: MutableInteger?
 //    ): Int {
@@ -239,7 +236,7 @@ object RawParseUtils {
 //                r = (r * 10) + v
 //                ptr++
 //            }
-//        } catch (e: ArrayIndexOutOfBoundsException) {
+//        } catch (e: IndexOutOfBoundsException) {
 //            // Not a valid digit.
 //        }
 //        if (ptrResult != null) ptrResult.value = ptr
@@ -265,8 +262,7 @@ object RawParseUtils {
      * @return the value at this location; 0 if the location is not a valid
      * numeric.
      */
-//    @JvmStatic
-//    fun parseLongBase10(
+////    fun parseLongBase10(
 //        b: ByteArray, ptr: Int,
 //        ptrResult: MutableInteger?
 //    ): Long {
@@ -292,7 +288,7 @@ object RawParseUtils {
 //                r = (r * 10) + v
 //                ptr++
 //            }
-//        } catch (e: ArrayIndexOutOfBoundsException) {
+//        } catch (e: IndexOutOfBoundsException) {
 //            // Not a valid digit.
 //        }
 //        if (ptrResult != null) ptrResult.value = ptr
@@ -312,10 +308,9 @@ object RawParseUtils {
      * @param p
      * first position within the buffer to parse.
      * @return the integer value.
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * if the string is not hex formatted.
      */
-    @JvmStatic
     fun parseHexInt16(bs: ByteArray, p: Int): Int {
         var r = digits16[bs[p].toInt()].toInt() shl 4
 
@@ -326,7 +321,7 @@ object RawParseUtils {
         r = r shl 4
 
         r = r or digits16[bs[p + 3].toInt()].toInt()
-        if (r < 0) throw ArrayIndexOutOfBoundsException()
+        if (r < 0) throw IndexOutOfBoundsException()
         return r
     }
 
@@ -343,10 +338,9 @@ object RawParseUtils {
      * @param p
      * first position within the buffer to parse.
      * @return the integer value.
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * if the string is not hex formatted.
      */
-    @JvmStatic
     fun parseHexInt32(bs: ByteArray, p: Int): Int {
         var r = digits16[bs[p].toInt()].toInt() shl 4
 
@@ -368,7 +362,7 @@ object RawParseUtils {
         r = r or digits16[bs[p + 6].toInt()].toInt()
 
         val last = digits16[bs[p + 7].toInt()].toInt()
-        if (r < 0 || last < 0) throw ArrayIndexOutOfBoundsException()
+        if (r < 0 || last < 0) throw IndexOutOfBoundsException()
         return (r shl 4) or last
     }
 
@@ -385,11 +379,10 @@ object RawParseUtils {
      * @param p
      * first position within the buffer to parse.
      * @return the integer value.
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * if the string is not hex formatted.
      * @since 4.3
      */
-    @JvmStatic
     fun parseHexInt64(bs: ByteArray, p: Int): Long {
         var r = (digits16[bs[p].toInt()].toInt() shl 4).toLong()
 
@@ -435,7 +428,7 @@ object RawParseUtils {
         r = r or digits16[bs[p + 14].toInt()].toLong()
 
         val last = digits16[bs[p + 15].toInt()].toInt()
-        if (r < 0 || last < 0) throw ArrayIndexOutOfBoundsException()
+        if (r < 0 || last < 0) throw IndexOutOfBoundsException()
         return (r shl 4) or last.toLong()
     }
 
@@ -445,13 +438,12 @@ object RawParseUtils {
      * @param digit
      * hex character to parse.
      * @return numeric value, in the range 0-15.
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * if the input digit is not a valid hex digit.
      */
-    @JvmStatic
     fun parseHexInt4(digit: Byte): Int {
         val r = digits16[digit.toInt()]
-        if (r < 0) throw ArrayIndexOutOfBoundsException()
+        if (r < 0) throw IndexOutOfBoundsException()
         return r.toInt()
     }
 
@@ -486,8 +478,7 @@ object RawParseUtils {
      * @return the timezone at this location, expressed in minutes.
      */
 //    @JvmOverloads
-//    @JvmStatic
-//    fun parseTimeZoneOffset(
+////    fun parseTimeZoneOffset(
 //        b: ByteArray, ptr: Int,
 //        ptrResult: MutableInteger? = null
 //    ): Int {
@@ -508,7 +499,6 @@ object RawParseUtils {
      * character to find.
      * @return new position just after chrA.
      */
-    @JvmStatic
     fun next(b: ByteArray, ptr: Int, chrA: Char): Int {
         var ptr = ptr
         val sz = b.size
@@ -530,7 +520,6 @@ object RawParseUtils {
      * position within buffer to start looking for LF at.
      * @return new position just after the first LF found.
      */
-    @JvmStatic
     fun nextLF(b: ByteArray, ptr: Int): Int {
         return next(b, ptr, '\n')
     }
@@ -549,7 +538,6 @@ object RawParseUtils {
      * character to find.
      * @return new position just after the first chrA or LF to be found.
      */
-    @JvmStatic
     fun nextLF(b: ByteArray, ptr: Int, chrA: Char): Int {
         var ptr = ptr
         val sz = b.size
@@ -579,7 +567,6 @@ object RawParseUtils {
      * terminating newline.
      * @since 6.9
      */
-    @JvmStatic
     fun nextLfSkippingSplitLines(b: ByteArray, ptr: Int): Int {
         var ptr = ptr
         val sz = b.size
@@ -608,7 +595,6 @@ object RawParseUtils {
      * stripped
      * @since 6.9
      */
-    @JvmStatic
     fun headerValue(b: ByteArray, start: Int, end: Int): ByteArray {
         val data = ByteArray(end - start)
         var out = 0
@@ -644,7 +630,6 @@ object RawParseUtils {
      * @since 5.1
      */
     @Deprecated("use {{@link #nextLfSkippingSplitLines}} directly instead")
-    @JvmStatic
     fun headerEnd(b: ByteArray, ptr: Int): Int {
         return nextLfSkippingSplitLines(b, ptr)
     }
@@ -662,7 +647,6 @@ object RawParseUtils {
      * not found
      * @since 5.1
      */
-    @JvmStatic
     fun headerStart(headerName: ByteArray, b: ByteArray, ptr: Int): Int {
         // Start by advancing to just past a LF or buffer start
         var ptr = ptr
@@ -693,8 +677,7 @@ object RawParseUtils {
      * @return whether the message starts with any known headers
      * @since 6.9
      */
-//    @JvmStatic
-//    fun hasAnyKnownHeaders(b: ByteArray): Boolean {
+////    fun hasAnyKnownHeaders(b: ByteArray): Boolean {
 //        return match(b, 0, ObjectChecker.tree) != -1 || match(
 //            b,
 //            0,
@@ -725,7 +708,6 @@ object RawParseUtils {
      * character to find.
      * @return new position just before chrA, -1 for not found
      */
-    @JvmStatic
     fun prev(b: ByteArray, ptr: Int, chrA: Char): Int {
         var ptr = ptr
         if (ptr == b.size) --ptr
@@ -747,7 +729,6 @@ object RawParseUtils {
      * position within buffer to start looking for LF at.
      * @return new position just before the first LF found, -1 for not found
      */
-    @JvmStatic
     fun prevLF(b: ByteArray, ptr: Int): Int {
         return prev(b, ptr, '\n')
     }
@@ -767,7 +748,6 @@ object RawParseUtils {
      * @return new position just before the first chrA or LF to be found, -1 for
      * not found
      */
-    @JvmStatic
     fun prevLF(b: ByteArray, ptr: Int, chrA: Char): Int {
         var ptr = ptr
         if (ptr == b.size) --ptr
@@ -803,7 +783,6 @@ object RawParseUtils {
      * 1 past the end of the content within `buf`.
      * @return a line map indicating the starting position of each line.
      */
-    @JvmStatic
     fun lineMap(buf: ByteArray, ptr: Int, end: Int): IntList {
         var ptr = ptr
         val map = IntList((end - ptr) / 36)
@@ -833,8 +812,7 @@ object RawParseUtils {
      * @since 5.0
      */
 //    @Throws(BinaryBlobException::class)
-//    @JvmStatic
-//    fun lineMapOrBinary(buf: ByteArray, ptr: Int, end: Int): IntList {
+////    fun lineMapOrBinary(buf: ByteArray, ptr: Int, end: Int): IntList {
 //        // Experimentally derived from multiple source repositories
 //        // the average number of bytes/line is 36. Its a rough guess
 //        // to initially size our map close to the target.
@@ -874,8 +852,7 @@ object RawParseUtils {
      * character of the author's name. If no author header can be
      * located -1 is returned.
      */
-//    @JvmStatic
-//    fun author(b: ByteArray, ptr: Int): Int {
+////    fun author(b: ByteArray, ptr: Int): Int {
 //        var ptr = ptr
 //        val sz = b.size
 //        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
@@ -898,8 +875,7 @@ object RawParseUtils {
      * character of the committer's name. If no committer header can be
      * located -1 is returned.
      */
-//    @JvmStatic
-//    fun committer(b: ByteArray, ptr: Int): Int {
+////    fun committer(b: ByteArray, ptr: Int): Int {
 //        var ptr = ptr
 //        val sz = b.size
 //        if (ptr == 0) ptr += 46 // skip the "tree ..." line.
@@ -923,8 +899,7 @@ object RawParseUtils {
      * character of the tagger's name. If no tagger header can be
      * located -1 is returned.
      */
-//    @JvmStatic
-//    fun tagger(b: ByteArray, ptr: Int): Int {
+////    fun tagger(b: ByteArray, ptr: Int): Int {
 //        var ptr = ptr
 //        val sz = b.size
 //        if (ptr == 0) ptr += 48 // skip the "object ..." line.
@@ -951,8 +926,7 @@ object RawParseUtils {
      * character of the encoding's name. If no encoding header can be
      * located -1 is returned (and UTF-8 should be assumed).
      */
-//    @JvmStatic
-//    fun encoding(b: ByteArray, ptr: Int): Int {
+////    fun encoding(b: ByteArray, ptr: Int): Int {
 //        var ptr = ptr
 //        val sz = b.size
 //        while (ptr < sz) {
@@ -976,8 +950,7 @@ object RawParseUtils {
      * @since 4.2
      */
 //    @Nullable
-//    @JvmStatic
-//    fun parseEncodingName(b: ByteArray): String? {
+////    fun parseEncodingName(b: ByteArray): String? {
 //        val enc = encoding(b, 0)
 //        if (enc < 0) {
 //            return null
@@ -1007,8 +980,7 @@ object RawParseUtils {
      * if the JRE does not support the character set requested by
      * the encoding header.
      */
-//    @JvmStatic
-//    fun parseEncoding(b: ByteArray): Charset {
+////    fun parseEncoding(b: ByteArray): Charset {
 //        val enc = parseEncodingName(b) ?: return StandardCharsets.UTF_8
 //
 //        val name = enc.trim { it <= ' ' }
@@ -1042,8 +1014,7 @@ object RawParseUtils {
      * @see .parseEncoding
      * @since 6.7
      */
-//    @JvmStatic
-//    fun guessEncoding(buffer: ByteArray): Charset {
+////    fun guessEncoding(buffer: ByteArray): Charset {
 //        return try {
 //            parseEncoding(buffer)
 //        } catch (e: IllegalCharsetNameException) {
@@ -1065,8 +1036,7 @@ object RawParseUtils {
      * @return the parsed identity or null in case the identity could not be
      * parsed.
      */
-//    @JvmStatic
-//    fun parsePersonIdent(`in`: String?): PersonIdent? {
+////    fun parsePersonIdent(`in`: String?): PersonIdent? {
 //        return parsePersonIdent(encode(`in`), 0)
 //    }
 
@@ -1089,8 +1059,7 @@ object RawParseUtils {
      * @return the parsed identity or null in case the identity could not be
      * parsed.
      */
-//    @JvmStatic
-//    fun parsePersonIdent(raw: ByteArray, nameB: Int): PersonIdent? {
+////    fun parsePersonIdent(raw: ByteArray, nameB: Int): PersonIdent? {
 //        var cs = try {
 //            parseEncoding(raw)
 //        } catch (e: IllegalCharsetNameException) {
@@ -1156,8 +1125,7 @@ object RawParseUtils {
      * identity line.
      * @return the parsed identity. Never null.
      */
-//    @JvmStatic
-//    fun parsePersonIdentOnly(
+////    fun parsePersonIdentOnly(
 //        raw: ByteArray,
 //        nameB: Int
 //    ): PersonIdent {
@@ -1204,7 +1172,6 @@ object RawParseUtils {
      * @return position of the ':' which terminates the footer line key if this
      * is otherwise a valid footer line key; otherwise -1.
      */
-    @JvmStatic
     fun endOfFooterLineKey(raw: ByteArray, ptr: Int): Int {
         var ptr = ptr
         try {
@@ -1216,7 +1183,7 @@ object RawParseUtils {
                 }
                 ptr++
             }
-        } catch (e: ArrayIndexOutOfBoundsException) {
+        } catch (e: IndexOutOfBoundsException) {
             return -1
         }
     }
@@ -1249,8 +1216,7 @@ object RawParseUtils {
      * after decoding the region through the specified character set.
      */
 //    @JvmOverloads
-//    @JvmStatic
-//    fun decode(
+////    fun decode(
 //        buffer: ByteArray, start: Int = 0,
 //        end: Int = buffer.size
 //    ): String {
@@ -1289,8 +1255,7 @@ object RawParseUtils {
      * after decoding the region through the specified character set.
      */
 //    @JvmOverloads
-//    @JvmStatic
-//    fun decode(
+////    fun decode(
 //        cs: Charset?, buffer: ByteArray,
 //        start: Int = 0, end: Int = buffer.size
 //    ): String {
@@ -1325,8 +1290,7 @@ object RawParseUtils {
      * @throws java.nio.charset.CharacterCodingException
      * the input is not in any of the tested character sets.
      */
-//    @JvmStatic
-//    @Throws(CharacterCodingException::class)
+////    @Throws(CharacterCodingException::class)
 //    fun decodeNoFallback(
 //        cs: Charset?,
 //        buffer: ByteArray?, start: Int, end: Int
@@ -1382,7 +1346,6 @@ object RawParseUtils {
      * data from.
      * @return a string representation of the range `[start,end)`.
      */
-    @JvmStatic
     fun extractBinaryString(
         buffer: ByteArray,
         start: Int, end: Int
@@ -1392,8 +1355,7 @@ object RawParseUtils {
         return r.toString()
     }
 
-//    @JvmStatic
-//    @Throws(CharacterCodingException::class)
+////    @Throws(CharacterCodingException::class)
 //    private fun decode(b: ByteBuffer, charset: Charset): String {
 //        val d = charset.newDecoder()
 //        d.onMalformedInput(CodingErrorAction.REPORT)
@@ -1412,7 +1374,6 @@ object RawParseUtils {
      * commit buffer.
      * @return position of the user's message buffer.
      */
-    @JvmStatic
     fun commitMessage(b: ByteArray, ptr: Int): Int {
         var ptr = ptr
         val sz = b.size
@@ -1438,7 +1399,6 @@ object RawParseUtils {
      * buffer.
      * @return position of the user's message buffer.
      */
-    @JvmStatic
     fun tagMessage(b: ByteArray, ptr: Int): Int {
         var ptr = ptr
         val sz = b.size
@@ -1465,7 +1425,6 @@ object RawParseUtils {
      * @return position of the LF at the end of the paragraph;
      * `b.length` if no paragraph end could be located.
      */
-    @JvmStatic
     fun endOfParagraph(b: ByteArray, start: Int): Int {
         var ptr = start
         val sz = b.size
@@ -1487,7 +1446,6 @@ object RawParseUtils {
      * @return last index of `ch` in raw, trimming spaces.
      * @since 4.1
      */
-    @JvmStatic
     fun lastIndexOfTrim(raw: ByteArray, ch: Char, pos: Int): Int {
         var pos = pos
         while (pos >= 0 && raw[pos] == ' '.code.toByte()) pos--

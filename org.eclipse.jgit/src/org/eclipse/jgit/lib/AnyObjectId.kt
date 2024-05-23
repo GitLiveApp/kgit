@@ -26,19 +26,14 @@ import org.eclipse.jgit.lib.ObjectId
  * instance is modified to represent a different object name.
  */
 abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
-    @JvmField
 	var w1: Int = 0
 
-    @JvmField
 	var w2: Int = 0
 
-    @JvmField
 	var w3: Int = 0
 
-    @JvmField
 	var w4: Int = 0
 
-    @JvmField
 	var w5: Int = 0
 
     val firstByte: Int
@@ -66,7 +61,7 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @return the value of the requested byte at `index`. Returned values
      * are unsigned and thus are in the range [0,255] rather than the
      * signed byte range of [-128, 127].
-     * @throws java.lang.ArrayIndexOutOfBoundsException
+     * @throws java.lang.IndexOutOfBoundsException
      * `index` is less than 0, equal to
      * [org.eclipse.jgit.lib.Constants.OBJECT_ID_LENGTH], or
      * greater than
@@ -79,7 +74,7 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
             2 -> w3
             3 -> w4
             4 -> w5
-            else -> throw ArrayIndexOutOfBoundsException(index)
+            else -> throw IndexOutOfBoundsException(index.toString())
         }
         return (w ushr (8 * (3 - (index and 3)))) and 0xff
     }
@@ -350,7 +345,7 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      */
     fun copyTo(tmp: CharArray, w: StringBuilder) {
         toHexCharArray(tmp)
-        w.append(tmp, 0, Constants.OBJECT_ID_STRING_LENGTH)
+        w.appendRange(tmp, 0, 0 + Constants.OBJECT_ID_STRING_LENGTH)
     }
 
     private fun toHexCharArray(): CharArray {
@@ -378,10 +373,10 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @return string form of the SHA-1, in lower case hexadecimal.
      */
     fun name(): String {
-        return String(toHexCharArray())
+        return toHexCharArray().concatToString()
     }
 
-    val name: String
+    private val name: String
         /**
          * Get string form of the SHA-1, in lower case hexadecimal.
          *
@@ -428,7 +423,7 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
      * @return an immutable copy, using the smallest memory footprint possible.
      */
     fun copy(): ObjectId {
-        if (javaClass == ObjectId::class.java) return this as ObjectId
+        if (this::class == ObjectId::class) return this as ObjectId
         return ObjectId(this)
     }
 
@@ -533,7 +528,6 @@ abstract class AnyObjectId /*: Comparable<AnyObjectId> */{
             '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'
         )
 
-        @JvmStatic
 		fun formatHexChar(dst: CharArray, p: Int, w: Int) {
             var w = w
             var o = p + 7

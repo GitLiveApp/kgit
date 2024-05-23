@@ -45,7 +45,7 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
         // define this assertion before the tight while loops below it
         // should be able to skip the array bound checks on access.
         //
-        if (aPtr < 0 || bPtr < 0 || aEnd > aRaw.size || bEnd > bRaw.size) throw ArrayIndexOutOfBoundsException()
+        if (aPtr < 0 || bPtr < 0 || aEnd > aRaw.size || bEnd > bRaw.size) throw IndexOutOfBoundsException()
 
         while (aPtr < aEnd && bPtr < bEnd && aRaw[aPtr] == bRaw[bPtr]) {
             aPtr++
@@ -87,7 +87,6 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
 
     companion object {
         /** No special treatment.  */
-		@JvmField
 		val DEFAULT: RawTextComparator = object : RawTextComparator() {
             override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
                 var ai = ai
@@ -120,8 +119,7 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
         }
 
         /** Ignores all whitespace.  */
-//		@JvmField
-//		val WS_IGNORE_ALL: RawTextComparator = object : RawTextComparator() {
+////		val WS_IGNORE_ALL: RawTextComparator = object : RawTextComparator() {
 //            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
 //                var ai = ai
 //                var bi = bi
@@ -174,8 +172,7 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
 //        /**
 //         * Ignore leading whitespace.
 //         */
-//		@JvmField
-//		val WS_IGNORE_LEADING: RawTextComparator = object : RawTextComparator() {
+////		val WS_IGNORE_LEADING: RawTextComparator = object : RawTextComparator() {
 //            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
 //                var ai = ai
 //                var bi = bi
@@ -211,8 +208,7 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
 //        }
 //
 //        /** Ignores trailing whitespace.  */
-//		@JvmField
-//		val WS_IGNORE_TRAILING: RawTextComparator = object : RawTextComparator() {
+////		val WS_IGNORE_TRAILING: RawTextComparator = object : RawTextComparator() {
 //            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
 //                var ai = ai
 //                var bi = bi
@@ -249,8 +245,7 @@ abstract class RawTextComparator : SequenceComparator<RawText>() {
 //        }
 //
 //        /** Ignores whitespace occurring between non-whitespace characters.  */
-//		@JvmField
-//		val WS_IGNORE_CHANGE: RawTextComparator = object : RawTextComparator() {
+////		val WS_IGNORE_CHANGE: RawTextComparator = object : RawTextComparator() {
 //            override fun equals(a: RawText, ai: Int, b: RawText, bi: Int): Boolean {
 //                var ai = ai
 //                var bi = bi

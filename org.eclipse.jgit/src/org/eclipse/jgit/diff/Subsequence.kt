@@ -21,7 +21,7 @@ package org.eclipse.jgit.diff
  * @param <S>
  * the base sequence type.
 </S> */
-class Subsequence<S : Sequence>(@JvmField val base: S, @JvmField val begin: Int, end: Int) : Sequence() {
+class Subsequence<S : Sequence>(val base: S, val begin: Int, end: Int) : Sequence() {
     private val size = end - begin
 
     override fun size(): Int {
@@ -99,7 +99,6 @@ class Subsequence<S : Sequence>(@JvmField val base: S, @JvmField val begin: Int,
          * the B sequence.
          * @return always `edits` (as the list was updated in-place).
         </S> */
-		@JvmStatic
 		fun <S : Sequence> toBase(
             edits: EditList,
             a: Subsequence<S>, b: Subsequence<S>

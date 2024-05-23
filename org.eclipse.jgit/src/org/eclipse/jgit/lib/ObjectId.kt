@@ -15,7 +15,6 @@ package org.eclipse.jgit.lib
 import org.eclipse.jgit.lib.Constants.encodeASCII
 //import org.eclipse.jgit.util.NB
 import org.eclipse.jgit.util.RawParseUtils
-import org.jetbrains.annotations.Nullable
 //import java.io.IOException
 //import java.io.ObjectInputStream
 //import java.io.ObjectOutputStream
@@ -101,7 +100,6 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          *
          * @return the all-null ObjectId, often used to stand-in for no object.
          */
-		@JvmStatic
 		fun zeroId(): ObjectId {
             return ZEROID
         }
@@ -116,8 +114,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * the string to test.
          * @return true if the string can converted into an ObjectId.
          */
-		@JvmStatic
-		fun isId(@Nullable id: String?): Boolean {
+		fun isId(id: String?): Boolean {
             if (id == null) {
                 return false
             }
@@ -127,7 +124,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
                     RawParseUtils.parseHexInt4(id[i].code.toByte())
                 }
                 return true
-            } catch (e: ArrayIndexOutOfBoundsException) {
+            } catch (e: IndexOutOfBoundsException) {
                 return false
             }
         }
@@ -139,7 +136,6 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * the id to convert. May be null.
          * @return the hex string conversion of this id's content.
          */
-		@JvmStatic
 		fun toString(i: ObjectId?): String {
             return if (i != null) i.name() else ZEROID_STR
         }
@@ -159,7 +155,6 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * first offset within secondBuffer to begin testing.
          * @return true if the two identifiers are the same.
          */
-		@JvmStatic
 		fun equals(
             firstBuffer: ByteArray, fi: Int,
             secondBuffer: ByteArray, si: Int
@@ -185,8 +180,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * available within this byte array.
          * @return the converted object id.
          */
-//        @JvmStatic
-//		@JvmOverloads
+////		@JvmOverloads
 //        fun fromRaw(bs: ByteArray?, p: Int = 0): ObjectId {
 //            val a = NB.decodeInt32(bs, p)
 //            val b = NB.decodeInt32(bs, p + 4)
@@ -214,8 +208,6 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * be available within this int array.
          * @return the converted object id.
          */
-        @JvmStatic
-		@JvmOverloads
         fun fromRaw(`is`: IntArray, p: Int = 0): ObjectId {
             return ObjectId(`is`[p], `is`[p + 1], `is`[p + 2], `is`[p + 3], `is`[p + 4])
         }
@@ -230,8 +222,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * position to read the first character from.
          * @return the converted object id.
          */
-//		@JvmStatic
-//		fun fromString(buf: ByteArray, offset: Int): ObjectId {
+////		fun fromString(buf: ByteArray, offset: Int): ObjectId {
 //            return fromHexString(buf, offset)
 //        }
 
@@ -242,8 +233,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
          * the string to read from. Must be 40 characters long.
          * @return the converted object id.
          */
-//		@JvmStatic
-//		fun fromString(str: String): ObjectId {
+////		fun fromString(str: String): ObjectId {
 //            if (str.length != Constants.OBJECT_ID_STRING_LENGTH) {
 //                throw InvalidObjectIdException(str)
 //            }
@@ -258,7 +248,7 @@ open class ObjectId : AnyObjectId/*, Serializable*/ {
 //                val d = RawParseUtils.parseHexInt32(bs, p + 24)
 //                val e = RawParseUtils.parseHexInt32(bs, p + 32)
 //                return ObjectId(a, b, c, d, e)
-//            } catch (e: ArrayIndexOutOfBoundsException) {
+//            } catch (e: IndexOutOfBoundsException) {
 //                val e1 = InvalidObjectIdException(
 //                    bs, p,
 //                    Constants.OBJECT_ID_STRING_LENGTH

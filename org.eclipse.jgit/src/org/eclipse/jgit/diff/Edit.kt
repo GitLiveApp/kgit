@@ -51,25 +51,25 @@ class Edit
      *
      * @return start point in sequence A
      */
-	@JvmField var beginA: Int,
+	var beginA: Int,
 	/**
      * Get end point in sequence A
      *
      * @return end point in sequence A
      */
-	@JvmField var endA: Int,
+	var endA: Int,
 	/**
      * Get start point in sequence B
      *
      * @return start point in sequence B
      */
-	@JvmField var beginB: Int,
+	var beginB: Int,
 	/**
      * Get end point in sequence B
      *
      * @return end point in sequence B
      */
-	@JvmField var endB: Int
+	var endB: Int
 ) {
     /** Type of edit  */
     enum class Type {

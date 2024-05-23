@@ -162,7 +162,7 @@ internal class HistogramDiffIndex<S : Sequence>(
             if (rIdx == recs.size) {
                 val sz = min((recs.size shl 1).toDouble(), (1 + region.lengthA).toDouble()).toInt()
                 val n = LongArray(sz)
-                System.arraycopy(recs, 0, n, 0, recs.size)
+                recs.copyInto(n, 0, 0, recs.size)
                 recs = n
             }
 
@@ -287,7 +287,7 @@ internal class HistogramDiffIndex<S : Sequence>(
         }
 
         private fun tableBits(sz: Int): Int {
-            var bits = 31 - Integer.numberOfLeadingZeros(sz)
+            var bits = 31 - sz.countLeadingZeroBits()
             if (bits == 0) bits = 1
             if (1 shl bits < sz) bits++
             return bits

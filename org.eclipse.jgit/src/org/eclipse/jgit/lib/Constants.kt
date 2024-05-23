@@ -217,7 +217,6 @@ object Constants {
      *
      * **This constant is fixed and is defined by the Git packfile format.**
      */
-	@JvmField
 	val PACK_SIGNATURE: ByteArray =
         byteArrayOf('P'.code.toByte(), 'A'.code.toByte(), 'C'.code.toByte(), 'K'.code.toByte())
 
@@ -522,8 +521,7 @@ object Constants {
      * function. Very unlikely given that JGit uses a hash function
      * that is in the Java reference specification.
      */
-//	@JvmStatic
-//	fun newMessageDigest(): MessageDigest {
+////	fun newMessageDigest(): MessageDigest {
 //        try {
 //            return MessageDigest.getInstance(HASH_FUNCTION)
 //        } catch (nsae: NoSuchAlgorithmException) {
@@ -541,8 +539,7 @@ object Constants {
      * @param typeCode the type code, from a pack representation.
      * @return the canonical string name of this type.
      */
-//	@JvmStatic
-//	fun typeString(typeCode: Int): String {
+////	fun typeString(typeCode: Int): String {
 //        return when (typeCode) {
 //            OBJ_COMMIT -> TYPE_COMMIT
 //            OBJ_TREE -> TYPE_TREE
@@ -566,8 +563,7 @@ object Constants {
      * @param typeCode the type code, from a pack representation.
      * @return the canonical ASCII encoded name of this type.
      */
-//	@JvmStatic
-//	fun encodedTypeString(typeCode: Int): ByteArray {
+////	fun encodedTypeString(typeCode: Int): ByteArray {
 //        return when (typeCode) {
 //            OBJ_COMMIT -> ENCODED_TYPE_COMMIT
 //            OBJ_TREE -> ENCODED_TYPE_TREE
@@ -670,8 +666,7 @@ object Constants {
      * @return a decimal representation of the input integer. The returned array
      * is the smallest array that will hold the value.
      */
-//	@JvmStatic
-//	fun encodeASCII(s: Long): ByteArray {
+////	fun encodeASCII(s: Long): ByteArray {
 //        return encodeASCII(s.toString())
 //    }
 
@@ -687,7 +682,6 @@ object Constants {
      * the input string contains one or more characters outside of
      * the 7-bit ASCII character space.
      */
-	@JvmStatic
 	fun encodeASCII(s: String): ByteArray {
         val r = ByteArray(s.length)
         for (k in r.indices.reversed()) {
@@ -707,7 +701,6 @@ object Constants {
      * default character encoding (UTF-8).
      * @see .CHARACTER_ENCODING
      */
-	@JvmStatic
 	fun encode(str: String): ByteArray = str.encodeToByteArray()
 //        val bb = StandardCharsets.UTF_8.encode(str)
 //        val len = bb.limit()
@@ -761,8 +754,7 @@ object Constants {
      *
      * @since 0.9.1
      */
-//	@JvmField
-//	val EMPTY_BLOB_ID: ObjectId = ObjectId
+////	val EMPTY_BLOB_ID: ObjectId = ObjectId
 //        .fromString("e69de29bb2d1d6434b8b29ae775ad8c2e48c5391")
 
     /**
