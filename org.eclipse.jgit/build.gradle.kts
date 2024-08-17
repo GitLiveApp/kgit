@@ -5,6 +5,19 @@ plugins {
 
 apply(plugin = "kotlinx-atomicfu")
 
+configure<PublishingExtension> {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url  = uri("https://maven.pkg.github.com/gitliveapp/packages")
+            credentials {
+                username = project.findProperty("gpr.user") as String
+                password = project.findProperty("gpr.key") as String
+            }
+        }
+    }
+}
+
 kotlin {
     jvm {
         jvmToolchain(17)

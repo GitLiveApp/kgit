@@ -15,7 +15,7 @@ buildscript {
 allprojects {
 
     group = "dev.gitlive"
-    version = "1.0-SNAPSHOT"
+    version = "0.1.0-merge-algorithm-prune"
 
     repositories {
         mavenCentral()
